@@ -25,11 +25,13 @@ print("=" * 50)
 run(["git", "add", "-A"])
 run(["git", "commit", "-m", "Initial commit: Sparfuchs grocery price comparison"])
 
-# Step 3: Repo erstellen + push
+# Step 3: Remote setzen + push
 print("\n" + "=" * 50)
-print("SCHRITT 3: Repo erstellen und pushen")
+print("SCHRITT 3: Remote setzen und pushen")
 print("=" * 50)
-run([GH, "repo", "create", "sparfuchs", "--private", "--source=.", "--push"])
+run(["git", "remote", "add", "origin", "https://github.com/ClemensWec/sparfuchs.git"], check=False)
+run(["git", "branch", "-M", "main"])
+run(["git", "push", "-u", "origin", "main", "--force"])
 
 print("\n" + "=" * 50)
 print("FERTIG! Dein Repo: https://github.com/ClemensWec/sparfuchs")
