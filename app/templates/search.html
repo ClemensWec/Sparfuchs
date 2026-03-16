@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Sparfuchs | Suche{% if q %}: {{ q }}{% endif %}{% endblock %}
+{% block content %}
+  <section class="search-page">
+    <div class="search-top-bar">
+      <a class="back-link" href="/">&larr; Startseite</a>
+      <div class="search-context">
+        <span class="summary-chip" id="search_location_chip">{{ location }}</span>
+        <span class="summary-chip" id="search_radius_chip">{{ radius_km|int }} km</span>
+      </div>
+    </div>
+
+    <div class="search-bar-section">
+      <form id="search-form" class="search-bar-wrap search-bar-page" action="/search" method="get">
+        <input type="hidden" name="location" value="{{ location }}" />
+        <input type="hidden" name="radius_km" value="{{ radius_km }}" />
+        <input
+          id="search_input"
+          type="text"
+          name="q"
+          value="{{ q }}"
+          placeholder="Produkt suchen..."
+          autocomplete="off"
+        />
+        <button type="submit" class="primary search-btn">Suchen</button>
+      </form>
+    </div>
+
+    <div class="search-layout">
+      <aside class="filter-panel" id="filter_panel">
+        <div class="filter-section">
+          <div class="section-kicker">Ketten</div>
+          <div id="chain_filters" class="filter-checks"></div>
+        </div>
+        <div class="filter-section">
+          <div class="section-kicker">Sortierung</div>
+          <select id="sort_select" class="filter-select">
+            <option value="relevance">Relevanz</option>
+            <option value="price_asc">Preis aufsteigend</option>
+            <option value="price_desc">Preis absteigend</option>
+            <option value="discount">Gr&ouml;&szlig;ter Rabatt</option>
+          </select>
+        </div>
+      </aside>
+
+      <main class="search-results">
+        <div class="search-results-header">
+          <span id="result_count" class="muted"></span>
+        </div>
+        <div id="product_grid" class="product-grid">
+          <div class="muted" style="grid-column:1/-1;text-align:center;padding:40px;">
+            {% if q %}Lade Ergebnisse...{% else %}Gib einen Suchbegriff ein, um Angebote zu finden.{% endif %}
+          </div>
+        </div>
+        <div id="load_more_wrap" style="display:none;text-align:center;padding:20px;">
+          <button id="load_more" class="primary" type="button">Mehr laden</button>
+        </div>
+      </main>
+
+      <aside class="shopping-list-sidebar" id="shopping_sidebar">
+        <div class="sidebar-head">
+          <div class="section-kicker">Einkaufsliste</div>
+          <span id="sidebar_count" class="count-badge">0</span>
+        </div>
+        <div id="sidebar_basket" class="sidebar-basket"></div>
+        <div class="sidebar-actions">
+          <form method="post" action="/results" id="sidebar_compare_form">
+            <input type="hidden" name="location" value="{{ location }}" />
+            <input type="hidden" name="radius_km" value="{{ radius_km }}" />
+            {% for c in chains %}
+              <input type="hidden" name="chains" value="{{ c }}" />
+            {% endfor %}
+            <input type="hidden" name="basket_json" id="sidebar_basket_json" value="[]" />
+            <button class="primary cta-button" type="submit" id="sidebar_compare_btn" disabled>Vergleichen</button>
+          </form>
+          <button type="button" id="sidebar_clear" class="clear-link">Leeren</button>
+        </div>
+      </aside>
+    </div>
+  </section>
+{% endblock %}

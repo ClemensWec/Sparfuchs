@@ -1,0 +1,13 @@
+{
+  "downloads_dir": "data\\kaufda_brochures\\downloads",
+  "output_path": "data\\kaufda_dataset\\offers.sqlite3",
+  "brochures": 2557,
+  "pages": 100277,
+  "offers_unique": 16438,
+  "offers_raw": 687603,
+  "offer_brochure_links": 687603,
+  "brochure_store_links": 47154,
+  "stores_preserved": 42240,
+  "dedup_ratio": "97.6%",
+  "duration_seconds": 231.97
+}

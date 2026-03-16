@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.kaufda.de)",
+      "Bash(/c/Users/Clemens/AppData/Local/Programs/Python/Python311/python.exe -c \":*)"
+    ]
+  }
+}

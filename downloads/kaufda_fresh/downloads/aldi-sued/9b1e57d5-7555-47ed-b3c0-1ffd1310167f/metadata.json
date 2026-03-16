@@ -1,0 +1,68 @@
+{
+  "content": {
+    "contentBadges": [
+      {
+        "name": "new"
+      }
+    ],
+    "id": "9b1e57d5-7555-47ed-b3c0-1ffd1310167f",
+    "image": "https://content-media.bonial.biz/9b1e57d5-7555-47ed-b3c0-1ffd1310167f/preview.jpg",
+    "legacyId": 2501041759,
+    "pageCount": 40,
+    "preview": false,
+    "publisher": {
+      "id": "DE-77",
+      "type": "RETAILER",
+      "name": "ALDI SÜD",
+      "primarySectorId": "DE-22",
+      "images": [
+        {
+          "url": "https://publisher-media.bonial.biz/publisher-logos/28eddb73-9451-4c93-9227-2230341c9c8c.png?impolicy=128x128",
+          "size": "128x128"
+        },
+        {
+          "url": "https://publisher-media.bonial.biz/publisher-logos/28eddb73-9451-4c93-9227-2230341c9c8c.png?impolicy=64x64",
+          "size": "64x64"
+        },
+        {
+          "url": "https://publisher-media.bonial.biz/publisher-logos/28eddb73-9451-4c93-9227-2230341c9c8c.png?impolicy=80x50",
+          "size": "80x50"
+        },
+        {
+          "url": "https://publisher-media.bonial.biz/publisher-logos/28eddb73-9451-4c93-9227-2230341c9c8c.png?impolicy=60x25",
+          "size": "60x25"
+        },
+        {
+          "url": "https://publisher-media.bonial.biz/publisher-logos/28eddb73-9451-4c93-9227-2230341c9c8c.png?impolicy=448x314",
+          "size": "448x314"
+        },
+        {
+          "url": "https://publisher-media.bonial.biz/publisher-logos/28eddb73-9451-4c93-9227-2230341c9c8c.png?impolicy=224x157",
+          "size": "224x157"
+        },
+        {
+          "url": "https://publisher-media.bonial.biz/publisher-logos/28eddb73-9451-4c93-9227-2230341c9c8c.png?impolicy=47x69",
+          "size": "47x69"
+        },
+        {
+          "url": "https://publisher-media.bonial.biz/publisher-logos/28eddb73-9451-4c93-9227-2230341c9c8c.png?impolicy=47x69",
+          "size": "47x69",
+          "type": "offer"
+        }
+      ]
+    },
+    "title": "Gutes für Alle.",
+    "type": "static_brochure",
+    "nearestStoreEnabled": true,
+    "header": {
+      "image": "https://content-media.bonial.biz/9b1e57d5-7555-47ed-b3c0-1ffd1310167f/edf24cb8-da76-37cf-94ec-2663a2245942.jpeg"
+    },
+    "validFrom": "2026-03-08T23:00:00.000+0000",
+    "validUntil": "2026-03-14T21:00:00.000+0000",
+    "showPremiumPanel": false
+  },
+  "externalTracking": {
+    "impression": [],
+    "click": []
+  }
+}

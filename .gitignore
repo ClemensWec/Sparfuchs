@@ -1,0 +1,29 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
+.sparfuchs-cache/
+dist/
+build/
+*.log
+*.sqlite
+.env
+
+# Large files / downloads
+models/
+data/kaufda_brochures/downloads/
+*.bak_before_hierarchy
+
+# SQLite temp files
+*.sqlite3-shm
+*.sqlite3-wal
+*.sqlite3-journal
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+

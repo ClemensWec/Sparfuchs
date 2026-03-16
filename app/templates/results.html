@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+{% block title %}Sparfuchs | Ergebnisse{% endblock %}
+{% block content %}
+  {% set ns = namespace(complete=0, priced=0, offers=0) %}
+  {% for r in rows %}
+    {% if r.missing_count == 0 %}
+      {% set ns.complete = ns.complete + 1 %}
+    {% endif %}
+    {% if r.total_eur is not none %}
+      {% set ns.priced = ns.priced + 1 %}
+    {% endif %}
+    {% set ns.offers = ns.offers + r.offer_count %}
+  {% endfor %}
+
+  <section class="results-summary app-card">
+    <div class="summary-top">
+      <a class="back-link" href="/">&larr; Neue Suche</a>
+      <h1 class="summary-title">Vergleich f&uuml;r {{ location }}</h1>
+    </div>
+    <div class="summary-meta">
+      <span class="summary-chip">{{ "%.0f"|format(radius_km) }} km Radius</span>
+      <span class="summary-chip">{{ selected_chains|length }} Ketten aktiv</span>
+      {% if rows %}
+        <span class="summary-chip">{{ rows|length }} M&auml;rkte bewertet</span>
+        <span class="summary-chip">Lokale Datenbank</span>
+      {% else %}
+        <span class="summary-chip">Keine verwertbaren Treffer</span>
+      {% endif %}
+    </div>
+  </section>
+
+  {% if error %}
+    <section class="notice-stack">
+      <div class="notice error">{{ error }}</div>
+    </section>
+  {% endif %}
+
+  {% if rows %}
+    <section class="stats-chips">
+      <article class="stat-chip">
+        <span>Bewertete M&auml;rkte</span>
+        <strong>{{ rows|length }}</strong>
+      </article>
+      <article class="stat-chip">
+        <span>Vollst&auml;ndige Treffer</span>
+        <strong>{{ ns.complete }}</strong>
+      </article>
+      <article class="stat-chip">
+        <span>Berechenbare Summen</span>
+        <strong>{{ ns.priced }}</strong>
+      </article>
+      <article class="stat-chip">
+        <span>Angebote gesamt</span>
+        <strong>{{ ns.offers }}</strong>
+      </article>
+    </section>
+
+    <!-- Tabs -->
+    <section class="compare-tabs">
+      <button class="tab-btn active" data-tab="best-store">Bester Einzelmarkt</button>
+      <button class="tab-btn" data-tab="spar-mix">Spar-Mix</button>
+    </section>
+
+    <!-- Tab 1: Bester Einzelmarkt -->
+    <section class="results-stack tab-content" id="tab-best-store">
+      {% for r in rows %}
+        <article class="result-card{% if loop.first %} is-best{% endif %}">
+          <div class="result-head">
+            <div class="result-title-wrap">
+              <span class="rank-badge">#{{ loop.index }}</span>
+              <div>
+                {% if loop.first %}
+                  <span class="best-flag">Beste Option</span>
+                {% endif %}
+                <h2>{{ r.store.name }}</h2>
+                <p class="result-sub">
+                  {{ r.store.chain }}
+                  {% if r.store.address %}&middot; {{ r.store.address }}{% endif %}
+                  {% if r.store.brochure_city_name %}
+                    &middot; Prospektregion {{ r.store.brochure_city_name }}
+                  {% endif %}
+                </p>
+                {% if r.store.brochure_match_score is not none %}
+                  <div class="result-region-note">
+                    {% if r.store.brochure_distance_km is not none and r.store.brochure_distance_km <= 15 %}
+                      Regional sehr nah zugeordnet
+                    {% elif r.store.brochure_distance_km is not none and r.store.brochure_distance_km <= 30 %}
+                      Regional plausibel zugeordnet
+                    {% else %}
+                      Regional weit entfernt zugeordnet
+                    {% endif %}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="result-total">
+              {% if r.total_eur is none %}
+                <div class="result-price muted">Keine Summe</div>
+              {% else %}
+                <div class="result-price">{{ "%.2f"|format(r.total_eur) }} &euro;</div>
+              {% endif %}
+              <div class="result-price-note">
+                {% if r.missing_count > 0 %}
+                  Teilsumme wegen fehlender Artikel
+                {% elif r.no_price_count > 0 %}
+                  Enth&auml;lt Treffer ohne festen Preis
+                {% else %}
+                  Vollst&auml;ndiger Vergleich
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <div class="metric-row">
+            <div class="metric-pill">
+              <span class="metric-label">Distanz</span>
+              <strong>{{ "%.1f"|format(r.distance_km) }} km</strong>
+            </div>
+            {% if r.store.brochure_distance_km is not none %}
+              <div class="metric-pill">
+                <span class="metric-label">Regionsmatch</span>
+                <strong>{{ "%.1f"|format(r.store.brochure_distance_km) }} km</strong>
+              </div>
+            {% endif %}
+            <div class="metric-pill">
+              <span class="metric-label">Fehlend</span>
+              <strong>{{ r.missing_count }}</strong>
+            </div>
+            <div class="metric-pill">
+              <span class="metric-label">Ohne Preis</span>
+              <strong>{% if r.no_price_count > 0 %}{{ r.no_price_count }}{% else %}0{% endif %}</strong>
+            </div>
+            <div class="metric-pill">
+              <span class="metric-label">Angebote</span>
+              <strong>{{ r.offer_count }}</strong>
+            </div>
+          </div>
+
+          <details class="details-card"{% if loop.first %} open{% endif %}>
+            <summary>Warenkorb-Details</summary>
+            <div class="details-body">
+              <div class="line-items">
+                {% for line in r.lines %}
+                  <article class="line-card{% if not line.offer %} is-missing{% elif line.offer.price_eur is none %} is-unpriced{% endif %}">
+                    <div class="line-head">
+                      <div>
+                        <div class="line-label">Gesucht</div>
+                        <div class="line-title">{{ line.wanted.q }}</div>
+                        {% if not line.wanted.any_brand and line.wanted.brand %}
+                          <span class="pill">Marke: {{ line.wanted.brand }}</span>
+                        {% else %}
+                          <span class="pill">Marke egal</span>
+                        {% endif %}
+                      </div>
+                      <div class="line-state">
+                        {% if not line.offer %}
+                          <span class="pill pill-danger">Nicht gefunden</span>
+                        {% elif line.offer.price_eur is none %}
+                          <span class="pill">Ohne Preis</span>
+                        {% else %}
+                          <span class="pill offer">
+                            Angebot
+                            {% if line.offer.was_price_eur and line.offer.was_price_eur > line.offer.price_eur %}
+                              -{{ ((1 - (line.offer.price_eur / line.offer.was_price_eur)) * 100) | round(0) | int }}%
+                            {% endif %}
+                          </span>
+                        {% endif %}
+                      </div>
+                    </div>
+                    <div class="line-grid">
+                      <div>
+                        <div class="line-label">Gefunden</div>
+                        {% if line.offer %}
+                          <div class="line-value">{{ line.offer.brand or "" }} {{ line.offer.title }}</div>
+                        {% else %}
+                          <div class="line-value muted">Kein passendes Aktionsangebot gefunden</div>
+                        {% endif %}
+                      </div>
+                      <div>
+                        <div class="line-label">Preis</div>
+                        {% if line.offer %}
+                          <div class="line-value">
+                            {% if line.offer.price_eur is none %}
+                              <span class="muted">&mdash;</span>
+                            {% else %}
+                              {{ "%.2f"|format(line.offer.price_eur) }} &euro;
+                              {% if line.offer.was_price_eur and line.offer.was_price_eur > line.offer.price_eur %}
+                                <span class="muted">statt {{ "%.2f"|format(line.offer.was_price_eur) }} &euro;</span>
+                              {% endif %}
+                            {% endif %}
+                          </div>
+                          {% if line.offer.base_price_eur and line.offer.base_unit %}
+                            <div class="line-meta">{{ "%.2f"|format(line.offer.base_price_eur) }} &euro;/{{ line.offer.base_unit }}</div>
+                          {% endif %}
+                        {% else %}
+                          <div class="line-value muted">&mdash;</div>
+                        {% endif %}
+                      </div>
+                      <div>
+                        <div class="line-label">G&uuml;ltigkeit</div>
+                        {% if line.offer %}
+                          <div class="line-value muted">
+                            {% if line.offer.valid_from or line.offer.valid_to %}
+                              {% if line.offer.valid_from %}{{ line.offer.valid_from }}{% endif %}
+                              {% if line.offer.valid_to %} bis {{ line.offer.valid_to }}{% endif %}
+                            {% else %}
+                              Keine Angabe
+                            {% endif %}
+                          </div>
+                        {% else %}
+                          <div class="line-value muted">Keine Angabe</div>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </article>
+                {% endfor %}
+              </div>
+            </div>
+          </details>
+        </article>
+      {% endfor %}
+    </section>
+
+    <!-- Tab 2: Spar-Mix -->
+    <section class="results-stack tab-content" id="tab-spar-mix" style="display:none;">
+      {% if spar_mix is defined and spar_mix and spar_mix.lines %}
+        <article class="result-card is-best">
+          <div class="result-head">
+            <div class="result-title-wrap">
+              <span class="rank-badge">MIX</span>
+              <div>
+                <span class="best-flag">Spar-Mix &mdash; G&uuml;nstigstes pro Artikel</span>
+                <h2>Kombination aus {{ spar_mix.store_count }} Kette{{ "n" if spar_mix.store_count != 1 else "" }}{% if max_stores is defined and max_stores and max_stores > 0 %} (max. {{ max_stores }}){% endif %}</h2>
+                <p class="result-sub">{{ spar_mix.stores_used | join(", ") }}</p>
+              </div>
+            </div>
+            <div class="result-total">
+              {% if spar_mix.total_eur is not none %}
+                <div class="result-price">{{ "%.2f"|format(spar_mix.total_eur) }} &euro;</div>
+                {% if rows and rows[0].total_eur is not none and spar_mix.total_eur < rows[0].total_eur %}
+                  <div class="result-price-note" style="color:#059669;">
+                    {{ "%.2f"|format(rows[0].total_eur - spar_mix.total_eur) }} &euro; gespart vs. Einzelmarkt
+                  </div>
+                {% else %}
+                  <div class="result-price-note">Gesamtsumme Spar-Mix</div>
+                {% endif %}
+              {% else %}
+                <div class="result-price muted">Keine Summe</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="details-body">
+            <div class="line-items">
+              {% for line in spar_mix.lines %}
+                <article class="line-card{% if not line.offer %} is-missing{% elif line.price_eur is none %} is-unpriced{% endif %}">
+                  <div class="line-head">
+                    <div>
+                      <div class="line-label">Gesucht</div>
+                      <div class="line-title">{{ line.wanted.q }}</div>
+                    </div>
+                    <div class="line-state">
+                      {% if line.store %}
+                        <span class="pill offer">{{ line.store.chain }}</span>
+                      {% else %}
+                        <span class="pill pill-danger">Nicht gefunden</span>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div class="line-grid">
+                    <div>
+                      <div class="line-label">Gefunden</div>
+                      {% if line.offer %}
+                        <div class="line-value">{{ line.offer.brand or "" }} {{ line.offer.title }}</div>
+                      {% else %}
+                        <div class="line-value muted">Kein passendes Aktionsangebot</div>
+                      {% endif %}
+                    </div>
+                    <div>
+                      <div class="line-label">Preis</div>
+                      {% if line.price_eur is not none %}
+                        <div class="line-value">{{ "%.2f"|format(line.price_eur) }} &euro;</div>
+                      {% else %}
+                        <div class="line-value muted">&mdash;</div>
+                      {% endif %}
+                    </div>
+                    <div>
+                      <div class="line-label">Markt</div>
+                      {% if line.store %}
+                        <div class="line-value">{{ line.store.chain }} &middot; {{ line.store.name }}</div>
+                      {% else %}
+                        <div class="line-value muted">&mdash;</div>
+                      {% endif %}
+                    </div>
+                  </div>
+                </article>
+              {% endfor %}
+            </div>
+          </div>
+        </article>
+      {% else %}
+        <div class="notice warn">Keine Spar-Mix Daten verf&uuml;gbar.</div>
+      {% endif %}
+    </section>
+  {% else %}
+    <section class="app-card empty-state">
+      <div class="section-kicker">Keine verwertbaren Ergebnisse</div>
+      <h2>Aktuell gibt es keinen sinnvollen Vergleich f&uuml;r diese Eingaben.</h2>
+      <p class="result-sub">Probier einen gr&ouml;&szlig;eren Radius, einen genaueren Standort oder einen anderen Warenkorb.</p>
+      <a class="primary-link" href="/">Zur&uuml;ck zur Suche</a>
+    </section>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,70 @@
+{
+  "content": {
+    "contentBadges": [
+      {
+        "name": "new"
+      }
+    ],
+    "id": "48f65907-5014-450b-8232-ccd86204ecba",
+    "image": "https://content-media.bonial.biz/48f65907-5014-450b-8232-ccd86204ecba/preview.jpg",
+    "legacyId": 2501046775,
+    "pageCount": 43,
+    "preview": false,
+    "publisher": {
+      "id": "DE-75",
+      "type": "RETAILER",
+      "name": "ALDI Nord",
+      "primarySectorId": "DE-22",
+      "images": [
+        {
+          "url": "https://publisher-media.bonial.biz/publisher-logos/c3d75280-7f54-4c34-85e6-192d378485d6.png?impolicy=128x128",
+          "size": "128x128"
+        },
+        {
+          "url": "https://publisher-media.bonial.biz/publisher-logos/c3d75280-7f54-4c34-85e6-192d378485d6.png?impolicy=64x64",
+          "size": "64x64"
+        },
+        {
+          "url": "https://publisher-media.bonial.biz/publisher-logos/c3d75280-7f54-4c34-85e6-192d378485d6.png?impolicy=80x50",
+          "size": "80x50"
+        },
+        {
+          "url": "https://publisher-media.bonial.biz/publisher-logos/c3d75280-7f54-4c34-85e6-192d378485d6.png?impolicy=60x25",
+          "size": "60x25"
+        },
+        {
+          "url": "https://publisher-media.bonial.biz/publisher-logos/c3d75280-7f54-4c34-85e6-192d378485d6.png?impolicy=448x314",
+          "size": "448x314"
+        },
+        {
+          "url": "https://publisher-media.bonial.biz/publisher-logos/c3d75280-7f54-4c34-85e6-192d378485d6.png?impolicy=224x157",
+          "size": "224x157"
+        },
+        {
+          "url": "https://publisher-media.bonial.biz/publisher-logos/c3d75280-7f54-4c34-85e6-192d378485d6.png?impolicy=47x69",
+          "size": "47x69"
+        },
+        {
+          "url": "https://publisher-media.bonial.biz/publisher-logos/c3d75280-7f54-4c34-85e6-192d378485d6.png?impolicy=47x69",
+          "size": "47x69",
+          "type": "offer"
+        }
+      ]
+    },
+    "title": "LIEBLINGE UNSERER REGION",
+    "type": "static_brochure",
+    "nearestStoreEnabled": true,
+    "header": {
+      "image": "https://content-media.bonial.biz/48f65907-5014-450b-8232-ccd86204ecba/29d5e9da-3ab9-3061-9690-9810bdffa001.jpeg"
+    },
+    "validFrom": "2026-03-08T23:00:00.000+0000",
+    "validUntil": "2026-03-14T21:00:00.000+0000",
+    "showPremiumPanel": true
+  },
+  "externalTracking": {
+    "impression": [],
+    "click": [
+      "https://ad.doubleclick.net/ddm/trackimp/N1325046.3097312BONIAL/B35148103.440582044;dc_trk_aid=634248076;dc_trk_cid=250219868;ord=${timestamp};dc_lat=;dc_rdid=;tag_for_child_directed_treatment=;tfua=;gdpr=${GDPR};gdpr_consent=${GDPR_CONSENT_755};ltd=;dc_tdv=1?"
+    ]
+  }
+}

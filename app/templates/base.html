@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f4efe4" />
+    <title>{% block title %}{{ title or "Sparfuchs" }}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='app.css') }}?v=20260315v2" />
+  </head>
+  <body class="{% block body_class %}page-shell{% endblock %}">
+    <div class="page-backdrop" aria-hidden="true">
+      <div class="backdrop-orb orb-one"></div>
+      <div class="backdrop-orb orb-two"></div>
+      <div class="backdrop-orb orb-three"></div>
+      <div class="backdrop-grid"></div>
+    </div>
+
+    <div class="site-shell">
+      <header class="site-header">
+        <a class="brand-lockup" href="/">
+          <span class="brand-mark">SF</span>
+          <span class="brand-copy">
+            <strong>Sparfuchs</strong>
+            <small>Angebote im Umkreis vergleichen</small>
+          </span>
+        </a>
+
+        <div class="header-meta">
+          <span class="header-pill">Lokale Angebote</span>
+          <span class="header-pill">Standortbasiert</span>
+        </div>
+      </header>
+
+      <main class="site-frame">
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+
+    <div id="overlay" class="overlay" aria-hidden="true">
+      <div class="overlay-card" role="status" aria-live="polite">
+        <div class="spinner" aria-hidden="true"></div>
+        <div class="overlay-copy">
+          <div class="overlay-title">Vergleich l&auml;uft</div>
+          <div class="muted">Lade M&auml;rkte und berechne die beste Option in deinem Umkreis.</div>
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', path='app.js') }}?v=20260315v2"></script>
+  </body>
+</html>

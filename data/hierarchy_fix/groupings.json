@@ -1,0 +1,6031 @@
+{
+  "5": [
+    {
+      "group": "Rabatte & Gutscheine",
+      "children": [
+        "Coupon & Rabatt",
+        "Gutscheine & Karten",
+        "Geschenkkarte",
+        "Punkteaktion"
+      ],
+      "merge": [
+        [
+          "Gutscheine & Karten",
+          "Geschenkkarte"
+        ]
+      ]
+    },
+    {
+      "group": "Kombi- & Reiseangebote",
+      "children": [
+        "Kombiangebot",
+        "Reiseangebot"
+      ]
+    },
+    {
+      "group": "Aktionen",
+      "children": [
+        "Themenwoche"
+      ]
+    }
+  ],
+  "1": [
+    {
+      "group": "Bier",
+      "children": [
+        "Bier",
+        "Pils",
+        "Pilsener",
+        "Weizenbier",
+        "Weißbier",
+        "Altbier",
+        "Helles",
+        "Helles bier",
+        "Bockbier",
+        "Märzen",
+        "Pilsbier",
+        "Schwarzbier",
+        "Fassbier"
+      ]
+    },
+    {
+      "group": "Alkoholfreies Bier & Radler",
+      "children": [
+        "Alkoholfreies bier",
+        "Alkoholfreies Radler",
+        "Radler"
+      ]
+    },
+    {
+      "group": "Biermischgetränke & Mixgetränke",
+      "children": [
+        "Biermischgetränk",
+        "Biermixgetränke",
+        "Mixgetränke",
+        "Fertigcocktail",
+        "Fertigcocktails",
+        "Fertige Mixgetränke",
+        "Fertigmixgetränk",
+        "Mischgetränke",
+        "Premix",
+        "Premix & Alkopops",
+        "Ready to Drink",
+        "Alcopops",
+        "Alkoholmischgetränke"
+      ]
+    },
+    {
+      "group": "Wein",
+      "children": [
+        "Wein",
+        "Rotwein",
+        "Weißwein",
+        "Roséwein",
+        "Rotling",
+        "Wein / Rotwein",
+        "Wein / Trocken",
+        "Weinschorle",
+        "Qualitätswein",
+        "Prädikatswein",
+        "Riesling",
+        "Spätburgunder",
+        "Trollinger",
+        "Wein (rosé)",
+        "Wein (rot)",
+        "Wein / Prädikatswein",
+        "Wein / Secco",
+        "Weinpaket",
+        "Wein & Sekt",
+        "Weincocktail",
+        "Weinhaltige Cocktails",
+        "Dessertwein",
+        "Glühwein",
+        "Honigwein",
+        "Alkoholfreie Weine",
+        "Alkoholfreier wein"
+      ]
+    },
+    {
+      "group": "Sekt & Schaumwein",
+      "children": [
+        "Sekt",
+        "Schaumwein",
+        "Schaumwein & Sekte",
+        "Schaumwein & Champagner",
+        "Schaumwein & Crémant",
+        "Schaumwein & Frizzante",
+        "Sekt & Secco",
+        "Secco",
+        "Secco & sekt",
+        "Sekt & Champagner",
+        "Champagner",
+        "Spumante",
+        "Perlwein",
+        "Perlwein / Sekt"
+      ]
+    },
+    {
+      "group": "Spirituosen",
+      "children": [
+        "Spirituosen",
+        "Rum & Spirituosen",
+        "Schnaps & Spirituosen",
+        "Brandy & Spirituosen",
+        "Schnaps & branntwein",
+        "Schnaps & Obstbrände",
+        "Schnaps & Obstler"
+      ]
+    },
+    {
+      "group": "Whisky & Whiskey",
+      "children": [
+        "Whisky",
+        "Irish Whiskey",
+        "Bourbon"
+      ]
+    },
+    {
+      "group": "Likör & Kräuterlikör",
+      "children": [
+        "Likör",
+        "Kräuterlikör",
+        "Likör & Aperitif",
+        "Likör & Bitter",
+        "Likör & Eierlikör",
+        "Likör & Kräuterlikör",
+        "Likör & Mixgetränke",
+        "Likör & Obstbrand",
+        "Likör / Amaro",
+        "Liköre & Eierlikör",
+        "Kräuterlikör & Likör",
+        "Anislikör / Pastis",
+        "Magenbitter"
+      ]
+    },
+    {
+      "group": "Rum",
+      "children": [
+        "Rum"
+      ]
+    },
+    {
+      "group": "Wodka",
+      "children": [
+        "Wodka"
+      ]
+    },
+    {
+      "group": "Gin",
+      "children": [
+        "Gin"
+      ]
+    },
+    {
+      "group": "Aperitif & Aperitivo",
+      "children": [
+        "Aperitif",
+        "Aperitivo"
+      ]
+    },
+    {
+      "group": "Wermut",
+      "children": [
+        "Wermut"
+      ]
+    },
+    {
+      "group": "Korn & Branntwein",
+      "children": [
+        "Korn",
+        "Branntwein"
+      ]
+    },
+    {
+      "group": "Brandy & Cognac",
+      "children": [
+        "Brandy",
+        "Cognac"
+      ]
+    },
+    {
+      "group": "Edelbrände & Obstbrände",
+      "children": [
+        "Edelbrände & Obstbrände",
+        "Obstbrand",
+        "Obstbrand & Schnaps",
+        "Obstbrände & Calvados"
+      ]
+    },
+    {
+      "group": "Raki & Anisspirituosen",
+      "children": [
+        "Raki",
+        "Anisspirituose",
+        "Anisspirituose / Raki"
+      ]
+    },
+    {
+      "group": "Apfelwein & Cider",
+      "children": [
+        "Apfelwein",
+        "Cider",
+        "Apfelwein / Cider"
+      ]
+    }
+  ],
+  "33": [
+    {
+      "group": "Teigwaren & Pasta",
+      "children": [
+        "Nudeln",
+        "Spaghetti",
+        "Eiernudeln",
+        "Frische nudeln",
+        "Hartweizenteigwaren",
+        "Spirelli",
+        "Spätzle",
+        "Pasta / Teigwaren",
+        "Frische Teigwaren"
+      ]
+    },
+    {
+      "group": "Mehl & Mehlsorten",
+      "children": [
+        "Mehl",
+        "Weizenmehl",
+        "Dinkelmehl",
+        "Grießmehl",
+        "Mehlsorten"
+      ]
+    },
+    {
+      "group": "Backmischungen & Fertigteige",
+      "children": [
+        "Backmischung",
+        "Backmischungen",
+        "Backmischungen & Teig",
+        "Teig & Backmischungen",
+        "Backmischungen & Teig",
+        "Amerikaner backmischung",
+        "Cupcake backmischung",
+        "Keksbackmischung",
+        "Kuchenbackmischung",
+        "Macaron backmischung",
+        "Muffin backmischung",
+        "Rüblikuchen backmischung",
+        "Torten backmischung",
+        "Waffelmischung",
+        "Brotbackmischung",
+        "Cinnamon rolls mix"
+      ]
+    },
+    {
+      "group": "Backzutaten & Backtriebmittel",
+      "children": [
+        "Backzutaten",
+        "Backpulver",
+        "Backhefe",
+        "Hefe",
+        "Hefe & Backtriebmittel",
+        "Backtriebmittel",
+        "Backhilfsmittel"
+      ],
+      "merge": [
+        [
+          "Backtriebmittel",
+          "Backzutaten"
+        ]
+      ]
+    },
+    {
+      "group": "Zucker & Süßungsmittel",
+      "children": [
+        "Zucker",
+        "Puderzucker",
+        "Zucker & Süßungsmittel",
+        "Süßstoff & zuckerersatz",
+        "Süßungsmittel",
+        "Honig & süßungsmittel",
+        "Gelierzucker",
+        "Vanillinzucker"
+      ]
+    },
+    {
+      "group": "Backzubehör & Dekoration",
+      "children": [
+        "Backzubehör",
+        "Backdekor",
+        "Backdeko",
+        "Backdekoration",
+        "Backzubehör & Dekoration",
+        "Glasur & Toppings",
+        "Glasur & Dekor",
+        "Fondant",
+        "Fondant & Gelees",
+        "Kuvertüre",
+        "Marzipanrohmasse",
+        "Belegkirschen",
+        "Lebensmittelfarbe",
+        "Raspelschokolade",
+        "Spritzbeutel",
+        "Muffinförmchen",
+        "Backfett",
+        "Backfett & Margarine",
+        "Backfette",
+        "Margarine & pflanzenfett"
+      ]
+    },
+    {
+      "group": "Teige & Fertigteige",
+      "children": [
+        "Pizzateig",
+        "Blätterteig",
+        "Fertigteig",
+        "Backteig",
+        "Backteig & Teigwaren",
+        "Teig & Blätterteig",
+        "Teigmischung",
+        "Filo- und Yufkateig",
+        "Strudelteig / Yufkateig",
+        "Flammkuchenteig",
+        "Keksteig",
+        "Knödelteig",
+        "Hefeteig"
+      ]
+    },
+    {
+      "group": "Dessertpulver & Pudding",
+      "children": [
+        "Puddingpulver",
+        "Dessertpulver",
+        "Dessertpulver & Mousse",
+        "Tortencreme & Füllungen"
+      ]
+    },
+    {
+      "group": "Reis, Bulgur & Couscous",
+      "children": [
+        "Reis",
+        "Bulgur & couscous",
+        "Couscous"
+      ]
+    },
+    {
+      "group": "Nüsse, Samen & Kerne",
+      "children": [
+        "Mandeln",
+        "Nussmus",
+        "Samen & Kerne"
+      ]
+    },
+    {
+      "group": "Backzubehör Spezial",
+      "children": [
+        "Gärkörbchen",
+        "Ausstechformen",
+        "Backhilfsmittel"
+      ]
+    },
+    {
+      "group": "Sonstige Backzutaten",
+      "children": [
+        "Kakaopulver",
+        "Kokosraspel",
+        "Kokosstreifen",
+        "Orangeat",
+        "Paniermehl",
+        "Speisestärke",
+        "Tapioka & Stärken"
+      ]
+    },
+    {
+      "group": "Suppeneinlagen & Sonstiges",
+      "children": [
+        "Suppeneinlage",
+        "Passierte tomaten"
+      ]
+    },
+    {
+      "group": "Torten & Kuchenböden",
+      "children": [
+        "Tortenboden",
+        "Rührteigböden"
+      ]
+    }
+  ],
+  "63": [
+    {
+      "group": "Socken",
+      "children": [
+        "Socken",
+        "Sportsocken",
+        "Arbeitssocken",
+        "Diabetikersocken",
+        "Sneakersocken",
+        "Sneaker & Socken"
+      ]
+    },
+    {
+      "group": "Bettwäsche & Bettwaren",
+      "children": [
+        "Bettwäsche",
+        "Bettwäsche & Spannbettlaken",
+        "Bettlaken",
+        "Spannbettlaken",
+        "Bettdecke",
+        "Bettwaren",
+        "Decken & Plaids",
+        "Decken",
+        "Tagesdecke",
+        "Wohndecke",
+        "Matratzentopper",
+        "Matratzen",
+        "Kissen",
+        "Kissen & Füllkissen",
+        "Kopfkissen",
+        "Nackenkissen",
+        "Yogakissen"
+      ]
+    },
+    {
+      "group": "Handtücher & Frottierwaren",
+      "children": [
+        "Handtücher",
+        "Handtuch",
+        "Frottierwaren",
+        "Frottier-Set",
+        "Frottierset",
+        "Badvorleger"
+      ]
+    },
+    {
+      "group": "Oberbekleidung",
+      "children": [
+        "Pullover",
+        "Jacken",
+        "Hoodie",
+        "Hoodies",
+        "Hoodie & Sweathose",
+        "Hoodie-Decke",
+        "Jacken & Westen",
+        "Jacken & oberbekleidung",
+        "Jacken Damen",
+        "Jacken Herren",
+        "Jeansjacke",
+        "Fleecejacke",
+        "Funktionsjacke",
+        "Softshelljacken",
+        "Softshellmantel",
+        "Steppjacke",
+        "Sweatjacken",
+        "Sweatshirt",
+        "Trainingsjacke",
+        "Trainingsjacke & Trainingshose",
+        "Westen"
+      ]
+    },
+    {
+      "group": "Hosen & Shorts",
+      "children": [
+        "Jeans",
+        "Hosen",
+        "Arbeitshosen",
+        "Damenhosen",
+        "Kinderhosen",
+        "Leggings",
+        "Retroshorts",
+        "Funktionsleggings",
+        "Funktionsshorts",
+        "Jogginghosen",
+        "Loungewear",
+        "Sweathosen",
+        "Sweatshorts",
+        "Sportshorts",
+        "Thermohose",
+        "Tights",
+        "Trainingshose",
+        "Radlerhose",
+        "Radhosen / Radshorts",
+        "Regenhose"
+      ]
+    },
+    {
+      "group": "T-Shirts & Tops",
+      "children": [
+        "T-Shirts",
+        "Shirt",
+        "Shirts",
+        "Shirts & tops",
+        "Langarmshirt",
+        "Longsleeve",
+        "Poloshirt",
+        "Tanktops",
+        "Funktionsshirt",
+        "Unterwäsche & Hemden",
+        "Achselhemd"
+      ]
+    },
+    {
+      "group": "Unterwäsche",
+      "children": [
+        "Slips",
+        "Unterwäsche",
+        "Boxershorts",
+        "Damenwäsche",
+        "Unterwäsche & Hemden",
+        "Baby-body"
+      ]
+    },
+    {
+      "group": "Schlaf- & Nachtwäsche",
+      "children": [
+        "Schlafanzug",
+        "Pyjama",
+        "Schlafanzug / Pyjama",
+        "Nachtwäsche",
+        "Bademäntel",
+        "Homewear",
+        "Homewear-Set",
+        "Sweatanzüge"
+      ]
+    },
+    {
+      "group": "Schuhe",
+      "children": [
+        "Sneaker",
+        "Schnürschuhe",
+        "Sportschuhe",
+        "Damenschuhe",
+        "Damen Outdoor Schuhe",
+        "Damen schuhe",
+        "Damen-schuhe",
+        "Herren-schuhe",
+        "Freizeitschuhe",
+        "Freizeitschuh",
+        "Hausschuhe",
+        "Kinderschuhe",
+        "Badeschuhe",
+        "Badepantoletten",
+        "Pantolette",
+        "Pantoletten",
+        "Slipper",
+        "Sandalen",
+        "Barfußschuh",
+        "Clog",
+        "Clogs",
+        "Eva clog",
+        "Gummistiefel",
+        "Trekkingschuhe"
+      ],
+      "merge": [
+        [
+          "Damen schuhe",
+          "Damenschuhe"
+        ],
+        [
+          "Damen-schuhe",
+          "Damenschuhe"
+        ]
+      ]
+    },
+    {
+      "group": "Sport- & Outdoor-Bekleidung",
+      "children": [
+        "Regenbekleidung",
+        "Regenjacke",
+        "Regenhose",
+        "Funktionsjacke",
+        "Funktionsleggings",
+        "Funktionsshirt",
+        "Funktionsshorts",
+        "Fahrradjacke",
+        "Fahrradjacken",
+        "Fahrradhandschuhe",
+        "Radhandschuhe",
+        "Radhosen / Radshorts",
+        "Radlerhose",
+        "Laufschuhe",
+        "Sportbrille",
+        "Sportbrillen",
+        "Sportshorts",
+        "Sportschuhe",
+        "Sportsocken",
+        "Sporttasche",
+        "Trekkingschuhe"
+      ],
+      "merge": [
+        [
+          "Sportbrille",
+          "Sportbrillen"
+        ]
+      ]
+    },
+    {
+      "group": "Babykleidung & Kinderbekleidung",
+      "children": [
+        "Babykleidung",
+        "Babybekleidung",
+        "Baby-body",
+        "Kinderbekleidung & accessoires",
+        "Kinderhosen",
+        "Kinderschuhe"
+      ]
+    },
+    {
+      "group": "Accessoires & Taschen",
+      "children": [
+        "Geldbörse",
+        "Gürtel",
+        "Handschuhe",
+        "Handtasche",
+        "Handytasche",
+        "Bauchtasche",
+        "Minitasche",
+        "Reiseaccessoires",
+        "Rucksack",
+        "Rucksäcke",
+        "Tasche",
+        "Taschen",
+        "Taschen & Rucksäcke",
+        "Taschen & geldbörsen",
+        "Schuhzubehör"
+      ]
+    },
+    {
+      "group": "Haushaltstextilien & Möbel",
+      "children": [
+        "Kleiderbügel",
+        "Kleiderständer",
+        "Schubladen-organizer",
+        "Schuhregal",
+        "Schuhschrank",
+        "Schutzhüllen & Aufbewahrung",
+        "Möbelüberwurf",
+        "Tischdecke",
+        "Tischläufer",
+        "Sitzauflagen & Kissen",
+        "Sitzkissen"
+      ]
+    },
+    {
+      "group": "Garn & Stoffe",
+      "children": [
+        "Strickgarn",
+        "Garn",
+        "Wolle & Garne",
+        "Stoff"
+      ]
+    },
+    {
+      "group": "Regenschirme & Schutz",
+      "children": [
+        "Regenschirme",
+        "Regenschirm"
+      ],
+      "merge": [
+        [
+          "Regenschirme",
+          "Regenschirm"
+        ]
+      ]
+    },
+    {
+      "group": "Arbeitskleidung",
+      "children": [
+        "Arbeitskleidung",
+        "Arbeitshosen",
+        "Arbeitssocken"
+      ]
+    },
+    {
+      "group": "Sonstiges",
+      "children": [
+        "Fahrradhelm"
+      ]
+    }
+  ],
+  "36": [
+    {
+      "group": "Topfpflanzen",
+      "children": [
+        "Topfpflanzen",
+        "Topfblumen",
+        "Topf- & Balkonpflanzen",
+        "Topfkräuter",
+        "Küchenkräuter im topf",
+        "Kräuter im topf",
+        "Kräuterpflanze",
+        "Kräuterpflanzen",
+        "Kräuter",
+        "Orchidee",
+        "Zitruspflanzen",
+        "Obstpflanzen"
+      ]
+    },
+    {
+      "group": "Blumensträuße",
+      "children": [
+        "Blumenstrauß",
+        "Schnittstrauß",
+        "Sträuße",
+        "Strauß",
+        "Geschenkstrauß",
+        "Pflanzen-Arrangement",
+        "Einzelblumen"
+      ]
+    },
+    {
+      "group": "Tulpen",
+      "children": [
+        "Tulpen",
+        "Tulpen Sondersorten"
+      ]
+    },
+    {
+      "group": "Zierpflanzen",
+      "children": [
+        "Zierpflanzen",
+        "Ziersträucher",
+        "Dekorative pflanzen",
+        "Balkonpflanzen",
+        "Balkonkastenpflanzen",
+        "Balkon- & Gartenpflanzen",
+        "Ampelpflanze",
+        "Blühampel",
+        "Kletterpflanzen",
+        "Clematis",
+        "Geranien",
+        "Stauden"
+      ]
+    },
+    {
+      "group": "Blumenzwiebeln & Zwiebelblumen",
+      "children": [
+        "Blumenzwiebeln",
+        "Steckzwiebeln / Pflanzzwiebeln",
+        "Zwiebelblumen",
+        "Narzissen",
+        "Chrysanthemen",
+        "Frühjahrsblüher"
+      ]
+    },
+    {
+      "group": "Schnittblumen",
+      "children": [
+        "Schnittblumen",
+        "Rosen",
+        "Stammrose",
+        "Nelken"
+      ]
+    },
+    {
+      "group": "Gemüse- & Salatpflanzen",
+      "children": [
+        "Salatpflanzen",
+        "Salatpflanze",
+        "Gemüsepflanzen"
+      ]
+    },
+    {
+      "group": "Deko & Accessoires",
+      "children": [
+        "Osterdeko",
+        "Dekoartikel",
+        "Gartendekoration / Pflanze",
+        "Türkranz",
+        "Kunstblumen"
+      ]
+    },
+    {
+      "group": "Zimmerpflanzen",
+      "children": [
+        "Zimmerpflanzen"
+      ]
+    },
+    {
+      "group": "Blumen allgemein",
+      "children": [
+        "Blumen",
+        "Blühpflanzen"
+      ]
+    },
+    {
+      "group": "Pflanzen allgemein",
+      "children": [
+        "Pflanzen"
+      ]
+    }
+  ],
+  "78": [
+    {
+      "group": "Körperpflege",
+      "children": [
+        "Duschgel",
+        "3-in-1 duschpflege",
+        "Badezusatz",
+        "Badeschaum",
+        "Badeüberraschung",
+        "Bodylotion",
+        "Bodyspray",
+        "Körpercreme",
+        "Körperpflege",
+        "Handpflege",
+        "Handseife",
+        "Seife",
+        "Seifen nachfüller",
+        "Waschcreme",
+        "Waschhandschuhe",
+        "Einmal-waschlappen",
+        "Wattepads",
+        "Wattestäbchen",
+        "Reisekosmetik",
+        "Wäscheparfüm"
+      ]
+    },
+    {
+      "group": "Haarpflege & Styling",
+      "children": [
+        "Shampoo",
+        "Haarpflege",
+        "Haarspülung",
+        "Haarspray",
+        "Styling Gel",
+        "Haarfärbemittel",
+        "Haarborste",
+        "Haartstylinggerät"
+      ]
+    },
+    {
+      "group": "Zahnpflege",
+      "children": [
+        "Zahnpasta",
+        "Zahnpasta minz",
+        "Zahnpasta kariesschutz",
+        "Zahnpasta kräuter",
+        "Zahnpasta original",
+        "Zahnpasta pro expert",
+        "Zahnpasta professional",
+        "Zahnpasta sensitive",
+        "Zahnpasta zahnfleischschutz",
+        "Zahnbürsten",
+        "Elektrische Zahnbürste",
+        "Zahnbürstenköpfe",
+        "Zahnpflege",
+        "Zahncreme",
+        "Zahnseide & interdental",
+        "Interdentalbürsten",
+        "Mundspülung",
+        "Zahnersatzreiniger"
+      ]
+    },
+    {
+      "group": "Deodorants & Parfum",
+      "children": [
+        "Deodorant",
+        "Parfum",
+        "Parfüm & Eau de Toilette",
+        "Wäscheparfüm",
+        "Bodyspray"
+      ]
+    },
+    {
+      "group": "Hygieneartikel",
+      "children": [
+        "Taschentücher",
+        "Feuchtes Toilettenpapier",
+        "Feuchttücher Baby",
+        "Babyfeuchttücher",
+        "Babytücher",
+        "Slipeinlagen",
+        "Damenhygiene",
+        "Inkontinenz",
+        "Inkontinenz & einlagen"
+      ]
+    },
+    {
+      "group": "Rasur & Haarentfernung",
+      "children": [
+        "Rasierklingen",
+        "Rasierer",
+        "Rasierer elektrisch",
+        "Rasiergel",
+        "Haarentferner"
+      ]
+    },
+    {
+      "group": "Baby & Kind",
+      "children": [
+        "Windeln",
+        "Babyfeuchttücher",
+        "Babytücher",
+        "Wundschutz & Babycreme"
+      ]
+    },
+    {
+      "group": "Medizinische Geräte & Erste Hilfe",
+      "children": [
+        "Blutdruckmessgerät",
+        "Blutdruckmessgeräte",
+        "Fieberthermometer",
+        "Ohrthermometer",
+        "Verbandstasche",
+        "Verbandtasche",
+        "Verbandskasten & Erste Hilfe",
+        "Wundsalbe",
+        "Wärmepflaster",
+        "Schmerzgel",
+        "Massagegeräte",
+        "Faszienrolle",
+        "Fußpflegegerät"
+      ]
+    },
+    {
+      "group": "Nahrungsergänzung & Protein",
+      "children": [
+        "Proteinpulver",
+        "Proteinpulver & Shakes",
+        "Nahrungsergänzungsmittel",
+        "Nahrungsergänzung",
+        "Nahrungsergänzung & Mineralstoffe",
+        "Vitamine & mineralstoffe",
+        "Vitaminpräparat",
+        "Brausetabletten"
+      ]
+    },
+    {
+      "group": "Gesichtspflege & Kosmetik",
+      "children": [
+        "Gesichtspflege",
+        "Gesichtscreme",
+        "Gesichtsöl",
+        "Augenpflege & Masken",
+        "Lippenpflege",
+        "Kosmetiktasche"
+      ]
+    },
+    {
+      "group": "Hautpflege & Spezialpflege",
+      "children": [
+        "Hautpflege",
+        "Körpercreme",
+        "Handpflege",
+        "Wundsalbe",
+        "Wundschutz & Babycreme",
+        "Hautpflege",
+        "Antiallergikum",
+        "Pflanzliche arzneimittel",
+        "Harnwegsinfektion medikament",
+        "Schlafmittel & Einschlafhilfen",
+        "Hustenbonbons",
+        "Halsbonbons",
+        "Nasenspray Allergie",
+        "Nasensprays"
+      ]
+    },
+    {
+      "group": "Sonstiges Drogerie & Gesundheit",
+      "children": [
+        "Aromapflege & Raumbeduftung",
+        "Brillenpflege",
+        "Ostereierfarbe",
+        "Nagelbürsten",
+        "Nagelpflege",
+        "Haarborste",
+        "Wachsstäbchen",
+        "Wattestäbchen",
+        "Wattepads"
+      ]
+    }
+  ],
+  "49": [
+    {
+      "group": "Fernseher & Monitore",
+      "children": [
+        "Fernseher",
+        "Smart-tv",
+        "Monitor",
+        "Wandhalterung",
+        "Montagehalterung"
+      ],
+      "merge": []
+    },
+    {
+      "group": "Smartphones & Zubehör",
+      "children": [
+        "Smartphone",
+        "Smartphone-Halterung",
+        "Ladekabel"
+      ],
+      "merge": []
+    },
+    {
+      "group": "Computer & Zubehör",
+      "children": [
+        "Notebook",
+        "Tablet",
+        "Externe festplatte",
+        "Drucker",
+        "Fotodrucker",
+        "Pocket printer",
+        "Kopierpapier",
+        "Druckerpatrone",
+        "Druckerpatronen"
+      ],
+      "merge": []
+    },
+    {
+      "group": "Kameras & Foto",
+      "children": [
+        "Kameras & Foto",
+        "Sofortbildkamera",
+        "Fotopapier",
+        "Wildkamera"
+      ],
+      "merge": []
+    },
+    {
+      "group": "Gaming & Unterhaltung",
+      "children": [
+        "Spielekonsolen",
+        "Spielkonsole",
+        "Gaming-Headset"
+      ],
+      "merge": []
+    },
+    {
+      "group": "Beleuchtung",
+      "children": [
+        "Leuchtmittel",
+        "LED-Kerzen",
+        "Led streifen",
+        "Beleuchtung",
+        "Reflektorlampen",
+        "Retro-LED-Lampen",
+        "Wandleuchten",
+        "Arbeitsstrahler & Baustrahler"
+      ],
+      "merge": []
+    },
+    {
+      "group": "Haushaltskleingeräte",
+      "children": [
+        "Kaffeemaschine",
+        "Kaffeemaschinen",
+        "Kaffeemaschine (Padsystem)",
+        "Kaffeemaschine mit Mahlwerk",
+        "Kaffeevollautomat",
+        "Kaffeeautomat",
+        "Filterkaffeemaschine",
+        "Kapselautomaten & Zubehör",
+        "Wasserkocher",
+        "Toaster",
+        "Mikrowellen",
+        "Stabmixer",
+        "Küchenkleingeräte",
+        "Brotbackautomat",
+        "Eismaschine",
+        "Kochplatte",
+        "Waffeleisen"
+      ],
+      "merge": []
+    },
+    {
+      "group": "Haartools & Körperpflege",
+      "children": [
+        "Haartrockner",
+        "Reisehaartrockner / Haartrockner",
+        "Haarglätter",
+        "Elektrorasierer",
+        "Elektrorasierer & Trimmer",
+        "Bartschneider",
+        "Barttrimmer",
+        "Haar- und bartschneider",
+        "Haartools",
+        "Fusselrasierer",
+        "Massagegerät"
+      ],
+      "merge": []
+    },
+    {
+      "group": "Büro & Schreibwaren",
+      "children": [
+        "Aktenvernichter",
+        "Aktenvernichter pflege",
+        "Kopierpapier",
+        "Laminiergerät",
+        "Geschenkkarten"
+      ],
+      "merge": []
+    },
+    {
+      "group": "Elektroinstallation & Stromversorgung",
+      "children": [
+        "Batterien",
+        "Akkus & Ladegeräte",
+        "Batterieladegerät",
+        "Steckdosenleiste",
+        "Steckdosenadapter mit USB",
+        "Verlängerungskabel",
+        "Powerbank",
+        "Starthilfe & powerbank",
+        "Starthilfen"
+      ],
+      "merge": []
+    },
+    {
+      "group": "Haushaltsgeräte & Reinigung",
+      "children": [
+        "Geschirrspüler",
+        "Handstaubsauger",
+        "Fensterputzroboter",
+        "Ultraschallreiniger"
+      ],
+      "merge": []
+    },
+    {
+      "group": "Werkzeuge & Autozubehör",
+      "children": [
+        "Autozubehör",
+        "OBD-Diagnosegerät",
+        "Verkehrswarner & Fahrerassistenz"
+      ],
+      "merge": []
+    },
+    {
+      "group": "Mess- & Wettergeräte",
+      "children": [
+        "Thermometer",
+        "Wetterstation",
+        "Körperwaage"
+      ],
+      "merge": []
+    },
+    {
+      "group": "Sonstige Elektronik",
+      "children": [
+        "Bluetooth-Tracker",
+        "Wecker & uhren",
+        "Fahrradbeleuchtung"
+      ],
+      "merge": []
+    },
+    {
+      "group": "Bügeleisen & Dampfbügelstationen",
+      "children": [
+        "Dampfbügeleisen",
+        "Bügeleisen",
+        "Dampfbügelstation",
+        "Dampfbürste",
+        "Dampfglätter"
+      ],
+      "merge": []
+    }
+  ],
+  "115": [
+    {
+      "group": "Lachs & Räucherfisch",
+      "children": [
+        "Lachsfilet",
+        "Räucherlachs",
+        "Lachs",
+        "Lachsforelle",
+        "Lachsforellenfilet",
+        "Lachssteak",
+        "Lachsfilet mariniert",
+        "Lachsportionen",
+        "Lachsseite",
+        "Lachsstremel",
+        "Lachs geräuchert",
+        "Graved Lachs",
+        "Lachs & Räucherfisch",
+        "Räucherfisch",
+        "Geräucherter fisch",
+        "Geräucherte fische",
+        "Geräuchertes Lachsfilet",
+        "Rauchfisch",
+        "Räucher- & Aufschnittfisch"
+      ]
+    },
+    {
+      "group": "Fischfilets",
+      "children": [
+        "Fischfilet",
+        "Kabeljaufilet",
+        "Thunfischfilets",
+        "Thunfischfilet",
+        "Seelachsfilet",
+        "Weißfischfilets",
+        "Rotbarschfilet",
+        "Schollenfilet",
+        "Steinbeißerfilet",
+        "Saiblingsfilet",
+        "Forellenfilet",
+        "Regenbogenforellenfilet",
+        "Viktoriasee-Barschfilet",
+        "Lachsforellenfilet",
+        "Skrei-Tail"
+      ]
+    },
+    {
+      "group": "Frischer Fisch",
+      "children": [
+        "Forelle",
+        "Dorade",
+        "Saibling",
+        "Rotbarsch",
+        "Scholle",
+        "Wolfsbarsch",
+        "Heilbutt",
+        "Kabeljau",
+        "Seehecht",
+        "Seelachs",
+        "Skrei / Kabeljau",
+        "Steinbutt"
+      ]
+    },
+    {
+      "group": "Heringsprodukte",
+      "children": [
+        "Matjes",
+        "Heringshappen",
+        "Heringsfilets",
+        "Heringsalat",
+        "Heringssalat",
+        "Heringsfilet",
+        "Heringsgerichte",
+        "Rollmöpse",
+        "Brathering",
+        "Bratheringe",
+        "Bücklingsfilet",
+        "Hering",
+        "Hering / Matjes",
+        "Hering in remoulade",
+        "Heringsalat",
+        "Heringsfilets in sahnesauce",
+        "Heringstopf",
+        "Marinierte heringshappen",
+        "Matjes & Hering",
+        "Matjesplatte",
+        "Matjessalat"
+      ]
+    },
+    {
+      "group": "Garnelen & Krustentiere",
+      "children": [
+        "Garnelen",
+        "Garnelencocktail & Meeresfrüchtesalate",
+        "Garnelenpfanne",
+        "Garnelenschwänze",
+        "Garnelenspieß",
+        "Krabben & Garnelen",
+        "Krabben & Krustentiere",
+        "Krabbensalat",
+        "Krebsfleisch",
+        "Krebsgerichte",
+        "Krustentiere"
+      ]
+    },
+    {
+      "group": "Meeresfrüchte & Muscheln",
+      "children": [
+        "Meeresfrüchte",
+        "Meeresfrüchtesalate",
+        "Frutti di Mare",
+        "Muscheln",
+        "Miesmuscheln",
+        "Muscheln & Schalentiere",
+        "Schalentiere & Muscheln",
+        "Schnecken",
+        "Austern",
+        "Pulpo",
+        "Pulpo / Tintenfisch",
+        "Tintenfisch",
+        "Tintenfisch & Calamari",
+        "Tintenfisch & Co."
+      ]
+    },
+    {
+      "group": "Thunfischprodukte",
+      "children": [
+        "Thunfisch",
+        "Thunfisch in Aufguss",
+        "Thunfisch in Öl",
+        "Thunfischloins",
+        "Thunfischsteaks"
+      ]
+    },
+    {
+      "group": "Fischsalate & Aufstriche",
+      "children": [
+        "Fischsalat",
+        "Fischaufstrich",
+        "Fischsalat & Fischfeinkost",
+        "Fischaufstrich & Salate",
+        "Krabbensalat"
+      ]
+    },
+    {
+      "group": "Fischkonserven & Fertigprodukte",
+      "children": [
+        "Fischkonserven",
+        "Konservenfisch",
+        "Konserven & Fisch in Öl",
+        "Fischplatte",
+        "Fertiggerichte & Snacks",
+        "Fertiggerichte & Snacks (Fisch)",
+        "Fischwaren",
+        "Fischzubereitung",
+        "Verarbeiteter fisch"
+      ]
+    },
+    {
+      "group": "Panierter & Backfisch",
+      "children": [
+        "Panierter fisch",
+        "Backfisch",
+        "Fischschnitzel",
+        "Fischspieß",
+        "Fischstücke im backteig"
+      ]
+    },
+    {
+      "group": "Sushi & Sashimi",
+      "children": [
+        "Sushi",
+        "Sushi & Sashimi"
+      ]
+    },
+    {
+      "group": "Marinierte & Spezialitäten",
+      "children": [
+        "Marinierte fischfilets",
+        "Fischmarinade",
+        "Carpaccio"
+      ]
+    }
+  ],
+  "19": [
+    {
+      "group": "Aufstriche",
+      "children": [
+        "Konfitüre",
+        "Brotaufstrich",
+        "Aufstrich",
+        "Nuss-Nougat-Creme",
+        "Erdnussbutter",
+        "Nussaufstrich",
+        "Nussmuse & Aufstriche",
+        "Konfitüre extra"
+      ]
+    },
+    {
+      "group": "Müsli & Cerealien",
+      "children": [
+        "Müsli",
+        "Müsli & Cerealien",
+        "Cerealien",
+        "Frühstücksflocken",
+        "Granola & Müsli",
+        "Knuspermüsli & Cerealien",
+        "Flakes & müslis",
+        "Puffreis & Cerealien"
+      ],
+      "merge": [
+        [
+          "Flakes & müslis",
+          "Müsli & Cerealien"
+        ],
+        [
+          "Knuspermüsli & Cerealien",
+          "Müsli & Cerealien"
+        ]
+      ]
+    },
+    {
+      "group": "Haferflocken & Porridge",
+      "children": [
+        "Haferflocken",
+        "Porridge",
+        "Overnight oats"
+      ]
+    },
+    {
+      "group": "Eier",
+      "children": [
+        "Eier"
+      ]
+    },
+    {
+      "group": "Zwieback & Knuspergebäck",
+      "children": [
+        "Zwieback & knuspergebäck"
+      ]
+    },
+    {
+      "group": "Brei & Grießbrei",
+      "children": [
+        "Brei & Grießbrei",
+        "Grießbrei"
+      ]
+    },
+    {
+      "group": "Kakao & Trinkschokolade",
+      "children": [
+        "Kakao",
+        "Kakao & Trinkschokolade",
+        "Kakao & schokoflocken",
+        "Kakaogetränk"
+      ]
+    },
+    {
+      "group": "Müsliriegel & Snacks",
+      "children": [
+        "Müsliriegel",
+        "Quetschies & Kindersnacks"
+      ]
+    },
+    {
+      "group": "Pancakes & Pfannkuchen",
+      "children": [
+        "Pancakes & pfannkuchen"
+      ]
+    }
+  ],
+  "23": [
+    {
+      "group": "Mineralwasser",
+      "children": [
+        "Mineralwasser",
+        "Aromatisiertes Mineralwasser",
+        "Mineralwasser mit geschmack",
+        "Mineralwasser aromatisiert",
+        "Mineralwasser medium",
+        "Mineralwasser still",
+        "Mineralwasser / Sprudel",
+        "Mineralwasser & aromawasser"
+      ]
+    },
+    {
+      "group": "Erfrischungsgetränke",
+      "children": [
+        "Erfrischungsgetränke",
+        "Softdrinks",
+        "Brause",
+        "Brause & Limonade",
+        "Kracherl & limo",
+        "Limo",
+        "Limonade",
+        "Limonade Orange",
+        "Limonade Zitrone",
+        "Limonade & Erfrischungsgetränke",
+        "Limonade & mixers",
+        "Limonade / Erfrischungsgetränk",
+        "Limonade Alkoholfrei",
+        "Limonade Grapefruit",
+        "Limonade Lemon",
+        "Limonade Mandarine-Mango",
+        "Limonade No. 9",
+        "Limonade Sommer-Mix",
+        "Light-limonade",
+        "Cola",
+        "Cola-Mix",
+        "Cola & Erfrischungsgetränke",
+        "Gazoz",
+        "Soda",
+        "Soda- & Sirupzubehör",
+        "Tonic",
+        "Tonic Water"
+      ]
+    },
+    {
+      "group": "Saft & Schorlen",
+      "children": [
+        "Saft",
+        "Apfelsaft",
+        "Orangensaft",
+        "Fruchtsaft",
+        "Direktsaft",
+        "Fruchtsaftgetränk",
+        "Fruchtsaftgetränk",
+        "Saftgetränk",
+        "Saftgetränke",
+        "Saft/nektar",
+        "Saft/nektar/fruchtsaftgetränk",
+        "Nektar",
+        "Obstsaft",
+        "Traubensaft",
+        "Traubennektar",
+        "Kirschsaft",
+        "Orangennektar",
+        "Multivitaminsaft",
+        "Saft und nektar",
+        "Saft & Schorlen",
+        "Saftschorle",
+        "Schorle",
+        "Apfelschorle",
+        "Fruchtschorle",
+        "Fruchtschorle",
+        "Schorlen & Mischgetränke",
+        "Schorlen & Erfrischungsgetränke"
+      ]
+    },
+    {
+      "group": "Kaffee",
+      "children": [
+        "Kaffee",
+        "Kaffeebohnen",
+        "Kaffeekapseln",
+        "Kaffeepads",
+        "Gemahlener kaffee",
+        "Kaffee (gemahlen)",
+        "Kaffee gemahlen",
+        "Filterkaffee",
+        "Kaffeefertiggetränke",
+        "Kaltkaffeegetränk",
+        "Kaffee ganze bohnen",
+        "Kaffeepulver",
+        "Röstkaffee",
+        "Kaffeepulver & Bohnen",
+        "Instantkaffee",
+        "Instantkaffee & Cappuccino",
+        "Instantkaffee entkoffeiniert",
+        "Löslicher kaffee",
+        "Instant Cappuccino & Pulver",
+        "Kaffee (aromatisiert)",
+        "Kaffee Crema",
+        "Kaffee-Ersatz",
+        "Kaffeegetränk",
+        "Kaffeegetränke",
+        "Kaffeegetränke (gekühlt)",
+        "Kaffeemilchmischgetränke",
+        "Gemahlener kaffee",
+        "Kaffee ganze bohnen"
+      ],
+      "merge": [
+        [
+          "Gemahlener kaffee",
+          "Kaffee"
+        ],
+        [
+          "Kaffee (gemahlen)",
+          "Kaffee"
+        ],
+        [
+          "Kaffee gemahlen",
+          "Kaffee"
+        ],
+        [
+          "Kaffee ganze bohnen",
+          "Kaffeebohnen"
+        ]
+      ]
+    },
+    {
+      "group": "Tee",
+      "children": [
+        "Tee",
+        "Teegetränk",
+        "Früchtetee",
+        "Matcha",
+        "Mate",
+        "Mate getränk",
+        "Instanttee",
+        "Tees & aufgüsse",
+        "Tee & Instantgetränke"
+      ]
+    },
+    {
+      "group": "Energy & Sport",
+      "children": [
+        "Energy Drink",
+        "Energy-Drinks & Shots",
+        "Shots",
+        "Vitaminshots",
+        "Vitamindrink",
+        "Vitaminwasser",
+        "Vitamingetränk",
+        "Isotonische Getränke",
+        "Isotonisches getränk",
+        "Sportgetränk",
+        "Sportgetränke",
+        "Functional drinks",
+        "Funktionales getränk",
+        "Protein-Shake"
+      ]
+    },
+    {
+      "group": "Aromatisierte & Spezialgetränke",
+      "children": [
+        "Aromatisiertes Wasser",
+        "Wasser mit Geschmack",
+        "Aromatisierte Joghurtgetränke",
+        "Kokoswasser",
+        "Kombucha",
+        "Malzgetränk",
+        "Malzbier",
+        "Bittergetränk",
+        "Bowle",
+        "Brottrunk",
+        "Mischgetränk"
+      ]
+    },
+    {
+      "group": "Sirup & Zubehör",
+      "children": [
+        "Sirup",
+        "Getränkesirup",
+        "Sirupe & sirupzubehör"
+      ]
+    },
+    {
+      "group": "Trinkmahlzeiten & Joghurtgetränke",
+      "children": [
+        "Trinkmahlzeit",
+        "Trinkmahlzeiten",
+        "Joghurtgetränk",
+        "Joghurtgetränke",
+        "Aromatisierte Joghurtgetränke"
+      ]
+    },
+    {
+      "group": "Alkoholfreie Spezialitäten",
+      "children": [
+        "Alkoholfreier Sekt",
+        "Alkoholfreie Aperitifs",
+        "Alkoholfreies getränk",
+        "Alkoholfreie Getränke",
+        "Alkoholfreie Mixgetränke",
+        "Alkoholfreier Secco",
+        "Alkoholfreier Wein / Weiße alkoholfrei",
+        "Alkoholfreier wein",
+        "Biermischgetränke alkoholfrei",
+        "Perlwein alkoholfrei",
+        "Secco alkoholfrei"
+      ]
+    },
+    {
+      "group": "Sonstige Getränke",
+      "children": [
+        "Kakaogetränke",
+        "Trinkschokolade",
+        "Frühstücksdrink",
+        "Frühstückssaft",
+        "Ingwershot",
+        "Instantgetränk",
+        "Instantgetränke",
+        "Instantkaffee entkoffeiniert",
+        "Instant Cappuccino & Pulver",
+        "Kaffee-Ersatz",
+        "Mischgetränk",
+        "Süßgetränke",
+        "Fruchtgetränk",
+        "Saftbeutel",
+        "Saftshots",
+        "Trinkzusatz",
+        "Getränkepulver",
+        "Getränkekiste"
+      ]
+    }
+  ],
+  "16": [
+    {
+      "group": "Backformen & Backzubehör",
+      "children": [
+        "Backform",
+        "Backformen",
+        "Backblech",
+        "Backpapier",
+        "Backpapier schalen",
+        "Backpinsel",
+        "Backwerkzeug",
+        "Backhelfer & Utensilien",
+        "Backcontainer",
+        "Backform silikon",
+        "Backformen & Bleche",
+        "Backgitter",
+        "Backzubehör",
+        "Back- & Grillfolie",
+        "Silikonbackform",
+        "Osterbackform",
+        "Bundform",
+        "Back- & Grillfolie",
+        "Heißluftfritteuse backform",
+        "Backformen & Bleche",
+        "Backpapier",
+        "Backpapier schalen"
+      ]
+    },
+    {
+      "group": "Pfannen & Töpfe",
+      "children": [
+        "Bratpfanne",
+        "Pfanne",
+        "Bräter",
+        "Topf-Set",
+        "Pfannen-Set",
+        "Pfannen & Töpfe",
+        "Töpfe & pfannen",
+        "Bratpfanne / Pfanne",
+        "Bräter & Bratpfannen",
+        "Pfanne / Steakpfanne",
+        "Servierpfanne",
+        "Wokpfanne",
+        "Topf",
+        "Topfserie / Kochgeschirr",
+        "Topfset",
+        "Kochtopf",
+        "Kochtöpfe",
+        "Kochgeschirr",
+        "Pfannenschutz"
+      ]
+    },
+    {
+      "group": "Küchenmaschinen & Mixer",
+      "children": [
+        "Küchenmaschine",
+        "Handmixer",
+        "Stabmixer",
+        "Mixer & Smoothie-Maker",
+        "Küchenmaschinen & mixer",
+        "Handrührer",
+        "Stabmixer / Pürierstab",
+        "Stabmixer-Set",
+        "Zerkleinerer & Mixer",
+        "Fleischwolf",
+        "Allesschneider",
+        "Gemüseschneider",
+        "Gemüseschäler",
+        "Multischneider",
+        "Nudelmaschine",
+        "Entsafter & Zitruspressen"
+      ]
+    },
+    {
+      "group": "Küchenhelfer & Zubehör",
+      "children": [
+        "Küchenhelfer",
+        "Küchenhelfer-set",
+        "Küchenzubehör",
+        "Küchenwerkzeug",
+        "Messbecher",
+        "Messkanne",
+        "Messerset",
+        "Messer",
+        "Kochmesser",
+        "Schälmesser",
+        "Reibe",
+        "Sieb & Passiergerät",
+        "Schneebesen",
+        "Teigrolle & nudelholz",
+        "Teigschaber",
+        "Spritzbeutel",
+        "Spritzbeutel",
+        "Gewürzmühle",
+        "Gewürzständer",
+        "Kaffeefilter",
+        "Kaffeelöffel / Dosierlöffel",
+        "Kuchenbehälter",
+        "Kuchenbehälter / Tortenglocke",
+        "Tortenglocke",
+        "Tortenbox",
+        "Tortenplatte",
+        "Tortenring",
+        "Tortenspitzen",
+        "Kuchenboxen & Transportbehälter",
+        "Transportbehälter",
+        "Transportbox",
+        "Transporthilfen"
+      ]
+    },
+    {
+      "group": "Aufbewahrung & Vorrat",
+      "children": [
+        "Aufbewahrungskorb",
+        "Aufbewahrungsbehälter",
+        "Aufbewahrungsboxen",
+        "Aufbewahrungsdosen",
+        "Aufbewahrungsdose",
+        "Aufbewahrung",
+        "Aufbewahrung & Behälter",
+        "Aufbewahrung & Boxen",
+        "Aufbewahrung & Organizer",
+        "Aufbewahrungsbehälter / Vorratsdose",
+        "Aufbewahrungsglas",
+        "Aufbewahrungskisten",
+        "Aufbewahrungslösungen",
+        "Aufbewahrungstrolley",
+        "Vakuumbeutel",
+        "Vakuumbeutel & aufbewahrung",
+        "Frischhaltedosen",
+        "Frischhaltebeutel",
+        "Frischhaltebox",
+        "Vorratsglas",
+        "Brottkasten",
+        "Keksdose"
+      ]
+    },
+    {
+      "group": "Geschirr & Besteck",
+      "children": [
+        "Geschirr",
+        "Geschirr & teller",
+        "Geschirr-Set",
+        "Geschirr-Starterset",
+        "Keramik & Geschirr",
+        "Schale / Geschirr",
+        "Schüsseln",
+        "Schüsseln & geschirr",
+        "Schüsselset",
+        "Besteck",
+        "Besteckset",
+        "Tassen",
+        "Tassen & becher",
+        "Trinkgläser",
+        "Gläser",
+        "Glaskaraffe",
+        "Teekanne",
+        "Thermobecher",
+        "Isolierbecher",
+        "Isolierkanne",
+        "Kaffeebecher",
+        "Trinkflasche",
+        "Weinkühler",
+        "Servierplatten",
+        "Servierschalen",
+        "Eierbecher"
+      ]
+    },
+    {
+      "group": "Küchengeräte & Elektro",
+      "children": [
+        "Heißluftfritteuse",
+        "Airfryer / Heißluftfritteuse",
+        "Heißluftfritteusen-Zubehör",
+        "Toaster",
+        "Waffeleisen",
+        "Waffelmaker",
+        "Kontaktgrill",
+        "Elektrische Pfannen & Grills",
+        "Elektrischer Grill",
+        "Küchengeräte",
+        "Kleinbacköfen",
+        "Mikrowelle",
+        "Mikrowellenzubehör",
+        "Schnellkochtopf",
+        "Schnellkochtopf set",
+        "Induktionskochplatte",
+        "Wasserkocher",
+        "Wassersprudler",
+        "Espressomaschinen",
+        "Padmaschinen",
+        "Brotbackautomat",
+        "Eierkocher",
+        "Eiswürfelbereiter",
+        "Eiswürfelbeutel",
+        "Dampfglätter & Bügelsysteme"
+      ]
+    },
+    {
+      "group": "Küchenwaagen & Messgeräte",
+      "children": [
+        "Küchenwaage"
+      ]
+    },
+    {
+      "group": "Aufbewahrung & Organisation",
+      "children": [
+        "Aufbewahrungskörbchen",
+        "Aufbewahrungsbox",
+        "Aufbewahrungsdosen",
+        "Aufbewahrungsbehälter",
+        "Eimer & Aufbewahrung",
+        "Eimer & Wäschekörbe",
+        "Korbregal",
+        "Regal",
+        "Küchenregal",
+        "Küchenwagen",
+        "Haushaltswagen",
+        "Mülltrennsystem",
+        "Recyclingstation"
+      ]
+    },
+    {
+      "group": "Textilien & Dekoration",
+      "children": [
+        "Dekoration",
+        "Osterdeko",
+        "Duftkerzen",
+        "Kerzen & teelichte",
+        "Tischdecke",
+        "Tischdecken",
+        "Servietten",
+        "Geschirrtuch",
+        "Geschirrtuch-Rolle",
+        "Geschirrtücher",
+        "Geschirrtücher-Set",
+        "Kissen & Nackenkissen",
+        "Kissenbezüge",
+        "Sitzkissen",
+        "Sitzhocker",
+        "Bettwaren & Decken",
+        "Badteppich",
+        "Badematte",
+        "Badematte & WC-Set",
+        "Badematten",
+        "Teppich",
+        "Fußmatte",
+        "Fensterrollo",
+        "Rollo",
+        "Vorhänge & Gardinen",
+        "Pinnwand"
+      ]
+    },
+    {
+      "group": "Haushaltsgeräte & Reinigung",
+      "children": [
+        "Handstaubsauger",
+        "Staubsaugerzubehör",
+        "Waschmaschine",
+        "Trockner",
+        "Wäscheständer",
+        "Bügeltische",
+        "Bügelzubehör",
+        "Duschabzieher",
+        "Handfeger",
+        "Sprühflasche",
+        "Haushaltswaren"
+      ]
+    },
+    {
+      "group": "Möbel & Aufbewahrung",
+      "children": [
+        "Küchenmöbel",
+        "Kleiderschrank",
+        "Küchenregal",
+        "Küchenwagen",
+        "Korbregal",
+        "Regal",
+        "Überbauschrank",
+        "Garderobe",
+        "Bürostuhl",
+        "Sitzhocker",
+        "Sitzkissen"
+      ]
+    },
+    {
+      "group": "Wasserfilter & Zubehör",
+      "children": [
+        "Wasserfilterkanne",
+        "Wasserfilterkartusche",
+        "Wasserfilter kartusche",
+        "Wasserfilter"
+      ],
+      "merge": [
+        [
+          "Wasserfilter kartusche",
+          "Wasserfilterkartusche"
+        ]
+      ]
+    },
+    {
+      "group": "Grill & BBQ Zubehör",
+      "children": [
+        "Grillbesteck & Messer",
+        "Grillhandschuhe",
+        "Grillpfanne",
+        "Pizzasteinofen",
+        "Pizzaofen",
+        "Buffetwärmer"
+      ]
+    },
+    {
+      "group": "Sonstiges Haushalt & Küche",
+      "children": [
+        "Eimer & Wäschekörbe",
+        "Autositzauflagen & Schoner",
+        "Automatten",
+        "Autositzbezüge",
+        "Kofferanhänger",
+        "Kofferraumtasche",
+        "Kofferraumzubehör",
+        "Kofferset",
+        "Kofferzubehör",
+        "CO2-Zylinder & Zubehör",
+        "Feuerzeug",
+        "Haushaltswagen",
+        "Isolierkanne",
+        "Isolierbecher",
+        "Kaffeebecher",
+        "Kaffeefilter",
+        "Kaffeelöffel / Dosierlöffel",
+        "Kleinbacköfen",
+        "LED-Spots",
+        "Laminierfolien",
+        "Matratze",
+        "Matratzen",
+        "Mikrowelle",
+        "Mikrowellenzubehör",
+        "Pinnwand",
+        "Raumduft",
+        "Recyclingstation",
+        "Rührbecher",
+        "Rührschüssel",
+        "Rührschüssel set",
+        "Rührschüssel-set",
+        "Siphons & Sahnespender",
+        "Sitzhocker",
+        "Sitzkissen",
+        "Sonnenschutz & Sichtschutz",
+        "Sprühflasche",
+        "Staubsaugerzubehör",
+        "Tassen",
+        "Tassen & becher",
+        "Thermobecher",
+        "Thermopapier",
+        "Thermoschüssel",
+        "Tischlampen",
+        "Tischleuchten",
+        "Tritte & Leitern",
+        "Tritthocker & Leitern",
+        "Trittleitern & hocker",
+        "Unterbauleuchte",
+        "Vorratsglas",
+        "WC-Sitz",
+        "WC-Sitz & Toilettenzubehör",
+        "Waschtisch & Badmöbel",
+        "Weinkühler"
+      ]
+    }
+  ],
+  "43": [
+    {
+      "group": "Waschmittel",
+      "children": [
+        "Waschmittel",
+        "Vollwaschmittel",
+        "Flüssigwaschmittel",
+        "Waschmittel pulver",
+        "Colorwaschmittel",
+        "Waschmittel Pods",
+        "Waschmittel blätter",
+        "Waschmittel flüssig",
+        "Waschmittel kapseln",
+        "Waschmittelkapseln",
+        "Waschpulver"
+      ]
+    },
+    {
+      "group": "Weichspüler & Wäschepflege",
+      "children": [
+        "Weichspüler",
+        "Wäsche-Hygienespüler",
+        "Wäscheparfum"
+      ]
+    },
+    {
+      "group": "Geschirrspülmittel & Tabs",
+      "children": [
+        "Geschirrspültabs",
+        "Geschirrspüler-tabs",
+        "Spülmaschinentabs",
+        "Spülmittel",
+        "Spülmittel (Handspülmittel)",
+        "Geschirrspülmittel (Hand)",
+        "Geschirrspülmittel (Konzentrat)",
+        "Geschirrspülmittel"
+      ]
+    },
+    {
+      "group": "Toilettenpapier & Toilettenpflege",
+      "children": [
+        "Toilettenpapier",
+        "Toilettenreiniger",
+        "WC-Reiniger",
+        "WC-Stein",
+        "WC-Spüler",
+        "WC-Bürste",
+        "WC-Reiniger-Tabs",
+        "WC-Schaum",
+        "Wc stein",
+        "Wc duftspüler",
+        "Wc-duftspüler",
+        "Toilettenpflege",
+        "Feuchtes Toilettenpapier"
+      ],
+      "merge": [
+        [
+          "Wc stein",
+          "WC-Stein"
+        ],
+        [
+          "Wc duftspüler",
+          "Wc-duftspüler"
+        ]
+      ]
+    },
+    {
+      "group": "Reiniger & Spezialreiniger",
+      "children": [
+        "Rohrreiniger",
+        "Badreiniger",
+        "Glasreiniger",
+        "Allzweckreiniger",
+        "Hygienereiniger",
+        "Fleckenentferner",
+        "Scheibenreiniger",
+        "Scheuermilch",
+        "Algen- & Grünbelagentferner",
+        "Bleichmittel",
+        "Haushaltsreiniger",
+        "Kalkreiniger",
+        "Neutralreiniger",
+        "Reiniger",
+        "Kalkreiniger nachfüllpack",
+        "Entkalker",
+        "Fettentferner",
+        "Fettlöser & spezialreiniger",
+        "Kalkentferner",
+        "Mehrzweckreiniger",
+        "Polster- & teppichreiniger",
+        "Schimmelentferner",
+        "Schmutzradierer",
+        "Reinigergel",
+        "Reinigungscreme & -paste",
+        "Reinigungspaste",
+        "Reinigungsgeräte",
+        "Reinigungs-blätter",
+        "Reinigungszubehör",
+        "Teppichpflege & fleckenentferner",
+        "Topfreiniger",
+        "Spülmaschinenreiniger",
+        "Spülmaschinenpflege",
+        "Spülmaschinensalz",
+        "Waschmaschinenpflege",
+        "Waschmaschinenreiniger",
+        "Zitronensäure",
+        "Bleichmittel & Reiniger",
+        "Abflussreiniger",
+        "Abflussreiniger",
+        "Auto-Reiniger",
+        "Autopflege",
+        "Küchen- & bodenreiniger",
+        "Küchenreiniger",
+        "Fensterreinigung",
+        "Glas- & Fensterreiniger"
+      ],
+      "merge": [
+        [
+          "Abflussreiniger",
+          "Rohrreiniger"
+        ]
+      ]
+    },
+    {
+      "group": "Staubsauger & Zubehör",
+      "children": [
+        "Staubsauger",
+        "Staubsaugerbeutel",
+        "Staubsauger mit Beutel",
+        "Staubsauger ohne Beutel",
+        "Hand- / Akku-Staubsauger",
+        "Handstaubsauger"
+      ]
+    },
+    {
+      "group": "Besen, Kehrsets & Bürsten",
+      "children": [
+        "Besen",
+        "Besen & Bürsten",
+        "Besen & Kehrset",
+        "Besen & Kehrzeug",
+        "Besen mit Stiel",
+        "Kehr- & Reinigungszubehör",
+        "Kehrschaufel",
+        "Kehrset",
+        "Kehrset & Besen",
+        "Kehrset & zubehör",
+        "Stubenbesen",
+        "Nagelbürste",
+        "Spülbürste"
+      ]
+    },
+    {
+      "group": "Putztücher & Schwämme",
+      "children": [
+        "Küchentücher",
+        "Küchenrolle",
+        "Putztücher",
+        "Allzwecktücher",
+        "Allzweck-tücher",
+        "Feucht-tücher",
+        "Feuchttücher",
+        "Brillenputztücher",
+        "Mikrofasertuch",
+        "Putzschwämme",
+        "Putzstein",
+        "Putzwerkzeug",
+        "Reinigungsschwamm",
+        "Schwamm",
+        "Schwämme & Reinigungstücher",
+        "Schwämme & Reinigungszubehör",
+        "Schwämme & pads",
+        "Wischtuch",
+        "Wischtücher",
+        "Staubmagnet / Staubtücher Nachfüllpackung",
+        "Staubmagnet Starter-Set",
+        "Staubmagnet Tücher"
+      ],
+      "merge": [
+        [
+          "Allzwecktücher",
+          "Allzweck-tücher"
+        ]
+      ]
+    },
+    {
+      "group": "Bodenreinigung & Wischer",
+      "children": [
+        "Bodenwischer",
+        "Bodenwischer & Mop",
+        "Bodenwischer Starter-Set",
+        "Bodenreiniger",
+        "Bodenreinigung",
+        "Bodenreinigungstücher",
+        "Bodentücher",
+        "Moppzubehör",
+        "Mop & Eimer",
+        "Mopp & Wischer",
+        "Moppset",
+        "Wischbezug",
+        "Wischbezüge & Refills",
+        "Wischmopp set",
+        "Wischsysteme"
+      ]
+    },
+    {
+      "group": "Raumduft & Lufterfrischer",
+      "children": [
+        "Lufterfrischer",
+        "Raumduft & Lufterfrischer",
+        "Raumduft",
+        "Raumduft & Duftspender",
+        "Raumduft & nachfüller",
+        "Raumduft nachfüller",
+        "Raumduft nachfüllpack",
+        "Raumspray",
+        "Duftkissen & Raumduft"
+      ]
+    },
+    {
+      "group": "Müll & Aufbewahrung",
+      "children": [
+        "Abfalleimer",
+        "Müllbeutel",
+        "Wäschekorb",
+        "Wäschebox",
+        "Wäschenetz",
+        "Wäschesammler",
+        "Wäscheschirm",
+        "Wäschezubehör"
+      ]
+    },
+    {
+      "group": "Wäschepflege & Zubehör",
+      "children": [
+        "Bügelhilfe & Sprühstärke",
+        "Imprägnierer",
+        "Imprägnierspray",
+        "Farb- und Schmutzfänger",
+        "Wäsche-Hygienespüler"
+      ]
+    },
+    {
+      "group": "Sonstiges Reinigungszubehör",
+      "children": [
+        "Dampfreiniger / Steam Cleaner",
+        "Fensterwischer",
+        "Klarspüler",
+        "Küchenpapier",
+        "Luftentfeuchter & Nachfüllset",
+        "Müllbeutel",
+        "Raumentfeuchter",
+        "Schmutzradierer",
+        "Schwamm",
+        "Spiralreiniger & Topfreiniger",
+        "Staubwedel",
+        "Staubwedel / Teleskop-Staubwedel",
+        "Staubwischer",
+        "Teleskopstiel",
+        "Wischbezug",
+        "Wischbezüge & Refills",
+        "Wischmopp set",
+        "Wischsysteme",
+        "Wischtuch",
+        "Wischtücher",
+        "Waschmaschinenpflege",
+        "Waschmaschinenreiniger",
+        "Wäsche-Hygienespüler",
+        "Zitronensäure"
+      ]
+    }
+  ],
+  "127": [
+    {
+      "group": "Kartoffeln & Wurzelgemüse",
+      "children": [
+        "Kartoffeln",
+        "Wurzelgemüse",
+        "Frisches wurzelgemüse",
+        "Karotten & Möhren",
+        "Möhren & Karotten",
+        "Möhren",
+        "Bundmöhren",
+        "Karotten & Möhren",
+        "Knollensellerie",
+        "Rote bete",
+        "Wurzelgemüse & Knollen"
+      ]
+    },
+    {
+      "group": "Salate & Blattgemüse",
+      "children": [
+        "Salat",
+        "Blattsalate",
+        "Blattsalat",
+        "Fertigsalate",
+        "Romanasalat",
+        "Kopfsalat",
+        "Kopfsalat & endivie",
+        "Eisbergsalat",
+        "Salat & Blattgemüse",
+        "Salat & Blattsalate",
+        "Salate & Antipasti",
+        "Blattgemüse",
+        "Rucola",
+        "Chicorée"
+      ]
+    },
+    {
+      "group": "Tomaten",
+      "children": [
+        "Tomaten",
+        "Cherrytomaten",
+        "Rispentomaten",
+        "Cocktailtomaten",
+        "Roma tomaten",
+        "Pflaumentomaten",
+        "Tomaten (konserven & passierte)",
+        "Gehackte tomaten",
+        "Gehackte Tomaten (Bio)",
+        "Gehackte Tomaten (Konserve)",
+        "Geschälte Tomaten (Konserve)"
+      ]
+    },
+    {
+      "group": "Äpfel & Birnen",
+      "children": [
+        "Äpfel",
+        "Apfel",
+        "Apfelmark",
+        "Apfelmus",
+        "Apfelmus & Kompott",
+        "Birnen"
+      ]
+    },
+    {
+      "group": "Beeren & Früchte",
+      "children": [
+        "Beeren",
+        "Beerenmischung",
+        "Beerenkonserve",
+        "Himbeeren",
+        "Heidelbeeren",
+        "Erdbeeren"
+      ]
+    },
+    {
+      "group": "Tropische & Exotische Früchte",
+      "children": [
+        "Avocado",
+        "Mango",
+        "Ananas",
+        "Passionsfrucht",
+        "Passionsfrüchte",
+        "Tropische früchte",
+        "Exotische Früchte",
+        "Kiwi",
+        "Feigen",
+        "Datteln",
+        "Getrocknete Datteln"
+      ]
+    },
+    {
+      "group": "Zitrusfrüchte",
+      "children": [
+        "Zitrusfrüchte",
+        "Orangen",
+        "Mandarinen",
+        "Clementinen",
+        "Limetten",
+        "Zitronen"
+      ]
+    },
+    {
+      "group": "Trauben & Melonen",
+      "children": [
+        "Trauben",
+        "Tafeltrauben",
+        "Obstmischung",
+        "Melonen",
+        "Wassermelone"
+      ]
+    },
+    {
+      "group": "Pilze & Champignons",
+      "children": [
+        "Pilze",
+        "Champignons",
+        "Brokkoli",
+        "Broccoli"
+      ]
+    },
+    {
+      "group": "Paprika & Peperoni",
+      "children": [
+        "Paprika",
+        "Peperoni & Paprika",
+        "Spitzpaprika",
+        "Eingelegte Peperoni / Antipasti"
+      ]
+    },
+    {
+      "group": "Gurken & Eingelegtes",
+      "children": [
+        "Gurken",
+        "Eingelegte gurken",
+        "Gewürzgurken",
+        "Gurken & Gurkenprodukte",
+        "Eingelegtes Gemüse",
+        "Eingelegtes",
+        "Eingelegtes & Konserven",
+        "Konservengemüse",
+        "Konserven & Eingelegtes",
+        "Konserven & Eingemachtes",
+        "Konserven",
+        "Konservenobst",
+        "Obstkonserven",
+        "Obstkonserve",
+        "Sauerkraut",
+        "Rotkohl & Sauerkraut",
+        "Rotkohl",
+        "Krautsalat"
+      ]
+    },
+    {
+      "group": "Hülsenfrüchte & Bohnen",
+      "children": [
+        "Bohnen",
+        "Brechbohnen",
+        "Bohnenkonserven",
+        "Erbsen & Schoten",
+        "Hülsenfrüchte",
+        "Linsen & hülsenfrüchte",
+        "Linsen",
+        "Mais",
+        "Konservenmais"
+      ]
+    },
+    {
+      "group": "Kräuter & Frische Kräuter",
+      "children": [
+        "Frische Kräuter",
+        "Kräuter",
+        "Kraeuter (frisch)",
+        "Kräuter / Petersilie",
+        "Kräuter frisch"
+      ]
+    },
+    {
+      "group": "Gemüse & Gemüsearten",
+      "children": [
+        "Gemüse",
+        "Frischegemüse",
+        "Vorbereitetes gemüse",
+        "Schnittgemüse",
+        "Suppengemüse",
+        "Broccoli",
+        "Blumenkohl",
+        "Auberginen",
+        "Aubergine",
+        "Fenchel",
+        "Kohl",
+        "Kohl & Wirsing",
+        "Kohlrabi",
+        "Lauch & Porree",
+        "Lauchzwiebeln",
+        "Lauch",
+        "Radieschen",
+        "Zucchini",
+        "Artischocken",
+        "Algen- und meeressalate"
+      ]
+    },
+    {
+      "group": "Trockenfrüchte & Getrocknetes",
+      "children": [
+        "Trockenfrüchte",
+        "Trockenobst",
+        "Trockenfrüchte & Datteln",
+        "Getrocknete Tomaten"
+      ]
+    },
+    {
+      "group": "Obstsalate & Fertigprodukte",
+      "children": [
+        "Frisches obst geschnitten",
+        "Geschnittenes obst",
+        "Fertiger Obstsalat",
+        "Obstsalat",
+        "Fruchtmus",
+        "Fruchtmus & quetschies",
+        "Fruchtpüree",
+        "Früchte im Becher",
+        "Früchtemix",
+        "Antipasti & Salate",
+        "Salate & Antipasti"
+      ]
+    },
+    {
+      "group": "Kerne, Samen & Saaten",
+      "children": [
+        "Kerne & Samen",
+        "Saaten & Kerne"
+      ]
+    }
+  ],
+  "59": [
+    {
+      "group": "Reisegepäck",
+      "children": [
+        "Reisegepäck",
+        "Koffer & taschen",
+        "Hartschalenkoffer",
+        "Koffer & Reisetaschen",
+        "Kosmetikkoffer",
+        "Reisegepäck-Set",
+        "Boardcase / Trolley",
+        "Koffer",
+        "Reisegepäck & taschen",
+        "Reisekoffer",
+        "Reisetasche",
+        "Reisetasche mit rollen",
+        "Rucksäcke"
+      ]
+    },
+    {
+      "group": "Reisen & Unterkunft",
+      "children": [
+        "Reise",
+        "Reiseangebot",
+        "Hotelübernachtung",
+        "Reise & hotel",
+        "Reiseführer & Broschüren",
+        "Reisegutschein",
+        "Reisen",
+        "Reisen & tourismus",
+        "Freizeitaufenthalt",
+        "Erlebnis & Freizeit",
+        "Weinverkostung"
+      ]
+    },
+    {
+      "group": "Geschenke & Geschenkverpackung",
+      "children": [
+        "Präsent",
+        "Geschenkpapier",
+        "Geschenksets & Zubehör",
+        "Geschenkset",
+        "Geschenkartikel",
+        "Geschenkumschlag",
+        "Gutschein",
+        "Guthabenkarte",
+        "Präsentkorb",
+        "Fotogeschenke",
+        "Karte",
+        "Schlüsselanhänger",
+        "Sticker"
+      ]
+    },
+    {
+      "group": "Osterdekoration",
+      "children": [
+        "Osterdeko",
+        "Osterkörbchen & Aufbewahrung",
+        "Osterkörbe & Aufbewahrung",
+        "Oster- & Dekofiguren",
+        "Ostereier-Dekoration"
+      ]
+    },
+    {
+      "group": "Bürobedarf & Schreibwaren",
+      "children": [
+        "Bürobedarf",
+        "Schreibwaren",
+        "Heftgerät",
+        "Heftklammern",
+        "Kopierpapier",
+        "Notizblock",
+        "Notizzettel",
+        "Ordner",
+        "Prospekthüllen"
+      ]
+    },
+    {
+      "group": "Nudeln & Pasta",
+      "children": [
+        "Nudelsalat",
+        "Frische Pasta",
+        "Pasta & Nudeln",
+        "Pasta-saucen",
+        "Schupfnudeln",
+        "Spaghetti",
+        "Spätzle",
+        "Teigwaren / Pasta"
+      ]
+    },
+    {
+      "group": "Feinkost & Aufstriche",
+      "children": [
+        "Antipasti & Feinkost",
+        "Aufstrich",
+        "Feinkostsalat",
+        "Konserven tomaten",
+        "Passierte tomaten"
+      ]
+    },
+    {
+      "group": "Baby & Kind",
+      "children": [
+        "Kindersitz",
+        "Babyartikel",
+        "Babynahrung",
+        "Buggy",
+        "Plüsch & Stofftiere"
+      ]
+    },
+    {
+      "group": "Deko & Bastelbedarf",
+      "children": [
+        "Bastelbedarf & Deko",
+        "Deko",
+        "Deko & Wohnaccessoires",
+        "Dekofigur",
+        "Dekohänger",
+        "Anhänger & Schmuckdeko",
+        "Füllmaterial",
+        "Garten- & Außenfiguren",
+        "Kranz & Türschmuck",
+        "Malerbedarf",
+        "Oster- & Dekofiguren",
+        "Papierdekoration",
+        "Saisonale Dekoration",
+        "Textiles & Filzartikel"
+      ]
+    },
+    {
+      "group": "Sonstiges",
+      "children": [
+        "Sonstiges",
+        "Sonstige artikel",
+        "Set",
+        "Mehrfachpackung",
+        "Markenartikel",
+        "Mittagstisch",
+        "Mobilfunk & SIM-Karten",
+        "Online-artikel",
+        "Kochbuch",
+        "Sicherheitsausrüstung",
+        "Autozubehör",
+        "Verschiedenes"
+      ]
+    }
+  ],
+  "3": [
+    {
+      "group": "Gesellschaftsspiele & Kartenspiele",
+      "children": [
+        "Kartenspiel",
+        "Gesellschaftsspiele",
+        "Brett- & Gesellschaftsspiele",
+        "Brettspiel",
+        "Brettspiele",
+        "Gesellschaftsspiel",
+        "Memory",
+        "Memoryspiel",
+        "Knobelspiel",
+        "Reisespiele"
+      ]
+    },
+    {
+      "group": "Puppen & Figuren",
+      "children": [
+        "Puppen",
+        "Puppe",
+        "Puppen & Figuren",
+        "Puppen & Zubehör",
+        "Puppenhaus",
+        "Puppenhäuser",
+        "Sammlerfiguren",
+        "Sammelfiguren",
+        "Spielfigur & Sammelfigur",
+        "Spielfiguren",
+        "Figuren",
+        "Figuren & Sammler",
+        "Figuren & Spielsets",
+        "Plüschfigur"
+      ]
+    },
+    {
+      "group": "Holz- und Bauspielzeug",
+      "children": [
+        "Holzspielzeug",
+        "Bauspielzeug",
+        "Bau- & konstruktionsspielzeug",
+        "Bausets",
+        "Bausteine",
+        "Bausteine & Konstruktion",
+        "Klemmbausteine",
+        "Konstruktionsspielzeug",
+        "Brettspiel",
+        "Modellbau"
+      ]
+    },
+    {
+      "group": "Kreatives & Basteln",
+      "children": [
+        "Bastelsets",
+        "Bastelsets & Malsets",
+        "Malen & kreativ",
+        "Buntstifte",
+        "Malblock",
+        "Malbuch",
+        "Malbücher",
+        "Malkreide",
+        "Knetmasse",
+        "Kinetic Sand",
+        "Lernstifte"
+      ]
+    },
+    {
+      "group": "Outdoor Spielgeräte & Fahrzeuge",
+      "children": [
+        "Kinderfahrrad",
+        "Fahrrad",
+        "Laufräder",
+        "Inlineskates",
+        "Roller & Scooter",
+        "Scooter",
+        "Tretfahrzeuge & Trettraktoren",
+        "Spielzeugfahrzeuge",
+        "Spielzeugautos",
+        "Spielzeugautos & Garagen",
+        "Spielzeugautos & Sets",
+        "Spielzeugfahrzeug",
+        "Ferngesteuerte autos",
+        "Ferngesteuertes fahrzeug",
+        "Spielfahrzeuge",
+        "Rutscher / Lauflernfahrzeug"
+      ]
+    },
+    {
+      "group": "Sport & Fitness",
+      "children": [
+        "Fitnessgeräte",
+        "Fitness & Outdoor Spielgeräte",
+        "Fitness & Yoga",
+        "Fitness-Zubehör",
+        "Fitnesszubehör",
+        "Sportartikel",
+        "Basketballständer",
+        "Tischtennisplatte",
+        "Turnmatte",
+        "Yogamatte"
+      ]
+    },
+    {
+      "group": "Spielhäuser & Spielküchen",
+      "children": [
+        "Spielhaus",
+        "Spielhäuser",
+        "Spielküche",
+        "Spielküche & Zubehör",
+        "Spielküche / Outdoor Spiel",
+        "Outdoor Spielküche",
+        "Kaufladen",
+        "Werkbank / Kinderwerkzeug"
+      ]
+    },
+    {
+      "group": "Sand- & Wasserspielzeug",
+      "children": [
+        "Sandspielzeug",
+        "Seifenblasen",
+        "Ballspielset",
+        "Bälle",
+        "Flummi"
+      ]
+    },
+    {
+      "group": "Kuscheltiere & Plüsch",
+      "children": [
+        "Kuscheltiere",
+        "Plüschtiere",
+        "Kuscheltiere & dekoration",
+        "Plüsch & Deko",
+        "Plüschspielzeug",
+        "Plüschtier"
+      ]
+    },
+    {
+      "group": "Geschicklichkeit & Lernspielzeug",
+      "children": [
+        "Geschicklichkeitsspiel",
+        "Lernspiel",
+        "Lernspielzeug",
+        "Motorikspielzeug",
+        "Magnettafel / Standtafel"
+      ]
+    },
+    {
+      "group": "Spielsets & Überraschungsspielzeug",
+      "children": [
+        "Überraschungsspielzeug",
+        "Spielset"
+      ]
+    },
+    {
+      "group": "Kostüme & Zubehör",
+      "children": [
+        "Kostümzubehör",
+        "Steckenpferd / Hobby Horsing",
+        "Hobby Horsing Zubehör",
+        "Schaukel- & Spielpferd"
+      ]
+    },
+    {
+      "group": "Schutzausrüstung",
+      "children": [
+        "Schutzausrüstung / Helm"
+      ]
+    },
+    {
+      "group": "Sonstiges Spielzeug & Zubehör",
+      "children": [
+        "Dartscheibe",
+        "Experimentierkästen",
+        "Elektronisches spielzubehör",
+        "Tiptoi",
+        "Puzzles",
+        "Puzzle",
+        "Reiseangebote",
+        "Reisetasche",
+        "Veranstaltung & Tickets",
+        "Pfeile",
+        "Ballspielset",
+        "Partytisch",
+        "Garten-Spielzeug",
+        "Gartenspielzeug",
+        "Kinderschaukel",
+        "Klettergerüst",
+        "Memoryspiel",
+        "Sammelfiguren",
+        "Spielkonsole"
+      ]
+    },
+    {
+      "group": "Nachtlicht & Dekoration",
+      "children": [
+        "Nachtlicht",
+        "Osterhase"
+      ]
+    }
+  ],
+  "81": [
+    {
+      "group": "Schokolade",
+      "children": [
+        "Schokolade",
+        "Tafelschokolade",
+        "Bitterschokolade",
+        "Zartbitterschokolade",
+        "Schokoladentafeln",
+        "Schokolade Edelbitter",
+        "Weiße Schokolade",
+        "Schokolinsen",
+        "Schokoladeneier",
+        "Schokoladenosterartikel",
+        "Schokolade & trüffel",
+        "Schokolade mix",
+        "Schokolade & Backzutaten",
+        "Schokolade & Knabbergebäck",
+        "Schokolade & Konfiserie",
+        "Schokolade & Snacks",
+        "Schokolade mit keksen",
+        "Schokolade mit salzgebäck",
+        "Schokolade spezialitäten",
+        "Schokoladenwaffeln",
+        "Gefüllte schokolade",
+        "Schokofrüchte",
+        "Schokolierte früchte",
+        "Schokoladenüberzogenes Trockenobst",
+        "Schokolade & trüffel",
+        "Schokolade & Konfiserie",
+        "Schokolade & Snacks",
+        "Schokolade & Backzutaten",
+        "Schokolade mix",
+        "Schokolade spezialitäten",
+        "Schokolade mit keksen",
+        "Schokolade mit salzgebäck",
+        "Schokoladentafeln",
+        "Schokoladenwaffeln",
+        "Schokoladeneier",
+        "Schokoladenosterartikel",
+        "Schokolinsen",
+        "Schokolade Edelbitter",
+        "Weiße Schokolade",
+        "Schokolade & trüffel",
+        "Schokolade mix",
+        "Schokolade & Backzutaten",
+        "Schokolade & Knabbergebäck",
+        "Schokolade & Konfiserie",
+        "Schokolade & Snacks",
+        "Schokolade mit keksen",
+        "Schokolade mit salzgebäck",
+        "Schokolade spezialitäten",
+        "Schokoladenwaffeln",
+        "Gefüllte schokolade",
+        "Schokofrüchte",
+        "Schokolierte früchte",
+        "Schokoladenüberzogenes Trockenobst"
+      ],
+      "merge": [
+        [
+          "Schokoküsse & Marshmallows",
+          "Schokolade"
+        ],
+        [
+          "Nougat & Schokoladenriegel",
+          "Schokolade"
+        ],
+        [
+          "Schokoriegel & snacks",
+          "Schokolade"
+        ],
+        [
+          "Schokoriegel",
+          "Schokolade"
+        ],
+        [
+          "Schokolade & trüffel",
+          "Schokolade"
+        ],
+        [
+          "Schokolade mix",
+          "Schokolade"
+        ],
+        [
+          "Schokolade & Backzutaten",
+          "Schokolade"
+        ],
+        [
+          "Schokolade & Knabbergebäck",
+          "Schokolade"
+        ],
+        [
+          "Schokolade & Konfiserie",
+          "Schokolade"
+        ],
+        [
+          "Schokolade & Snacks",
+          "Schokolade"
+        ],
+        [
+          "Schokolade mit keksen",
+          "Schokolade"
+        ],
+        [
+          "Schokolade mit salzgebäck",
+          "Schokolade"
+        ],
+        [
+          "Schokolade spezialitäten",
+          "Schokolade"
+        ],
+        [
+          "Schokoladentafeln",
+          "Tafelschokolade"
+        ],
+        [
+          "Schokolade Edelbitter",
+          "Bitterschokolade"
+        ],
+        [
+          "Schokolinsen",
+          "Schokolade"
+        ],
+        [
+          "Schokoladeneier",
+          "Schokolade"
+        ],
+        [
+          "Schokoladenosterartikel",
+          "Schokolade"
+        ],
+        [
+          "Weiße Schokolade",
+          "Schokolade"
+        ]
+      ]
+    },
+    {
+      "group": "Pralinen & Konfiserie",
+      "children": [
+        "Pralinen",
+        "Konfekt",
+        "Konfiserie",
+        "Konfekt & Spezialitäten",
+        "Konfekt / Pralinen",
+        "Pralinen & Confiserie",
+        "Pralinen & Geschenkartikel",
+        "Pralinen & konfiserie",
+        "Pralinen / Schoko-Bons",
+        "Kleingebäck & pralinen",
+        "Marzipan",
+        "Marzipan & Confiserie",
+        "Marzipan & Konfiserie",
+        "Nougat",
+        "Torrone"
+      ],
+      "merge": [
+        [
+          "Marzipan & Confiserie",
+          "Marzipan"
+        ],
+        [
+          "Marzipan & Konfiserie",
+          "Marzipan"
+        ],
+        [
+          "Pralinen & Confiserie",
+          "Pralinen"
+        ],
+        [
+          "Pralinen & Geschenkartikel",
+          "Pralinen"
+        ],
+        [
+          "Pralinen & konfiserie",
+          "Pralinen"
+        ],
+        [
+          "Konfekt & Spezialitäten",
+          "Konfekt"
+        ],
+        [
+          "Konfekt / Pralinen",
+          "Konfekt"
+        ]
+      ]
+    },
+    {
+      "group": "Kekse & Waffeln",
+      "children": [
+        "Kekse",
+        "Waffeln",
+        "Kekse & Kuchen",
+        "Kekse & Waffeln",
+        "Keks & Kekse",
+        "Kekse & schokoriegel",
+        "Cookies",
+        "Waffeln & Karamellwaffeln",
+        "Waffeln & Keksriegel",
+        "Waffeln & Riegel",
+        "Waffeln & Röllchen",
+        "Waffeln & knabbergebäck",
+        "Waffelröllchen",
+        "Waffelschnitten",
+        "Kuchen & Schnitten",
+        "Kuchenrolle",
+        "Küchlein",
+        "Mini kuchen",
+        "Kuchenriegel",
+        "Kuchensnack",
+        "Sahne- & Kuchenstücke",
+        "Törtchen",
+        "Oblaten",
+        "Macarons",
+        "Backwaren & Süßgebäck",
+        "Kindergebäck"
+      ],
+      "merge": [
+        [
+          "Keks & Kekse",
+          "Kekse"
+        ],
+        [
+          "Kekse & schokoriegel",
+          "Kekse"
+        ],
+        [
+          "Kuchen & Schnitten",
+          "Kekse"
+        ],
+        [
+          "Kuchenrolle",
+          "Kekse"
+        ],
+        [
+          "Küchlein",
+          "Kekse"
+        ],
+        [
+          "Mini kuchen",
+          "Kekse"
+        ],
+        [
+          "Kuchenriegel",
+          "Kekse"
+        ],
+        [
+          "Kuchensnack",
+          "Kekse"
+        ],
+        [
+          "Sahne- & Kuchenstücke",
+          "Kekse"
+        ],
+        [
+          "Törtchen",
+          "Kekse"
+        ],
+        [
+          "Oblaten",
+          "Kekse"
+        ],
+        [
+          "Macarons",
+          "Kekse"
+        ],
+        [
+          "Backwaren & Süßgebäck",
+          "Kekse"
+        ],
+        [
+          "Kindergebäck",
+          "Kekse"
+        ]
+      ]
+    },
+    {
+      "group": "Fruchtgummi & Bonbons",
+      "children": [
+        "Fruchtgummi",
+        "Bonbons",
+        "Lakritz",
+        "Lutscher & Lollies",
+        "Lutscher",
+        "Bonbons & Pastillen",
+        "Bonbons & kaubonbons",
+        "Fruchtgummi & gelee",
+        "Gummibonbons",
+        "Gummibärchen",
+        "Vegane Fruchtgummis",
+        "Weingummi",
+        "Lakritz & Salmiak"
+      ],
+      "merge": [
+        [
+          "Bonbons & Pastillen",
+          "Bonbons"
+        ],
+        [
+          "Bonbons & kaubonbons",
+          "Bonbons"
+        ],
+        [
+          "Fruchtgummi & gelee",
+          "Fruchtgummi"
+        ],
+        [
+          "Lakritz & Salmiak",
+          "Lakritz"
+        ]
+      ]
+    },
+    {
+      "group": "Chips & Salzige Snacks",
+      "children": [
+        "Chips",
+        "Kartoffelchips",
+        "Tortilla Chips",
+        "Salzige snacks",
+        "Chips & Salzgebäck",
+        "Kartoffelsnacks",
+        "Kartoffelsticks",
+        "Mais-Snack",
+        "Maissnacks",
+        "Maiswaffeln",
+        "Bruschette chips",
+        "Salzstangen",
+        "Sticks & Salzgebäck",
+        "Cracker",
+        "Cracker & Salzgebäck",
+        "Knabbergebäck",
+        "Knabberartikel",
+        "Knabbermischungen",
+        "Knusper snack",
+        "Salziges knackgebäck",
+        "Umschlossene erdnüsse",
+        "Nüsse",
+        "Nüsse & Trockenfrüchte",
+        "Nuss-Frucht-Mix",
+        "Nussmischung",
+        "Trockenfrüchte & Nüsse",
+        "Geröstete Nüsse",
+        "Mandeln",
+        "Pistazien",
+        "Erdnussflips"
+      ],
+      "merge": [
+        [
+          "Chips & Salzgebäck",
+          "Chips"
+        ],
+        [
+          "Cracker & Salzgebäck",
+          "Cracker"
+        ],
+        [
+          "Knabberartikel",
+          "Knabbergebäck"
+        ],
+        [
+          "Knabbermischungen",
+          "Knabbergebäck"
+        ],
+        [
+          "Knusper snack",
+          "Knabbergebäck"
+        ],
+        [
+          "Salziges knackgebäck",
+          "Knabbergebäck"
+        ],
+        [
+          "Umschlossene erdnüsse",
+          "Nüsse"
+        ],
+        [
+          "Nüsse & Trockenfrüchte",
+          "Nüsse"
+        ],
+        [
+          "Nuss-Frucht-Mix",
+          "Nüsse"
+        ],
+        [
+          "Nussmischung",
+          "Nüsse"
+        ],
+        [
+          "Trockenfrüchte & Nüsse",
+          "Nüsse"
+        ],
+        [
+          "Geröstete Nüsse",
+          "Nüsse"
+        ],
+        [
+          "Mandeln",
+          "Nüsse"
+        ],
+        [
+          "Pistazien",
+          "Nüsse"
+        ]
+      ]
+    },
+    {
+      "group": "Riegel & Snacks",
+      "children": [
+        "Riegel",
+        "Proteinriegel",
+        "Snackriegel",
+        "Müsliriegel",
+        "Keksriegel",
+        "Riegel & Snackkuchen",
+        "Snackkuchen",
+        "Snackpack",
+        "Snackmix",
+        "Snack",
+        "Schokoriegel",
+        "Schokoriegel & snacks",
+        "Kekse & schokoriegel",
+        "Waffeln & Riegel",
+        "Waffeln & Keksriegel",
+        "Waffeln & Riegel"
+      ],
+      "merge": [
+        [
+          "Schokoriegel & snacks",
+          "Schokoriegel"
+        ],
+        [
+          "Kekse & schokoriegel",
+          "Schokoriegel"
+        ],
+        [
+          "Waffeln & Riegel",
+          "Riegel"
+        ],
+        [
+          "Waffeln & Keksriegel",
+          "Riegel"
+        ]
+      ]
+    },
+    {
+      "group": "Marshmallows & Schaumküsse",
+      "children": [
+        "Marshmallows",
+        "Schokoküsse & Marshmallows",
+        "Schaumküsse"
+      ]
+    },
+    {
+      "group": "Popcorn & Mais-Snacks",
+      "children": [
+        "Popcorn",
+        "Popcorn & popcornzubehör",
+        "Mikrowellenpopcorn",
+        "Mais-Snack",
+        "Maissnacks",
+        "Maiswaffeln"
+      ],
+      "merge": [
+        [
+          "Mais-Snack",
+          "Maissnacks"
+        ]
+      ]
+    },
+    {
+      "group": "Saisonale & Osterartikel",
+      "children": [
+        "Osterartikel",
+        "Osterartikel schokolade",
+        "Osterfiguren & Saisonales",
+        "Ostergebäck"
+      ]
+    },
+    {
+      "group": "Sonstige Süßwaren & Snacks",
+      "children": [
+        "Konserven & eingemachtes",
+        "Antipasti",
+        "Aufstriche & Cremes",
+        "Haselnussaufstrich",
+        "Nussaufstrich",
+        "Snack-Würstchen",
+        "Beef Jerky",
+        "Imbiss",
+        "Geschenksets & Präsentartikel",
+        "Sirup & Süßungsmittel",
+        "Rote grütze"
+      ]
+    }
+  ],
+  "12": [
+    {
+      "group": "Speiseeis",
+      "children": [
+        "Speiseeis",
+        "Eis Multipack",
+        "Eisbecher",
+        "Eismultipack",
+        "Eisschale",
+        "Eiswaffeln",
+        "Sorbet",
+        "Eis & Speiseeis",
+        "Eis / Eistüten",
+        "Eis am Stiel & Waffelhörnchen",
+        "Eis-Sandwich",
+        "Eiscreme Becher",
+        "Eisriegel",
+        "Stieleis"
+      ]
+    },
+    {
+      "group": "Tiefkühlpizza",
+      "children": [
+        "Tiefkühlpizza",
+        "Pizza",
+        "Pizza (Tiefkühl)",
+        "Pizza & Baguettes",
+        "Pizzen & Fladen",
+        "Flammkuchen"
+      ]
+    },
+    {
+      "group": "Tiefkühlkuchen & Torten",
+      "children": [
+        "Tiefkühlkuchen",
+        "Torten & Kuchen (tiefgekühlt)",
+        "Gefrorene Kuchen & Torten",
+        "Torten & Kuchen",
+        "Tiefkühlkuchen & Desserts",
+        "Tiefkühlkuchen & Torten"
+      ]
+    },
+    {
+      "group": "Pommes & Kartoffelprodukte",
+      "children": [
+        "Pommes frites",
+        "Backofenpommes",
+        "Pommes & Kartoffelprodukte",
+        "Tiefkühl-Pommes",
+        "Pommes",
+        "Süßkartoffelpommes",
+        "Kartoffelgerichte",
+        "Kartoffelbeilagen",
+        "Kartoffelprodukte",
+        "Kartoffelpuffer",
+        "Kartoffelpuffer & Rösti",
+        "Rösti",
+        "Puffer"
+      ]
+    },
+    {
+      "group": "Tiefkühlgemüse",
+      "children": [
+        "Tiefkühlgemüse",
+        "Tiefkühlgemüsepfanne",
+        "Tiefkühlkräuter",
+        "Rahmspinat",
+        "Rahm-Gemüse",
+        "Gemüse tiefkühl",
+        "Gemüsepfanne",
+        "Tiefkuehlgemuese",
+        "Tiefkühlgemüse mix",
+        "Wokgemüse",
+        "Suppengemüse (tiefgekühlt)",
+        "Rotkohl & beilagen"
+      ]
+    },
+    {
+      "group": "Fisch & Meeresfrüchte",
+      "children": [
+        "Fischstäbchen",
+        "Fisch & Fischfilets",
+        "Tiefkühl-Fisch",
+        "Fisch",
+        "Fischfilet tiefkühl",
+        "Fischfilets (tiefgefroren)",
+        "Heilbutt",
+        "Hummerschwanz",
+        "Kibbeling",
+        "Lachs",
+        "Panierter Fisch / Backfisch",
+        "Backfisch / Backteig",
+        "Filets in backteig",
+        "Panierte Fischfilets",
+        "Panierte fischprodukte",
+        "Steinbeisser",
+        "Tiefkühl-Fisch & Meeresfrüchte",
+        "Tiefkühlfisch",
+        "Tiefkühlfisch & Meeresfrüchte",
+        "Zanderfilet",
+        "Fertiggerichte (Fisch & Meeresfrüchte)"
+      ]
+    },
+    {
+      "group": "Geflügel & Fleisch",
+      "children": [
+        "Geflügel (tiefkühl)",
+        "Nuggets",
+        "Chicken Nuggets",
+        "Hähnchen nuggets",
+        "Panierte fleischgerichte",
+        "Panierte hähnchen",
+        "Panierte schnitzel",
+        "Vegane Schnitzel",
+        "Vegane Burger",
+        "Wildfleisch",
+        "Lammfleisch"
+      ]
+    },
+    {
+      "group": "Tiefkühlfertiggerichte & Snacks",
+      "children": [
+        "Tiefkühlfertiggerichte",
+        "Tiefkühlgerichte",
+        "Tiefkühl-Fertiggerichte",
+        "Fertiggerichte Tiefkühl",
+        "Fertiggerichte & Snacks (tiefgekühlt)",
+        "Asiatische fertiggerichte",
+        "Häppchen & Snacks",
+        "Tiefkühl-Snack",
+        "Tiefkühl-Snacks",
+        "Tiefkühlfingerfood",
+        "Piccolinis"
+      ]
+    },
+    {
+      "group": "Tiefkühlbackwaren & Gebäck",
+      "children": [
+        "Tiefkühlbackwaren",
+        "Aufbackprodukte",
+        "Backwaren tiefgefroren",
+        "Aufbackbrötchen",
+        "Backcamembert",
+        "Gebäck tiefkühl",
+        "Tiefkühlgebäck",
+        "Teig- & Blätterteiggebäck",
+        "Teigtaschen",
+        "Backfisch / Backteig"
+      ]
+    },
+    {
+      "group": "Knödel & Teigwaren",
+      "children": [
+        "Knödel",
+        "Klöße",
+        "Klöße & Knödel",
+        "Klöße und knödel",
+        "Kloßteig",
+        "Pelmeni",
+        "Gnocchi",
+        "Gefüllte pasta"
+      ]
+    }
+  ],
+  "109": [
+    {
+      "group": "Katzenfutter",
+      "children": [
+        "Katzenfutter Nass",
+        "Katzenfutter",
+        "Katzenfutter trocken",
+        "Katzenfutter junior",
+        "Katzennahrung",
+        "Katzentrockenfutter",
+        "Katzenmilch"
+      ],
+      "merge": [
+        [
+          "Katzensnack",
+          "Katzensnacks"
+        ]
+      ]
+    },
+    {
+      "group": "Katzensnacks",
+      "children": [
+        "Katzensnacks",
+        "Katzensnack"
+      ]
+    },
+    {
+      "group": "Katzenzubehör",
+      "children": [
+        "Katzenstreu",
+        "Katzenzubehör",
+        "Katzentoilette"
+      ]
+    },
+    {
+      "group": "Hundefutter",
+      "children": [
+        "Hundefutter Nass",
+        "Hundefutter",
+        "Hundenassnahrung",
+        "Hundefutter - Trockenfutter",
+        "Hundetrockenfutter"
+      ]
+    },
+    {
+      "group": "Hundesnacks",
+      "children": [
+        "Hundesnack",
+        "Kauartikel hunde"
+      ]
+    },
+    {
+      "group": "Vogelfutter",
+      "children": [
+        "Vogelfutter",
+        "Meisenknödel"
+      ]
+    },
+    {
+      "group": "Nagetierfutter",
+      "children": [
+        "Nagetierfutter",
+        "Kaninchenfutter",
+        "Nagerfutter & Zubehör",
+        "Nagerheu"
+      ]
+    },
+    {
+      "group": "Insektenfutter & Snacks",
+      "children": [
+        "Insektenfutter & Snacks"
+      ]
+    },
+    {
+      "group": "Haustierfutter",
+      "children": [
+        "Haustierfutter",
+        "Tiernahrung nassfutter",
+        "Tier-Snacks"
+      ]
+    }
+  ],
+  "27": [
+    {
+      "group": "Elektrowerkzeuge",
+      "children": [
+        "Bohrschrauber",
+        "Drehschlagschrauber",
+        "Akkuschrauber",
+        "Drehmomentwerkzeug",
+        "Drehmomentschlüssel",
+        "Drehmomentschlüssel-Set",
+        "Elektrohobel",
+        "Exzenterschleifer",
+        "Poliermaschinen",
+        "Schleifmaschinen",
+        "Stichsäge / Pendelhubstichsäge",
+        "Multitool",
+        "Holzbearbeitungsmaschinen"
+      ]
+    },
+    {
+      "group": "Handwerkzeuge",
+      "children": [
+        "Bit-set",
+        "Bits & Adapter",
+        "Bohrer & Aufsätze",
+        "Maulschlüssel",
+        "Ratschen & Drehwerkzeuge",
+        "Ratschen-set",
+        "Schlüsselsatz",
+        "Stechbeitel / Schnitzwerkzeug",
+        "Steckschlüsselsatz",
+        "Werkzeugsatz"
+      ]
+    },
+    {
+      "group": "Schraub- und Befestigungsmaterial",
+      "children": [
+        "Klebeband",
+        "Packband & klebeband",
+        "Befestigung & Kleben",
+        "Montagekleber",
+        "Selbstklebende Haken"
+      ]
+    },
+    {
+      "group": "Leitern und Tritte",
+      "children": [
+        "Leiter",
+        "Klapptritt / Trittleiter"
+      ]
+    },
+    {
+      "group": "Mess- und Prüfgeräte",
+      "children": [
+        "Kreuzlinienlaser",
+        "Messgeräte",
+        "Messwerkzeug",
+        "Inspektionskamera"
+      ]
+    },
+    {
+      "group": "Arbeits- und Schutzkleidung",
+      "children": [
+        "Arbeitshandschuhe",
+        "Schutzkleidung & -ausrüstung"
+      ]
+    },
+    {
+      "group": "Kompressoren und Pumpen",
+      "children": [
+        "Kompressor",
+        "Luftkompressor",
+        "Luftkompressoren",
+        "Luftpumpe",
+        "Luftpumpe & Kompressor"
+      ]
+    },
+    {
+      "group": "Transporthilfen und Lagerung",
+      "children": [
+        "Transporthilfe",
+        "Transporthilfen",
+        "Schubkarre",
+        "Unterstellbock",
+        "Montageständer",
+        "Lagerregal",
+        "Regal",
+        "Werkbank / Spanntisch",
+        "Sortimentskasten"
+      ]
+    },
+    {
+      "group": "Sägen",
+      "children": [
+        "Sägen",
+        "Tischkreissäge",
+        "Astsägen",
+        "Kettensägen akku"
+      ]
+    },
+    {
+      "group": "Farben und Malerzubehör",
+      "children": [
+        "Farb- & Lackprodukte",
+        "Innenfarbe",
+        "Lack",
+        "Malerzubehör",
+        "Pinsel",
+        "Farbroller",
+        "Sprühfarbe"
+      ]
+    },
+    {
+      "group": "Reinigungs- und Pflegeprodukte",
+      "children": [
+        "Autopflege",
+        "Fahrradpflege",
+        "Bremsenreiniger",
+        "Hochdruckreiniger",
+        "Silikonentferner"
+      ]
+    },
+    {
+      "group": "Werkzeugkoffer und Aufbewahrung",
+      "children": [
+        "Werkzeugkoffer"
+      ]
+    },
+    {
+      "group": "Hebewerkzeuge und Wagenheber",
+      "children": [
+        "Hebewerkzeug",
+        "Rangierwagenheber"
+      ]
+    },
+    {
+      "group": "Zurr- und Spannmittel",
+      "children": [
+        "Spanngurte",
+        "Spanngummi",
+        "Zurrgurte & Spanngummi"
+      ]
+    },
+    {
+      "group": "Elektrik und Adapter",
+      "children": [
+        "Adapter",
+        "Steckdosenadapter",
+        "Akkus"
+      ]
+    },
+    {
+      "group": "Sonstiges Werkzeug und Zubehör",
+      "children": [
+        "Arbeitsleuchte",
+        "Arbeitsstrahler",
+        "Heißklebepistole",
+        "Motorenöl",
+        "Motoröl",
+        "Nass-trockensauger"
+      ]
+    }
+  ],
+  "21": [
+    {
+      "group": "Öle",
+      "children": [
+        "Olivenöl",
+        "Speiseöl",
+        "Rapsöl",
+        "Sonnenblumenöl",
+        "Kürbiskernöl",
+        "Leinöl",
+        "Frittieröl",
+        "Kokosöl",
+        "Nussöl",
+        "Pflanzenöl",
+        "Kochöl",
+        "Ölspray"
+      ]
+    },
+    {
+      "group": "Essig & Balsamico",
+      "children": [
+        "Essig",
+        "Essigessenz",
+        "Balsamico",
+        "Apfelessig",
+        "Balsamico-Crema"
+      ]
+    },
+    {
+      "group": "Senf & Senfsaucen",
+      "children": [
+        "Senf",
+        "Senfsauce & dips",
+        "Soßen & Senf"
+      ]
+    },
+    {
+      "group": "Saucen & Dressings",
+      "children": [
+        "Ketchup",
+        "Saucen",
+        "Salatdressing",
+        "Mayonnaise",
+        "Saucen & Dressings",
+        "Nudelsauce",
+        "Sojasauce",
+        "Würzsauce",
+        "Salatsauce",
+        "Saucen & Fonds",
+        "Tomatensoße",
+        "Dips & Saucen",
+        "Dips & sauces",
+        "Dressing",
+        "Dressings & sosse",
+        "Grillsaucen & Marinaden",
+        "Salatdressing & Saucen",
+        "Salatdressings & Saucen",
+        "Salatsoße",
+        "Saucen & Würzen",
+        "Saucenpulver / Soßenmix",
+        "Würzsaucen",
+        "Tomatensauce",
+        "Tomatensaucen",
+        "Soßenbinder & Bindemittel",
+        "Senfsauce & dips",
+        "Soßen & Senf",
+        "Chilisauce",
+        "Chilisauce & würzsauce",
+        "Würzpaste",
+        "Würzmittel",
+        "Würzmischung",
+        "Würze",
+        "Würzsaucen"
+      ]
+    },
+    {
+      "group": "Tomatenprodukte",
+      "children": [
+        "Tomatenkonserven",
+        "Tomatenmark",
+        "Tomatensoße",
+        "Ge hackte tomaten & passata",
+        "Geschälte Tomaten",
+        "Getrocknete tomaten",
+        "Passierte tomaten & tomaten",
+        "Tomatensauce",
+        "Tomatensaucen"
+      ],
+      "merge": [
+        [
+          "Tomatensoße",
+          "Tomatensauce"
+        ],
+        [
+          "Tomatensauce",
+          "Tomatensaucen"
+        ]
+      ]
+    },
+    {
+      "group": "Gewürze & Kräuter",
+      "children": [
+        "Gewürze",
+        "Gewürzmühle",
+        "Kräuter & Gewürze",
+        "Salatgewürz",
+        "Salz",
+        "Würzmischung",
+        "Würzmittel",
+        "Würzpaste",
+        "Gewürze & Zutaten",
+        "Gewürzgurken",
+        "Pfeffer & Gewürze",
+        "Paprikapulver",
+        "Vanilleschote",
+        "Würze"
+      ]
+    },
+    {
+      "group": "Antipasti & Eingelegtes",
+      "children": [
+        "Antipasti",
+        "Aufstriche & Antipasti",
+        "Eingelegte gurken",
+        "Eingelegtes & Antipasti",
+        "Eingelegtes & Chilis",
+        "Oliven",
+        "Bruschetta",
+        "Gewürzgurken"
+      ]
+    },
+    {
+      "group": "Honig & Süßungsmittel",
+      "children": [
+        "Honig",
+        "Sirup & Süßungsmittel",
+        "Fruchtgelee"
+      ]
+    },
+    {
+      "group": "Bratfett & Margarine",
+      "children": [
+        "Bratfett & Bratcreme",
+        "Butterschmalz",
+        "Margarine & Streichfett",
+        "Margarine & Streichfette",
+        "Schmalz & Bratfett"
+      ]
+    },
+    {
+      "group": "Bouillon & Brühe",
+      "children": [
+        "Bouillon",
+        "Brühe & Fond",
+        "Brühwürfel",
+        "Saucen & Fonds"
+      ]
+    },
+    {
+      "group": "Pesto",
+      "children": [
+        "Pesto",
+        "Pesto Genovese",
+        "Pesto Rosso",
+        "Pesto alla Calabrese"
+      ]
+    },
+    {
+      "group": "Spezialitäten & Sonstiges",
+      "children": [
+        "Meerrettich",
+        "Meerrettich & Würzmittel",
+        "Hefeflocken & nahrungsergänzung",
+        "Nussmus",
+        "Sesammus & Tahini",
+        "Toppings & Panaden",
+        "Trüffel & Spezialitäten",
+        "Zitronenkonzentrat",
+        "Röstzwiebeln"
+      ]
+    }
+  ],
+  "46": [
+    {
+      "group": "Gartenmöbel",
+      "children": [
+        "Gartenmöbel",
+        "Gartenmöbel-Set",
+        "Balkonmöbel",
+        "Beistelltisch",
+        "Gartenbank",
+        "Gartenliege",
+        "Gartenlounge",
+        "Gartengarnitur",
+        "Gartenliegen & Sonnenliegen",
+        "Gartenmöbel & Aufbewahrung",
+        "Gartentisch",
+        "Gartentische",
+        "Gartentische & Sets",
+        "Lounge-Set",
+        "Auflagenbox",
+        "Sitzauflagen & polster",
+        "Stapelstuhl / Gartenstuhl"
+      ]
+    },
+    {
+      "group": "Sonnenschutz & Überdachung",
+      "children": [
+        "Markisen & Sonnenschutz",
+        "Marktschirm",
+        "Sonnenschirme",
+        "Sonnensegel",
+        "Schirmständer",
+        "Pergola / Terrassenüberdachung",
+        "Terrassendach",
+        "Terrassenüberdachung",
+        "Sichtschutz",
+        "Sichtschutzmatte"
+      ]
+    },
+    {
+      "group": "Beleuchtung & Dekoration",
+      "children": [
+        "Solarlampen",
+        "Solarleuchte",
+        "Solar-Laterne",
+        "Solarstrahler",
+        "Solar-Bodenleuchte",
+        "Solar-Erdspießleuchte",
+        "Solar-Gartenfackel",
+        "Solar-Gartenleuchte",
+        "Solar-Gartenstecker",
+        "Solar-Hängelampe",
+        "Solar-Lichterkette",
+        "Solar-Springbrunnen",
+        "Solar-Windspiel",
+        "Solar-Gartendekoration",
+        "Außenleuchten",
+        "Bodenleuchte",
+        "Lichterketten",
+        "Gartendekoration",
+        "Gartenstecker",
+        "Gartenbogen",
+        "Gartenzwerg",
+        "Vogelfutterhaus"
+      ],
+      "merge": [
+        [
+          "Dekostecker",
+          "Gartenstecker"
+        ],
+        [
+          "Solar-Strahler",
+          "Solarstrahler"
+        ]
+      ]
+    },
+    {
+      "group": "Grill & BBQ",
+      "children": [
+        "Grill",
+        "Grillzubehör",
+        "Grillanzünder",
+        "Grillbürste",
+        "Grillkohle",
+        "Holzkohle",
+        "Holzkohlegrill",
+        "Holzkohlebriketts",
+        "Gasgrill",
+        "Gasflaschen",
+        "Einweggrill",
+        "Anzündwürfel",
+        "Feueranzünder",
+        "Kohlenanzünder",
+        "Outdoorküche"
+      ],
+      "merge": [
+        [
+          "Grills",
+          "Grill"
+        ],
+        [
+          "Gasgrills",
+          "Gasgrill"
+        ],
+        [
+          "Grillkohle / Holzkohle",
+          "Holzkohle"
+        ],
+        [
+          "Holzkohle & Briketts",
+          "Holzkohlebriketts"
+        ],
+        [
+          "Grillkohle",
+          "Holzkohle"
+        ]
+      ]
+    },
+    {
+      "group": "Fahrräder & E-Mobilität",
+      "children": [
+        "E-Bike",
+        "E-Faltrad",
+        "E-Scooter",
+        "E-Roller",
+        "E-Mountainbike",
+        "E-Racing-Bike",
+        "Lastenräder",
+        "Bollerwagen",
+        "Fahrradzubehör",
+        "Fahrradträger",
+        "Fahrradanhänger",
+        "Fahrradsattel",
+        "Fahrradtasche",
+        "Fahrradhelm",
+        "Fahrradkorb",
+        "Fahrradlift",
+        "Fahrradpflege",
+        "Fahrradreinigung",
+        "Fahrradschloss",
+        "Kettenschloss",
+        "Spiralkabelschloss",
+        "Fahrradschläuche",
+        "Sattelbezug",
+        "Satteltasche",
+        "Standluftpumpe",
+        "Luftpumpe",
+        "Handyhalterung",
+        "Smartphonehalter",
+        "Rückspiegel"
+      ],
+      "merge": [
+        [
+          "E-Bikes",
+          "E-Bike"
+        ],
+        [
+          "E-Lastenrad",
+          "Lastenräder"
+        ],
+        [
+          "Standluftpumpe mit Manometer",
+          "Standluftpumpe"
+        ]
+      ]
+    },
+    {
+      "group": "Rasen & Mähtechnik",
+      "children": [
+        "Rasenmäher",
+        "Benzinrasenmäher",
+        "Aufsitzrasenmäher",
+        "Rasenroboter",
+        "Mähroboterzubehör",
+        "Rasentrimmer & Freischneider",
+        "Frei- & Motorsensen",
+        "Rasenpflege",
+        "Streuer & Ausbringer",
+        "Unkrautstecher",
+        "Unkrautbürste & Fugenbürste"
+      ],
+      "merge": [
+        [
+          "Freischneider & Rasentrimmer",
+          "Rasentrimmer & Freischneider"
+        ],
+        [
+          "Aufsitzmäher",
+          "Aufsitzrasenmäher"
+        ]
+      ]
+    },
+    {
+      "group": "Gartengeräte & Werkzeuge",
+      "children": [
+        "Gartenschere",
+        "Heckenschere",
+        "Astschere",
+        "Baumschere",
+        "Baumpflegesäge",
+        "Teleskopschere",
+        "Kettensägen",
+        "Bodenhacke / Gartenfräse",
+        "Bodenhacke & Kultivatoren",
+        "Schubkarren",
+        "Besen",
+        "Hochdruckreiniger",
+        "Multifunktionsgeräte",
+        "Ersatzteile Gartenwerkzeug",
+        "Gartenwerkzeuge",
+        "Gartenzubehör",
+        "Gartenhandschuhe",
+        "Gartensack",
+        "Faltbarer gartensack"
+      ],
+      "merge": [
+        [
+          "Heckenscheren",
+          "Heckenschere"
+        ]
+      ]
+    },
+    {
+      "group": "Pflanzen, Erde & Saatgut",
+      "children": [
+        "Hochbeet",
+        "Blumenerde",
+        "Anzucht & Zubehör",
+        "Dünger",
+        "Dünger & Bodenverbesserer",
+        "Pflanzendünger",
+        "Pflanzenerde",
+        "Pflanzensäcke",
+        "Pflanzgefäß",
+        "Pflanzenregal",
+        "Pflanzkasten",
+        "Samen & Zwiebeln",
+        "Saatgut & Rasenpflege",
+        "Rasensamen",
+        "Gewächshaus",
+        "Frühbeet",
+        "Komposter",
+        "Rankgitter",
+        "Rindenmulch"
+      ]
+    },
+    {
+      "group": "Bewässerung & Pumpen",
+      "children": [
+        "Bewässerung",
+        "Bewässerungsset",
+        "Pumpen & Bewässerung",
+        "Regner",
+        "Schlauchbox",
+        "Gartenspritze",
+        "Gießkannen",
+        "Regentank"
+      ]
+    },
+    {
+      "group": "Häuser, Terrassen & Aufbau",
+      "children": [
+        "Gartenhaus",
+        "Gerätehaus",
+        "Gartenbox",
+        "Holzfliesen / Terrassenfliesen",
+        "Terrassendielen",
+        "Outdoorküche",
+        "Abdeckplanen"
+      ]
+    },
+    {
+      "group": "Spiel & Freizeit",
+      "children": [
+        "Sandkasten",
+        "Trampolin",
+        "Schaukel",
+        "Spielhaus",
+        "Tischtennisplatten",
+        "Fußballtor",
+        "Hängematte",
+        "Hängesessel",
+        "Kajaks",
+        "Pool",
+        "Sauna & Wellness"
+      ],
+      "merge": [
+        [
+          "Trampoline",
+          "Trampolin"
+        ]
+      ]
+    },
+    {
+      "group": "Camping & Outdoor",
+      "children": [
+        "Zelte & Camping",
+        "Zelt",
+        "Campingmatten",
+        "Campingtoilette",
+        "Campingzubehör",
+        "Kühlbox"
+      ]
+    }
+  ],
+  "65": [
+    {
+      "group": "Fertiggerichte",
+      "children": [
+        "Fertiggerichte (58)",
+        "Frische Fertiggerichte (4)",
+        "Gefrorene fertiggerichte (1)",
+        "Fertiggericht (Fisch) (1)",
+        "Fertiggericht mit reis (1)",
+        "Fertiggericht mit zander (1)",
+        "Fertiggerichte (Pasta) (1)",
+        "Fertiggerichte (Pasta mit Sauce) (1)",
+        "Fertiggerichte (Pfanne) (1)",
+        "Fertiggerichte (Portion) (1)",
+        "Fertiggerichte (gekühlt) (1)",
+        "Pasta fertiggerichte (1)",
+        "Pasta-Fertiggericht (1)",
+        "Pasta-Fertiggericht (1)",
+        "Pasta fertiggerichte",
+        "Snacks & Fertiggerichte (1)",
+        "Eintopf & Fertiggerichte (1)",
+        "Fertiggerichte & Eintöpfe (1)",
+        "Pfannengerichte (5)",
+        "Pfannengericht (2)",
+        "Ofenfertige pfännchen (1)",
+        "Fertigsandwich (1)",
+        "Fertigsauce (1)",
+        "Fertigsaucen & Pasta (1)"
+      ]
+    },
+    {
+      "group": "Suppen & Eintöpfe",
+      "children": [
+        "Suppen (18)",
+        "Fertigsuppe (10)",
+        "Eintopf (12)",
+        "Suppen (instant) (4)",
+        "Suppeneinlage (2)",
+        "Suppen & Eintöpfe (2)",
+        "Einzelportion-Suppen (1)",
+        "Suppen & saucen (pulver) (1)",
+        "Gulasch & Eintöpfe (1)",
+        "Eintopf & Fertiggerichte (1)"
+      ],
+      "merge": [
+        [
+          "Eintöpfe",
+          "Eintopf"
+        ],
+        [
+          "Instant-suppe",
+          "Suppen (instant) (4)"
+        ],
+        [
+          "Instant suppen",
+          "Suppen (instant) (4)"
+        ]
+      ]
+    },
+    {
+      "group": "Instantprodukte",
+      "children": [
+        "Instantnudeln (17)",
+        "Instant-Pasta (2)",
+        "Trockensuppen (12)",
+        "Instant-suppen & noodles (2)",
+        "Instant noodles & suppen (1)",
+        "Instant noodles (1)",
+        "Instant noodles & suppen",
+        "Instant-suppen & noodles"
+      ],
+      "merge": [
+        [
+          "Instant noodles",
+          "Instantnudeln (17)"
+        ],
+        [
+          "Instant noodles & suppen",
+          "Instantnudeln (17)"
+        ],
+        [
+          "Instant-suppen & noodles",
+          "Instantnudeln (17)"
+        ]
+      ]
+    },
+    {
+      "group": "Saucen, Fonds & Fertigwürzmischungen",
+      "children": [
+        "Fertigsaucen (2)",
+        "Trockensaucen (3)",
+        "Saucen & Saucenmix (1)",
+        "Fix & Mischungen (2)",
+        "Fix & Würzpaste (1)",
+        "Brühe & Fond (2)"
+      ],
+      "merge": [
+        [
+          "Fertigsauce",
+          "Fertigsaucen (2)"
+        ],
+        [
+          "Fix & Würzpaste",
+          "Fix & Mischungen (2)"
+        ],
+        [
+          "Brühe & Bouillon",
+          "Brühe & Fond (2)"
+        ],
+        [
+          "Fond",
+          "Brühe & Fond (2)"
+        ]
+      ]
+    },
+    {
+      "group": "Salate & Aufstriche",
+      "children": [
+        "Salate & Aufstriche (5)",
+        "Fertigsalate (4)",
+        "Frische Salate & Bowls (1)",
+        "Fertigsalat (2)",
+        "Aufstriche & Pasteten (1)",
+        "Dips & Aufstriche (3)",
+        "Antipasti (2)",
+        "Salate & Antipasti (1)",
+        "Salate (Frischetheke) (1)",
+        "Feinkostsalat (1)",
+        "Geflügelsalat (1)",
+        "Eiersalat (1)"
+      ],
+      "merge": [
+        [
+          "Fertigsalat",
+          "Fertigsalate (4)"
+        ]
+      ]
+    },
+    {
+      "group": "Pasta, Ravioli & Teigtaschen",
+      "children": [
+        "Ravioli (4)",
+        "Gnocchi & Fertigpasta (3)",
+        "Gnocchi (1)",
+        "Gefüllte Pasta (1)",
+        "Gefüllte teigwaren (1)",
+        "Frische Pasta (1)",
+        "Frische teigwaren (1)",
+        "Pelmeni & Teigtaschen (1)",
+        "Nudelgerichte (4)",
+        "Spaghetti in tomatensauce (1)",
+        "Lasagne (1)",
+        "Lasagne bolognese (1)",
+        "Pasta & Saucen Kits (1)",
+        "Pasta fertiggerichte",
+        "Pasta-Fertiggericht (1)"
+      ],
+      "merge": [
+        [
+          "Nudelgericht",
+          "Nudelgerichte (4)"
+        ]
+      ]
+    },
+    {
+      "group": "Kartoffel, Reis & Beilagen",
+      "children": [
+        "Kartoffelgerichte (3)",
+        "Kartoffelpüree (2)",
+        "Kartoffelpüree instant (2)",
+        "Kartoffelsalat (3)",
+        "Kartoffelspezialitäten (1)",
+        "Vorgekochte Kartoffeln (1)",
+        "Baked potatoes (1)",
+        "Beilagen / Spätzle (1)",
+        "Reisbeilage (3)",
+        "Reisgerichte (2)",
+        "Paella (2)",
+        "Baked beans (2)",
+        "Milchreis (1)"
+      ]
+    },
+    {
+      "group": "Auflauf & Ofengerichte",
+      "children": [
+        "Auflauf (3)",
+        "Kartoffelgratin (2)",
+        "Quiche (1)",
+        "Ofenfertige pfännchen (1)"
+      ]
+    },
+    {
+      "group": "Knödel & Klöße",
+      "children": [
+        "Knödel & klöße (4)",
+        "Klöße & Knödel (2)",
+        "Knödel & klöße"
+      ],
+      "merge": [
+        [
+          "Klöße & Knödel",
+          "Knödel & klöße (4)"
+        ]
+      ]
+    },
+    {
+      "group": "Regionale & Fleischgerichte",
+      "children": [
+        "Gulasch / Fertiggericht (1)",
+        "Gulasch in Bratensauce (1)",
+        "Hühnerfrikassee (1)",
+        "Sauerbraten (fertig) (1)",
+        "Rührei & eigerichte (1)",
+        "Gefüllte paprika (1)",
+        "Kohlroulade (1)",
+        "Kohlroulade (fertig) (1)",
+        "Kohlrouladen (1)",
+        "Krautrouladen (1)",
+        "Krautwickel (1)",
+        "Ragout Fin (2)"
+      ]
+    },
+    {
+      "group": "Asiatische & Indische Gerichte",
+      "children": [
+        "Asiatische fertiggerichte (5)",
+        "Asiatische suppe (1)",
+        "Indische Fertiggerichte (5)",
+        "Indisches curry (2)",
+        "Sushi & Meal (1)",
+        "Sushi & onigiri (1)",
+        "Falafel (3)",
+        "Weinblätter (2)"
+      ]
+    },
+    {
+      "group": "Snacks, Sandwiches & Wraps",
+      "children": [
+        "Sandwich (2)",
+        "Fertigsandwich (1)",
+        "Wraps (1)",
+        "Dürüm / Wrap (1)",
+        "Burger (1)",
+        "Döner / Kebab (1)",
+        "Snacks & Fertiggerichte (1)"
+      ]
+    },
+    {
+      "group": "Vegetarisch & Vegan",
+      "children": [
+        "Vegane Fertiggerichte (2)",
+        "Vegane spezialitäten (1)",
+        "Falafel (3)"
+      ]
+    },
+    {
+      "group": "Baby & Kinder",
+      "children": [
+        "Babynahrung (3)",
+        "Kinderfertiggericht (1)"
+      ]
+    },
+    {
+      "group": "Feinkost & Antipasti",
+      "children": [
+        "Antipasti (2)",
+        "Aufstriche & Pasteten (1)",
+        "Dips & Aufstriche (3)",
+        "Salate & Antipasti (1)"
+      ]
+    }
+  ],
+  "8": [
+    {
+      "group": "Schnitt- & Hartkäse",
+      "children": [
+        "Schnittkäse",
+        "Hartkäse",
+        "Gouda",
+        "Bergkäse",
+        "Cheddar",
+        "Pecorino Romano",
+        "Pecorino",
+        "Emmentaler",
+        "Tilsiter",
+        "Leerdammer",
+        "Stangenkäse / Schnittkäse",
+        "Geriebener käse",
+        "Reibekäse",
+        "Würzkäse",
+        "Pizzakäse",
+        "Pizzakäse / Reibekäse",
+        "Gouda / Bio"
+      ],
+      "merge": [
+        [
+          "Geriebener käse",
+          "Reibekäse"
+        ],
+        [
+          "Pizzakäse / Reibekäse",
+          "Pizzakäse"
+        ]
+      ]
+    },
+    {
+      "group": "Weichkäse & Edelkäses",
+      "children": [
+        "Weichkäse",
+        "Camembert",
+        "Brie",
+        "Blauschimmelkäse",
+        "Weichkäse & Frischkäse",
+        "Weichkäse rolle",
+        "Weichkäse spezialität",
+        "Französischer Käse",
+        "Weinbergkäse",
+        "Handkäse",
+        "Sauermilchkäse",
+        "Kochkäse",
+        "Italienischer käse"
+      ],
+      "merge": [
+        [
+          "Weichkäse & Frischkäse",
+          "Weichkäse"
+        ]
+      ]
+    },
+    {
+      "group": "Frischkäse, Quark & Aufstriche",
+      "children": [
+        "Frischkäse",
+        "Frischkäsezubereitung",
+        "Frischkäse & Aufstrich",
+        "Frischkäse & Spezialitäten",
+        "Frischkäse / Kräuterkäse",
+        "Frischkäseaufstrich",
+        "Frischkäseportionen",
+        "Quark",
+        "Quarkcreme",
+        "Quarkgenuss",
+        "Quarkzubereitung",
+        "Quark & Quarkzubereitungen",
+        "Fruchtquark",
+        "Hüttenkäse",
+        "Aufstrich",
+        "Aufstrich & Frischkäse",
+        "Aufstriche & Dips",
+        "Aufstriche & Streichkäse",
+        "Dips & Aufstriche",
+        "Dips",
+        "Käseaufstrich",
+        "Käsezubereitung",
+        "Fruchtquark",
+        "Mascarpone",
+        "Fertigsalate & Aufstriche",
+        "Pflanzenbasierte Aufstriche",
+        "Quark & Quarkzubereitungen",
+        "Quarkzubereitung"
+      ],
+      "merge": [
+        [
+          "Frischkäse & Aufstrich",
+          "Frischkäse"
+        ],
+        [
+          "Aufstriche & Dips",
+          "Aufstriche"
+        ]
+      ]
+    },
+    {
+      "group": "Mozzarella, Feta & Weißkäse",
+      "children": [
+        "Mozzarella",
+        "Mozzarella di Bufala",
+        "Feta",
+        "Feta & schafskäse",
+        "Schafskäse",
+        "Hirtenkäse",
+        "Griechischer Frischkäse / Weißkäse",
+        "Griechischer Frischkäse / Weißkäse",
+        "Griechischer Frischkäse / Weißkäse",
+        "Griechischer Frischkäse / Weißkäse",
+        "Griechischer Frischkäse / Weißkäse",
+        "Griechischer Frischkäse / Weißkäse",
+        "Griechischer Frischkäse / Weißkäse",
+        "Griechischer Frischkäse / Weißkäse",
+        "Griechischer Frischkäse / Weißkäse",
+        "Griechischer Frischkäse / Weißkäse",
+        "Griechischer Frischkäse / Weißkäse",
+        "Griechischer Frischkäse / Weißkäse"
+      ],
+      "merge": [
+        [
+          "Feta & schafskäse",
+          "Feta"
+        ],
+        [
+          "Griechischer Frischkäse / Weißkäse",
+          "Weißkäse"
+        ]
+      ]
+    },
+    {
+      "group": "Schmelz-, Streich- & Käsesnacks",
+      "children": [
+        "Schmelzkäse",
+        "Streichkäse",
+        "Schmelzkäse",
+        "Käsesnack",
+        "Käsesnack",
+        "Käsewürfel",
+        "Käseportionen",
+        "Rahmkäse",
+        "Käsesnack",
+        "Käsesnack",
+        "Kochkäse"
+      ],
+      "merge": [
+        [
+          "Streichkäse",
+          "Schmelzkäse"
+        ],
+        [
+          "Rahmkäse",
+          "Schmelzkäse"
+        ]
+      ]
+    },
+    {
+      "group": "Käsescheiben & Aufschnitt",
+      "children": [
+        "Käsescheiben",
+        "Scheibenkäse",
+        "Käseaufschnitt",
+        "Tilsiter / Scheibenkäse",
+        "Leerdammer / Schnittkäse",
+        "Schnittkäse / Scheibenkäse"
+      ],
+      "merge": [
+        [
+          "Scheibenkäse",
+          "Käsescheiben"
+        ],
+        [
+          "Schnittkäse / Scheibenkäse",
+          "Schnittkäse"
+        ],
+        [
+          "Leerdammer / Schnittkäse",
+          "Leerdammer"
+        ]
+      ]
+    },
+    {
+      "group": "Butter, Margarine & Streichfette",
+      "children": [
+        "Butter",
+        "Margarine",
+        "Streichfett",
+        "Margarine & pflanzenbutter",
+        "Margarine & streichfette",
+        "Margarine / Streichfett",
+        "Margarine & Brotaufstrich",
+        "Streichfett & Margarine",
+        "Margarine & pflanzenbutter",
+        "Margarine & streichfette",
+        "Butteralternative"
+      ],
+      "merge": [
+        [
+          "Margarine & pflanzenbutter",
+          "Margarine"
+        ],
+        [
+          "Margarine & streichfette",
+          "Margarine"
+        ],
+        [
+          "Margarine / Streichfett",
+          "Margarine"
+        ],
+        [
+          "Streichfett & Margarine",
+          "Margarine"
+        ]
+      ]
+    },
+    {
+      "group": "Milch & Spezialmilch",
+      "children": [
+        "Milch",
+        "Haltbare Milch",
+        "H-milch",
+        "Vollmilch",
+        "Frischmilch",
+        "Weidemilch",
+        "Fettarme Milch",
+        "Milchmischgetränke",
+        "Trinkmilch & Milchmix",
+        "Kaffeemilch",
+        "Kondensmilch",
+        "Säuglings- & Kindermilch",
+        "Folgemilch",
+        "Kindermilch",
+        "Babygläschen",
+        "Fettarme Milch",
+        "Kindermilch"
+      ],
+      "merge": [
+        [
+          "H-milch",
+          "Haltbare Milch"
+        ],
+        [
+          "Folgemilch",
+          "Säuglings- & Kindermilch"
+        ]
+      ]
+    },
+    {
+      "group": "Pflanzliche Alternativen",
+      "children": [
+        "Pflanzendrink",
+        "Pflanzenmilch",
+        "Haferdrink",
+        "Sojadrink",
+        "Pflanzliche Joghurtalternative",
+        "Pflanzlicher Joghurt",
+        "Pflanzlicher Joghurt & Skyr-Alternative",
+        "Joghurt alternative",
+        "Joghurtalternative",
+        "Joghurt alternative",
+        "Joghurtalternativen",
+        "Soja-joghurtalternative",
+        "Pflanzliche sahne",
+        "Pflanzliche sahne & cuisine",
+        "Pflanzen-Sahne & Cuisine",
+        "Pflanzengetränke",
+        "Pflanzliche Alternativen",
+        "Pflanzenbasierte Aufstriche",
+        "Veganer Käse",
+        "Käsealternative",
+        "Käsealternative in scheiben",
+        "Käseersatz",
+        "Käseersatz gerieben",
+        "Butteralternative",
+        "Sojasahne",
+        "Kokoscreme"
+      ],
+      "merge": [
+        [
+          "Joghurt alternative",
+          "Pflanzliche Joghurtalternative"
+        ],
+        [
+          "Joghurtalternative",
+          "Pflanzliche Joghurtalternative"
+        ],
+        [
+          "Pflanzliche sahne & cuisine",
+          "Pflanzliche sahne"
+        ],
+        [
+          "Pflanzen-Sahne & Cuisine",
+          "Pflanzliche sahne"
+        ]
+      ]
+    },
+    {
+      "group": "Joghurt & Joghurtdrinks",
+      "children": [
+        "Joghurt",
+        "Fruchtjoghurt",
+        "Griechischer joghurt",
+        "Skyr",
+        "Rahmjoghurt",
+        "Naturjoghurt",
+        "Joghurt mild",
+        "Joghurt mit der ecke",
+        "Joghurt mit knusper",
+        "Joghurt mit müsli",
+        "Joghurt-dessert",
+        "Frucht auf Joghurt",
+        "Trinkjoghurt",
+        "Trinkjoghurt & Drinks",
+        "Trinkjoghurt & Milchmix",
+        "Joghurtdrink",
+        "Joghurtdrinks",
+        "Protein drink",
+        "Protein joghurtdrink",
+        "Kinderjoghurt",
+        "Quarkjoghurt",
+        "Fruchtjoghurt mit Topping"
+      ],
+      "merge": [
+        [
+          "Joghurtdrink",
+          "Joghurtdrinks"
+        ],
+        [
+          "Trinkjoghurt & Drinks",
+          "Trinkjoghurt"
+        ]
+      ]
+    },
+    {
+      "group": "Fermentierte Milchprodukte",
+      "children": [
+        "Kefir",
+        "Kefir & fermentierte milchprodukte",
+        "Buttermilch",
+        "Buttermilch drink"
+      ],
+      "merge": [
+        [
+          "Kefir & fermentierte milchprodukte",
+          "Kefir"
+        ]
+      ]
+    },
+    {
+      "group": "Sahne, Crème & Kochsahne",
+      "children": [
+        "Sahne",
+        "Schlagsahne",
+        "Schmand",
+        "Crème fraîche & Sauerrahm",
+        "Saure Sahne",
+        "Kochsahne & Creme",
+        "Sahne & Crèmes",
+        "Sahne & Rahm",
+        "Sahnekapseln",
+        "Kaffeesahne",
+        "Sauerrahm"
+      ],
+      "merge": [
+        [
+          "Crème fraîche & Sauerrahm",
+          "Saure Sahne"
+        ],
+        [
+          "Sahne & Crèmes",
+          "Sahne"
+        ]
+      ]
+    },
+    {
+      "group": "Desserts & Pudding",
+      "children": [
+        "Pudding",
+        "Dessert",
+        "Dessert & Pudding",
+        "Dessert & Grütze",
+        "Dessertbecher",
+        "Dessertcreme",
+        "Dessert / Pudding",
+        "Dessertpudding",
+        "Desserts (pflanzlich)",
+        "Pudding & Dessert",
+        "Pudding & desserts",
+        "Pudding pflanzlich",
+        "Mousse",
+        "Milchdessert",
+        "Milchreis",
+        "Milchreis & Grütze",
+        "Milchreis & Pudding",
+        "Snackpudding / Pudding",
+        "Vla & Pudding",
+        "Grießpudding",
+        "Schokoladenmilch",
+        "Schokomilch",
+        "Kakao & Trinkschokolade",
+        "Kakaogetränke"
+      ],
+      "merge": [
+        [
+          "Dessert & Pudding",
+          "Pudding"
+        ],
+        [
+          "Pudding & desserts",
+          "Pudding"
+        ],
+        [
+          "Dessert / Pudding",
+          "Pudding"
+        ]
+      ]
+    },
+    {
+      "group": "Käse-Spezialitäten & Portionen",
+      "children": [
+        "Käse",
+        "Käseplatte",
+        "Käseauswahl",
+        "Käse & Spezialitäten",
+        "Bauernkäse / Spezialkäse",
+        "Ofenkäse",
+        "Backkäse",
+        "Käsesalat",
+        "Käseportionen",
+        "Käsewürfel",
+        "Snack",
+        "Fadenkäse",
+        "Käseportionen",
+        "Käseaufschnitt"
+      ],
+      "merge": [
+        [
+          "Käse & Spezialitäten",
+          "Käseplatte"
+        ],
+        [
+          "Käseportionen",
+          "Käsewürfel"
+        ]
+      ]
+    }
+  ],
+  "14": [
+    {
+      "group": "Aufschnitt & Schinken",
+      "children": [
+        "Schinken",
+        "Aufschnitt",
+        "Kochschinken",
+        "Aufschnitt & Schinken",
+        "Aufschnittplatte",
+        "Schinken & Aufschnitt",
+        "Schinkenaufschnitt",
+        "Schinken & Schinkenwaren",
+        "Schinken & Spezialitäten",
+        "Schinken (regional)",
+        "Hinterschinken",
+        "Schinkenbraten",
+        "Schinkenwürfel",
+        "Schinkenspeck",
+        "Schinken & Schinkenwaren",
+        "Saftschinken",
+        "Prosciutto cotto",
+        "Lachsschinken",
+        "Schinkenkrakauer",
+        "Schinkenmett",
+        "Schinken & Aufschnitt"
+      ],
+      "merge": [
+        [
+          "Schinken & Schinkenwaren",
+          "Schinken"
+        ],
+        [
+          "Schinken & Aufschnitt",
+          "Schinken"
+        ]
+      ]
+    },
+    {
+      "group": "Rohwurst & Salami",
+      "children": [
+        "Salami",
+        "Rohwurst",
+        "Luftgetrocknete wurst",
+        "Salami & Aufschnitt",
+        "Salami & Dauerwurst",
+        "Salami in Scheiben",
+        "Rohwurst & Cabanossi",
+        "Rohwurst & Trockenwurst",
+        "Cabanossi",
+        "Kabanos",
+        "Kabanossi",
+        "Mett- & rohwurst",
+        "Mett/rohwurst",
+        "Rohwurst & Cabanossi",
+        "Trocken- & Snackwurst",
+        "Trockenwurst",
+        "Dauerwurst",
+        "Mortadella",
+        "Krakauer",
+        "Schinkenkrakauer",
+        "Wurst spezialitäten",
+        "Wurstspezialitäten"
+      ],
+      "merge": [
+        [
+          "Cabanossi",
+          "Cabanossi"
+        ],
+        [
+          "Kabanos",
+          "Kabanossi"
+        ]
+      ]
+    },
+    {
+      "group": "Brühwurst, Koch- & Streichwurst",
+      "children": [
+        "Brühwurst",
+        "Brühwurst & Kochwurst",
+        "Bockwurst",
+        "Wiener",
+        "Wiener Würstchen",
+        "Wiener & Würstchen",
+        "Wiener Würstchen",
+        "Wiener & Würstchen",
+        "Würstchen",
+        "Frankfurter",
+        "Frankfurter & Wiener",
+        "Frankfurter würstchen",
+        "Weißwurst",
+        "Weisswurst",
+        "Knacker",
+        "Knackwurst",
+        "Knacker & Brühwürste",
+        "Knacker & Würstchen",
+        "Knacker & Brühwürste",
+        "Kochwurst",
+        "Kochsalami",
+        "Lyoner",
+        "Käsewurst",
+        "Käsekrainer",
+        "Regensburger",
+        "Siedewurst",
+        "Jagdwurst",
+        "Teewurst",
+        "Schinkenwurst",
+        "Fleischwurst",
+        "Mettwurst",
+        "Streichwurst",
+        "Leberwurst"
+      ],
+      "merge": [
+        [
+          "Weißwurst",
+          "Weisswurst"
+        ],
+        [
+          "Knacker & Brühwürste",
+          "Knacker"
+        ]
+      ]
+    },
+    {
+      "group": "Bratwürste & Grillwürste",
+      "children": [
+        "Bratwurst",
+        "Bratwürste",
+        "Bratwürstchen",
+        "Rostbratwurst",
+        "Bratwurst & Grillwurst",
+        "Bratwurst & Grillwürste",
+        "Bratwurst & wurstgehäck",
+        "Bratwurst & Grillwurst",
+        "Grillwurst",
+        "Grillwürste",
+        "Grillwurst",
+        "Grillfleisch",
+        "Grillspieße",
+        "Grillwürste",
+        "Grillwürste"
+      ],
+      "merge": [
+        [
+          "Bratwurst & Grillwurst",
+          "Bratwurst"
+        ],
+        [
+          "Bratwurst & Grillwürste",
+          "Bratwurst"
+        ]
+      ]
+    },
+    {
+      "group": "Schweinefleisch & Cuts",
+      "children": [
+        "Schweinefleisch",
+        "Schweinefilet",
+        "Schweinerücken",
+        "Schweinerückensteaks",
+        "Schweinelende / Schweinefilet",
+        "Schweinerippe",
+        "Schweinebauch",
+        "Bauch",
+        "Bauchspeck",
+        "Bauchschnitten",
+        "Bauchscheiben",
+        "Bauchspeck",
+        "Schweinenacken",
+        "Schweinenackensteaks",
+        "Schweinekotelett",
+        "Kammkoteletts",
+        "Stiel-Koteletts",
+        "Stielkoteletts",
+        "Schweinebraten",
+        "Schweinebraten & Haxe",
+        "Schweinegeschnetzeltes",
+        "Schweinehackfleisch",
+        "Schweinegulasch",
+        "Schweineschnitzel",
+        "Schweinelende",
+        "Schweinehaxe",
+        "Eisbein",
+        "Haxe",
+        "Hinterhaxe / Eisbein",
+        "Vordereisbeine",
+        "Vorderbeinscheiben",
+        "Vorderbeine",
+        "Schäufele"
+      ],
+      "merge": [
+        [
+          "Bauchspeck",
+          "Bauchspeck"
+        ],
+        [
+          "Schweinelende / Schweinefilet",
+          "Schweinefilet"
+        ]
+      ]
+    },
+    {
+      "group": "Rindfleisch & Steaks",
+      "children": [
+        "Rindfleisch",
+        "Rinderfilet",
+        "Rinderhüfte",
+        "Rinderbraten",
+        "Rinderbraten",
+        "Rinderroulade",
+        "Rinderroulade",
+        "Rinderrouladen",
+        "Rinder-Suppenfleisch",
+        "Rindergulasch",
+        "Rindfleisch / Steak",
+        "Rindersteak",
+        "Rindersteaks",
+        "Rumpsteak",
+        "Entrecôte",
+        "Entrecote Steak",
+        "Entrecôte",
+        "Roastbeef",
+        "Roastbeef & Rumpsteak",
+        "Roastbeef & Rumpsteak",
+        "Filet",
+        "Filetsteak",
+        "Rinderhackfleisch",
+        "Rinderbrust",
+        "Rinderbacke",
+        "Rinderbäckchen",
+        "Rindfleisch steaks",
+        "Rückensteaks",
+        "Rückenschnitzel",
+        "Tafelspitz",
+        "Beinscheibe",
+        "Rippe",
+        "Rinderhochrippe / Rinderhals",
+        "Rindergulasch"
+      ],
+      "merge": [
+        [
+          "Entrecôte",
+          "Entrecôte"
+        ],
+        [
+          "Rinderroulade",
+          "Rinderroulade"
+        ]
+      ]
+    },
+    {
+      "group": "Geflügel & Pute",
+      "children": [
+        "Geflügel",
+        "Hähnchen",
+        "Hähnchenbrust",
+        "Hähnchenbrustfilet",
+        "Hähnchenbrust (im Baconmantel)",
+        "Hähnchenfilet",
+        "Hähnchengrillbrust",
+        "Hähnchenkeule",
+        "Hähnchenkeulen",
+        "Hähnchenschenkel",
+        "Hähnchenoberschenkel",
+        "Hähnchenunterkeule",
+        "Hähnchenspieße",
+        "Hähnchenflügel",
+        "Hähnchenteile",
+        "Hähnchenschnitzel",
+        "Hähnchensteaks",
+        "Hähnchenpakete",
+        "Hähnchenunterkeulen",
+        "Hähnchenbrust (mariniert)",
+        "Suppenhuhn",
+        "Pute",
+        "Putenbrust",
+        "Putenschnitzel",
+        "Putengulasch",
+        "Putenfleisch",
+        "Putenfilet",
+        "Puteninnenfilet",
+        "Putenmedaillons",
+        "Putenoberkeulen",
+        "Putenunterkeule",
+        "Putenbrustaufschnitt",
+        "Maishähnchen",
+        "Freilandhähnchen",
+        "Geflügelspezialitäten",
+        "Entenbrust",
+        "Entenbrustfilet",
+        "Ente",
+        "Entenkeule"
+      ],
+      "merge": [
+        [
+          "Pute",
+          "Putenfleisch"
+        ],
+        [
+          "Hähnchen",
+          "Hähnchen"
+        ]
+      ]
+    },
+    {
+      "group": "Lamm, Kalb, Kaninchen & Wild",
+      "children": [
+        "Lammfleisch",
+        "Lamm",
+        "Lammkotelett",
+        "Lammkotelett",
+        "Lammkeule",
+        "Lammlachs",
+        "Kaninchen",
+        "Kaninchenkeule",
+        "Kaninchenteile",
+        "Kaninchenleber",
+        "Kalbfleisch",
+        "Kalbsschnitzel",
+        "Kalbsfilet",
+        "Kalbsleber",
+        "Kalbssteak",
+        "Hirschgulasch",
+        "Spanferkel",
+        "Iberico"
+      ],
+      "merge": [
+        [
+          "Lammkotelett",
+          "Lammkotelett"
+        ],
+        [
+          "Kalbfleisch",
+          "Kalbsfilet"
+        ]
+      ]
+    },
+    {
+      "group": "Hackfleisch, Burger & Frikadellen",
+      "children": [
+        "Hackfleisch",
+        "Gehacktes",
+        "Gehacktes gemischt",
+        "Rinderhackfleisch",
+        "Schweinehackfleisch",
+        "Gemischtes Hackfleisch",
+        "Hackfleisch & Burger",
+        "Hackfleisch & Frikadellen",
+        "Hackfleischkonserve",
+        "Mett",
+        "Mett / Hackepeter",
+        "Mett / Mettbrötchen",
+        "Mett / mettende",
+        "Mett/hackepeter",
+        "Mettwürstchen",
+        "Mett mit brötchen",
+        "Mettende",
+        "Zwiebelmett",
+        "Frikadellen",
+        "Fleischbällchen",
+        "Burger",
+        "Burger patties",
+        "Burgerfleisch",
+        "Hamburger",
+        "Hackfleischzubereitung",
+        "Brät & Farcen"
+      ],
+      "merge": [
+        [
+          "Mett / Hackepeter",
+          "Mett"
+        ],
+        [
+          "Mett/hackepeter",
+          "Mett"
+        ]
+      ]
+    },
+    {
+      "group": "Panierte Produkte, Schnitzel & Cordon Bleu",
+      "children": [
+        "Schnitzel",
+        "Schnitzel paniert",
+        "Panierte Produkte",
+        "Panierte & Knusprige Hähnchenprodukte",
+        "Panierte hähnchenprodukte",
+        "Panierte schnitzel",
+        "Cordon bleu",
+        "Cordon bleu / panierte Schnitzel",
+        "Schinkenschnitzel",
+        "Hähnchenschnitzel",
+        "Kalbsschnitzel",
+        "Steakschnitzel",
+        "Schnitzelfleisch",
+        "Schnitzel & Koteletts",
+        "Panierte Produkte",
+        "Geflügel-Schnitzel",
+        "Panierte & Knusprige Hähnchenprodukte"
+      ],
+      "merge": [
+        [
+          "Cordon bleu",
+          "Cordon bleu"
+        ],
+        [
+          "Panierte Produkte",
+          "Panierte Produkte"
+        ]
+      ]
+    },
+    {
+      "group": "Braten, Rouladen & Gulasch",
+      "children": [
+        "Braten",
+        "Braten & Bratenstücke",
+        "Braten & Schmorbraten",
+        "Bratenrolle",
+        "Braten / Gulasch",
+        "Braten / Schweinebraten",
+        "Rollbraten",
+        "Rouladen",
+        "Roulade / Braten / Gulasch",
+        "Rouladen",
+        "Rinderroulade",
+        "Rinderbraten",
+        "Rindergulasch",
+        "Gulasch",
+        "Gulasch & Eintopf",
+        "Schweinebraten",
+        "Kruste nbraten",
+        "Krustenbraten",
+        "Schinkenbraten",
+        "Schwenkbraten",
+        "Spießbraten",
+        "Fertiggerichte & Convenience",
+        "Fertiggerichte mit Fleisch",
+        "Fertiger Braten"
+      ],
+      "merge": [
+        [
+          "Rouladen",
+          "Rouladen"
+        ],
+        [
+          "Braten & Bratenstücke",
+          "Braten"
+        ]
+      ]
+    },
+    {
+      "group": "Spieße, Kebabs & Grill / BBQ",
+      "children": [
+        "Fleischspieß",
+        "Spieße",
+        "Putenspieße",
+        "Hähnchenspieße",
+        "Spießbraten",
+        "Grillspieße",
+        "Gyros & Nacken",
+        "Gyros (geschnetzeltes)",
+        "Gyros",
+        "Gyros & Geschnetzeltes",
+        "Kebab & Marinaden",
+        "Kebabfleisch",
+        "Köfte",
+        "Cevapcici",
+        "Grillspezialitäten",
+        "Grillfleisch",
+        "Rippchen",
+        "Rippchen & Spareribs",
+        "Spareribs",
+        "Spare ribs",
+        "Rippchen & Spareribs",
+        "Spare ribs",
+        "Rippchen"
+      ],
+      "merge": [
+        [
+          "Rippchen & Spareribs",
+          "Rippchen"
+        ],
+        [
+          "Gyros & Geschnetzeltes",
+          "Gyros"
+        ]
+      ]
+    },
+    {
+      "group": "Innereien, Blut- & Leberwaren, Spezialwürste",
+      "children": [
+        "Innereien",
+        "Innereien & Leber",
+        "Leberwurst",
+        "Leberwurst & paté",
+        "Leberwurst & Streichwurst",
+        "Blutwurst",
+        "Blut- & Leberwurst",
+        "Blut- und leberwurst",
+        "Blut- & Leberwurst",
+        "Rotwurst",
+        "Grützwurst",
+        "Grützblutwurst",
+        "Schwarzwurst",
+        "Schwartenmagen",
+        "Zunge",
+        "Zunge in aspik",
+        "Leberpastete",
+        "Pasteten & Terrinen",
+        "Pastete",
+        "Presssack",
+        "Presskopf",
+        "Schinkenmett",
+        "Schinkenmett",
+        "Bierschinken"
+      ],
+      "merge": [
+        [
+          "Blut- und leberwurst",
+          "Blut- & Leberwurst"
+        ],
+        [
+          "Leberwurst & Streichwurst",
+          "Leberwurst"
+        ]
+      ]
+    },
+    {
+      "group": "Speck, Bacon & Räucherware",
+      "children": [
+        "Speck",
+        "Bacon",
+        "Speck & Schinken",
+        "Speck & Bacon",
+        "Speckwürfel",
+        "Schinkenspeck",
+        "Rauchpeitschen",
+        "Rauchschinken",
+        "Räucherwurst",
+        "Geräuchertes",
+        "Luftgetrocknetes & Geräuchertes",
+        "Bauchspeck",
+        "Speck & Schinkenspeck"
+      ],
+      "merge": [
+        [
+          "Speck & Schinken",
+          "Speck"
+        ],
+        [
+          "Speck & Bacon",
+          "Speck"
+        ]
+      ]
+    },
+    {
+      "group": "Konserven, Haltbares & Wurstpakete",
+      "children": [
+        "Wurstkonserve",
+        "Wurstkonserve",
+        "Wurst in Dose",
+        "Wurst im Glas",
+        "Wurst im Brötchen",
+        "Wurst im Ring",
+        "Wurstdose",
+        "Wurstaufschnitt & Pasteten",
+        "Wurstpaket",
+        "Wurstpaket",
+        "Wurstsortiment",
+        "Wurst & Aufschnitt",
+        "Wurstwaren",
+        "Wurstwaren / Krakauer",
+        "Konserve",
+        "Konservenfleisch",
+        "Konserven",
+        "Konserven",
+        "Dosenwurst",
+        "Fleischkonserve",
+        "Fleischkonserven",
+        "Wurstaufstrich",
+        "Wurstaufstrich",
+        "Wurst in Dose",
+        "Wurstdose"
+      ],
+      "merge": [
+        [
+          "Wurstkonserve",
+          "Wurstkonserve"
+        ],
+        [
+          "Wurstdose",
+          "Wurst in Dose"
+        ]
+      ]
+    },
+    {
+      "group": "Feinkostsalate, Aufstriche & Pasteten",
+      "children": [
+        "Fleischsalat",
+        "Wurstsalat",
+        "Aufschnittsalat",
+        "Feinkostsalate",
+        "Feinkost & Salate",
+        "Salate & Feinkost",
+        "Delikatesssalat",
+        "Tapasplatte",
+        "Aufschnittplatte",
+        "Pasteten",
+        "Pasteten & Terrinen",
+        "Leberpastete",
+        "Fleischsalat",
+        "Wurstaufschnitt",
+        "Wurstaufschnitt & Pasteten",
+        "Feinkost & Salate"
+      ],
+      "merge": [
+        [
+          "Feinkostsalate",
+          "Feinkost & Salate"
+        ],
+        [
+          "Pasteten & Terrinen",
+          "Pasteten"
+        ]
+      ]
+    },
+    {
+      "group": "Vegane & Wurstalternativen",
+      "children": [
+        "Vegane Fleischalternative",
+        "Vegane wurst",
+        "Wurstalternativen",
+        "Vegane Wurstalternative",
+        "Vegane aufschnitte",
+        "Vegane bratwurst",
+        "Fleischalternative"
+      ],
+      "merge": [
+        [
+          "Vegane Wurstalternative",
+          "Vegane Fleischalternative"
+        ],
+        [
+          "Fleischalternative",
+          "Vegane Fleischalternative"
+        ]
+      ]
+    },
+    {
+      "group": "Sonstiges & Sortimente / Theke / Imbiss",
+      "children": [
+        "Wurstspezialitäten",
+        "Wurst spezialitäten",
+        "Wurstsortiment",
+        "Wurstpaket",
+        "Wurstpaket",
+        "Wurstaufschnitt",
+        "Wurstaufschnitt & Pasteten",
+        "Wurst & Aufschnitt",
+        "Wurstarten",
+        "Wurstwaren",
+        "Imbiss & Theke",
+        "Heiße Theke",
+        "Frischetheke",
+        "Fertiggerichte & Convenience",
+        "Fertiggerichte mit Fleisch",
+        "Fleischpaket",
+        "Fleischspezialitäten",
+        "Fleischsnack",
+        "Snackwürstchen",
+        "Snackwurst",
+        "Wurst im Brötchen",
+        "Brötchen mit Fleisch",
+        "Aufschnitt & Schinken",
+        "Braten & Aufschnitt",
+        "Braten & Aufschnitt"
+      ],
+      "merge": [
+        [
+          "Wurstpaket",
+          "Wurstpaket"
+        ],
+        [
+          "Wurstwaren",
+          "Wurstwaren"
+        ]
+      ]
+    }
+  ],
+  "10": [
+    {
+      "group": "Brötchen & Semmeln",
+      "children": [
+        "Brötchen",
+        "Semmeln",
+        "Rosinenbrötchen",
+        "Spezialbrötchen",
+        "Aufbackbrötchen",
+        "Toastbrötchen",
+        "Weckli",
+        "Bagels",
+        "Briochebrötchen"
+      ],
+      "merge": [
+        [
+          "Brötchen & Gebäck",
+          "Brötchen"
+        ],
+        [
+          "Brötchen & Semmeln",
+          "Brötchen"
+        ],
+        [
+          "Brötchen & kleingebäck",
+          "Brötchen"
+        ],
+        [
+          "Bagels & Brötchen",
+          "Bagels"
+        ]
+      ]
+    },
+    {
+      "group": "Brote & Laib",
+      "children": [
+        "Brot",
+        "Vollkornbrot",
+        "Mehrkornbrot",
+        "Roggenbrot",
+        "Roggenmischbrot",
+        "Weizenmischbrot",
+        "Weizenbrot",
+        "Weißbrot",
+        "Schwarzbrot",
+        "Bauernbrot",
+        "Landbrot",
+        "Laibbrot",
+        "Kastenbrot",
+        "Mischbrot",
+        "Steinofenbrot",
+        "Glutenfreies Brot"
+      ]
+    },
+    {
+      "group": "Baguette & Stangenbrot",
+      "children": [
+        "Baguette",
+        "Aufbackbaguette"
+      ],
+      "merge": [
+        [
+          "Baguette & Stangenbrot",
+          "Baguette"
+        ],
+        [
+          "Baguette sandwich",
+          "Baguette"
+        ],
+        [
+          "Baguette & belegte Brote",
+          "Baguette"
+        ]
+      ]
+    },
+    {
+      "group": "Toast & Sandwichbrote",
+      "children": [
+        "Toastbrot",
+        "Sandwichbrot",
+        "Schnittbrot",
+        "Sandwich",
+        "Brioche Sandwich",
+        "Toastbrötchen"
+      ]
+    },
+    {
+      "group": "Fladen, Wraps & Tortillas",
+      "children": [
+        "Fladenbrot",
+        "Tortilla Wraps",
+        "Wraps",
+        "Pide",
+        "Ciabatta"
+      ],
+      "merge": [
+        [
+          "Fladenbrot & Pita",
+          "Fladenbrot"
+        ],
+        [
+          "Wraps & Tortillas",
+          "Wraps"
+        ],
+        [
+          "Wraps & Fladenbrot",
+          "Wraps"
+        ]
+      ]
+    },
+    {
+      "group": "Laugengbäck & Brezeln",
+      "children": [
+        "Laugengebäck",
+        "Brezel",
+        "Laugenecke"
+      ],
+      "merge": [
+        [
+          "Laugengbäck",
+          "Laugengebäck"
+        ],
+        [
+          "Brezeln",
+          "Brezel"
+        ],
+        [
+          "Laugenspitz",
+          "Laugengebäck"
+        ]
+      ]
+    },
+    {
+      "group": "Kuchen & Torten",
+      "children": [
+        "Kuchen",
+        "Torten",
+        "Käsekuchen",
+        "Sahneschnitte",
+        "Torteletts",
+        "Kuchenstück",
+        "Boden"
+      ],
+      "merge": [
+        [
+          "Kuchen & Schnitten",
+          "Kuchen"
+        ],
+        [
+          "Kuchen & Törtchen",
+          "Kuchen"
+        ],
+        [
+          "Kuchen & Törtchen",
+          "Kuchen"
+        ],
+        [
+          "Torte",
+          "Torten"
+        ],
+        [
+          "Torten & Kuchen",
+          "Torten"
+        ],
+        [
+          "Torte / schnitt",
+          "Torten"
+        ],
+        [
+          "Sahneschnitten",
+          "Sahneschnitte"
+        ],
+        [
+          "Kuchen & Schnitten",
+          "Kuchen"
+        ]
+      ]
+    },
+    {
+      "group": "Fein- & Süßgebäck (Plunder, Croissant, etc.)",
+      "children": [
+        "Gebäck",
+        "Feingebäck",
+        "Feinbackwaren",
+        "Croissant",
+        "Brioche",
+        "Hefeteiggebäck",
+        "Hefegebäck",
+        "Hefeschnecken",
+        "Schnecken",
+        "Teilchen",
+        "Plunder",
+        "Plundergebäck",
+        "Weizengebäck",
+        "Käsegebäck",
+        "Snackgebäck",
+        "Kaffee & Gebäck"
+      ],
+      "merge": [
+        [
+          "Croissant & Hörnchen",
+          "Croissant"
+        ],
+        [
+          "Gebäck & Feingebäck",
+          "Feingebäck"
+        ],
+        [
+          "Feinbackwaren",
+          "Feingebäck"
+        ],
+        [
+          "Plunder & teilchen",
+          "Plunder"
+        ],
+        [
+          "Plunder & Striezel",
+          "Plunder"
+        ],
+        [
+          "Plunderteig",
+          "Plunder"
+        ],
+        [
+          "Plunder & teilchen",
+          "Plunder"
+        ]
+      ]
+    },
+    {
+      "group": "Kleine süße Snacks (Donuts, Muffins & Co.)",
+      "children": [
+        "Donut",
+        "Berliner",
+        "Muffins",
+        "Quarkbällchen",
+        "Windbeutel",
+        "Pancakes",
+        "Pfannkuchen & Crêpes",
+        "Süßes Gebäck / Poffertjes",
+        "Süßgebäck & Desserts"
+      ],
+      "merge": [
+        [
+          "Donuts & Krapfen",
+          "Donut"
+        ],
+        [
+          "Donuts & Krapfen",
+          "Donut"
+        ]
+      ]
+    },
+    {
+      "group": "Herzhafte & Gefüllte Snacks / Belegtes",
+      "children": [
+        "Belegte brötchen",
+        "Belegte Backwaren",
+        "Belegte Baguettes",
+        "Imbiss & Brötchen",
+        "Gefüllte backwaren",
+        "Gefüllte Teigwaren / Snacks",
+        "Herzhafte Snacks",
+        "Pikante backwaren",
+        "Pasteten",
+        "Salami snack",
+        "Tramezzini",
+        "Burgerbrötchen"
+      ],
+      "merge": [
+        [
+          "Belegtes baguette",
+          "Belegte Baguettes"
+        ]
+      ]
+    },
+    {
+      "group": "Knäckebrot & Knuspriges",
+      "children": [
+        "Knäckebrot",
+        "Knusperbrot",
+        "Zwieback",
+        "Grissini"
+      ],
+      "merge": [
+        [
+          "Knäckebrot & Crispbread",
+          "Knäckebrot"
+        ],
+        [
+          "Knäckebrot & Crispbread",
+          "Knäckebrot"
+        ]
+      ]
+    },
+    {
+      "group": "Pizza, Flammkuchen & Böden",
+      "children": [
+        "Pizza",
+        "Calzone",
+        "Pinsa",
+        "Pizza- & Flammkuchenböden",
+        "Pizzasnack"
+      ]
+    },
+    {
+      "group": "Misc & Konditorei / Sonstige Backwaren",
+      "children": [
+        "Backwaren",
+        "Backwaren zum Fertigbacken",
+        "Cafeteria & Konditorei",
+        "Konditoreiwaren",
+        "Eierteigwaren",
+        "Spätzle & Eierspätzle",
+        "Gebäck & Lammkuchen",
+        "Kaffee & Kuchen"
+      ]
+    }
+  ]
+}
