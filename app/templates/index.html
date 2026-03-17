@@ -1,16 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Sparfuchs | Angebote im Umkreis vergleichen{% endblock %}
 {% block content %}
-  <section class="task-header">
-    <div>
-      <h1 class="task-title">Angebote im Umkreis vergleichen.</h1>
-      <p class="task-subtitle">Standort setzen, Produkte suchen, Einkaufsliste zusammenstellen und den g&uuml;nstigsten Einkauf finden.</p>
-    </div>
-    <div class="task-meta-bar">
-      <span class="task-meta-chip">Eigene Angebotsdatenbank</span>
-      <span class="task-meta-chip">Lokale Marktregionen</span>
-    </div>
-  </section>
 
   {% if error or warnings %}
     <section class="notice-stack">
@@ -25,92 +15,105 @@
     </section>
   {% endif %}
 
-  <div class="app-card form-card">
-    <div class="index-layout">
-      <section class="section-block section-location">
-        <div class="section-head">
-          <div class="section-kicker">1. Standort</div>
+  <div class="index-grid">
+    <!-- LEFT COLUMN: Search & Discovery -->
+    <div class="index-col-left">
+      <h1 class="index-headline">Finde die besten Preise in deiner Umgebung.</h1>
+
+      <!-- STANDORT -->
+      <div class="index-card">
+        <h2 class="section-kicker">Standort</h2>
+        <div class="location-input-wrap">
+          <input
+            id="location"
+            type="text"
+            name="location"
+            value="{{ default_location }}"
+            placeholder="Stadt, PLZ oder Adresse..."
+          />
+          <button type="button" id="use_geo" class="geo-action" aria-label="Meinen Standort verwenden" title="Meinen Standort verwenden">&#128205;</button>
         </div>
-
-        <div class="field-grid">
-          <div class="field-card field-card-wide">
-            <label for="location">Wo suchst du?</label>
-            <div class="location-input-wrap">
-              <input
-                id="location"
-                type="text"
-                name="location"
-                value="{{ default_location }}"
-                placeholder="Stadt, PLZ oder Koordinaten..."
-              />
-              <button type="button" id="use_geo" class="geo-action" aria-label="Meinen Standort verwenden" title="Meinen Standort verwenden">&#128205;</button>
-            </div>
-            <p class="field-help">PLZ (z.B. 53111) oder Stadt funktionieren.</p>
-          </div>
-
-          <div class="field-card">
-            <label for="radius_km">Radius: <output id="radius_value" for="radius_km">{{ default_radius_km }} km</output></label>
-            <div class="radius-control">
-              <input id="radius_km" type="range" name="radius_km" value="{{ default_radius_km }}" min="1" max="30" step="1" />
-              <div class="radius-meta">
-                <span>1 km</span>
-                <span>30 km</span>
-              </div>
-            </div>
+        <div class="radius-compact">
+          <label for="radius_km">Radius: <output id="radius_value" for="radius_km">{{ default_radius_km }} km</output></label>
+          <input id="radius_km" type="range" name="radius_km" value="{{ default_radius_km }}" min="1" max="30" step="1" />
+          <div class="radius-meta">
+            <span>1 km</span>
+            <span>30 km</span>
           </div>
         </div>
+      </div>
+
+      <!-- PRODUKTE SUCHEN -->
+      <div class="index-card">
+        <h2 class="section-kicker">Artikel hinzuf&uuml;gen</h2>
+        <div class="search-bar-wrap suggest">
+          <input
+            id="hero_search"
+            type="text"
+            placeholder="Was brauchst du? Butter, Milch, Eier..."
+            autocomplete="off"
+          />
+          <div id="category_dropdown" class="suggest-list" role="listbox" aria-label="Suchvorschl&auml;ge"></div>
+          <div id="suggest-live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+        </div>
+        <p class="section-note">Mehrere Artikel mit Komma trennen.</p>
+      </div>
+
+      <!-- KATEGORIE-TILES -->
+      <section class="tiles-section">
+        <h2 class="section-kicker">Oder schnell starten</h2>
+        <div id="category_tiles" class="tile-grid"></div>
       </section>
 
-      <section class="section-block section-search">
-        <div class="section-head">
-          <div class="section-kicker">2. Produkte zur Liste hinzuf&uuml;gen</div>
-        </div>
+    </div>
 
-        <div class="search-hero">
-          <div class="search-bar-wrap suggest">
-            <input
-              id="hero_search"
-              type="text"
-              placeholder="Was suchst du? z.B. H&auml;hnchenbrust, Milch, Butter..."
-              autocomplete="off"
-            />
-            <div id="category_dropdown" class="suggest-list" role="listbox" aria-label="Suchvorschläge"></div>
-            <div id="suggest-live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
-          </div>
-          <p class="section-note">Tippe einen Produktnamen ein und w&auml;hle die passende Kategorie aus.</p>
+    <!-- RIGHT COLUMN: Basket + Live Results -->
+    <div class="index-col-right">
+      <!-- EINKAUFSLISTE (immer sichtbar wenn Items vorhanden) -->
+      <section id="basket_section" class="basket-panel" style="display:none;">
+        <div class="basket-header">
+          <h2 class="section-kicker">Deine Artikel <span id="basket_count" class="count-badge">0</span></h2>
+          <button type="button" id="clear_basket" class="clear-link">Leeren</button>
         </div>
-      </section>
-
-      <section class="section-block section-basket-preview" id="basket_preview_section" style="display:none;">
-        <div class="section-head">
-          <div class="section-kicker">Einkaufsliste</div>
-          <span id="basket_count" class="count-badge">0 Artikel</span>
-        </div>
-        <div id="basket_preview" class="basket-preview-list"></div>
-        <div class="basket-settings">
-          <label for="max_stores">Spar-Mix: Max. M&auml;rkte</label>
+        <div id="basket_items" class="basket-items-list"></div>
+        <div class="basket-settings-row">
+          <label for="max_stores">In wie viele L&auml;den gehst du?</label>
           <select id="max_stores">
-            <option value="1">1 Markt</option>
-            <option value="2" selected>2 M&auml;rkte</option>
-            <option value="3">3 M&auml;rkte</option>
-            <option value="0">Unbegrenzt</option>
+            <option value="1">1</option>
+            <option value="2" selected>2</option>
+            <option value="3">3</option>
+            <option value="0">Egal</option>
           </select>
-          <p class="field-help">Zu wie vielen verschiedenen M&auml;rkten w&uuml;rdest du gehen?</p>
-        </div>
-        <div class="basket-cta">
-          <form method="post" action="/results" id="compare_form">
-            <input type="hidden" name="location" id="compare_location" />
-            <input type="hidden" name="radius_km" id="compare_radius" />
-            {% for c in chains %}
-              <input type="hidden" name="chains" value="{{ c }}" />
-            {% endfor %}
-            <input type="hidden" name="basket_json" id="basket_json" value="[]" />
-            <input type="hidden" name="max_stores" id="compare_max_stores" value="2" />
-            <button class="primary cta-button" type="submit">Jetzt vergleichen</button>
-          </form>
-          <button type="button" id="clear_basket" class="clear-link">Zettel leeren</button>
         </div>
       </section>
+
+      <!-- Ketten-Filter -->
+      <div class="chain-filter-bar" id="chain_filters" style="display:none;"></div>
+
+      <!-- LIVE STORE RANKING (appears automatically) -->
+      <section id="live_results" class="live-results" style="display:none;" aria-live="polite">
+        <div id="results_loading" class="results-loading" style="display:none;">
+          <div class="spinner-small"></div>
+          <span>Vergleiche Preise...</span>
+        </div>
+        <div id="results_error" class="notice error" style="display:none;"></div>
+        <div id="results_ranking" class="results-ranking"></div>
+        <div id="results_spar_mix" class="spar-mix-inline"></div>
+        <div id="results_freshness" class="data-freshness-inline"></div>
+      </section>
+
+      <!-- Empty basket placeholder -->
+      <section id="basket_empty_hint" class="basket-empty-hint">
+        <div class="empty-hint-icon" aria-hidden="true">&#128722;</div>
+        <h3>Deine Einkaufsliste ist leer</h3>
+        <p>Suche links nach Produkten und f&uuml;ge sie deiner Liste hinzu &mdash; der Preisvergleich startet automatisch.</p>
+      </section>
+
+      <!-- TRUST FOOTER -->
+      <footer class="trust-footer">
+        <p>{{ offer_count|default('188.000', true) }} Angebote &middot; {{ chain_count|default('10', true) }} Ketten</p>
+        {% if last_updated %}<p>Aktualisiert {{ last_updated }}</p>{% endif %}
+      </footer>
     </div>
   </div>
 
@@ -129,9 +132,6 @@
         <button type="button" id="sheet_close" class="sheet-close-btn" aria-label="Schliessen">&times;</button>
       </div>
       <div id="sheet_basket_items" class="bottom-sheet-body"></div>
-      <div class="bottom-sheet-footer">
-        <button class="primary cta-button" type="button" id="sheet_compare_btn">Jetzt vergleichen</button>
-      </div>
     </div>
   </div>
 {% endblock %}

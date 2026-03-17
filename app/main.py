@@ -8,11 +8,11 @@ from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI, Form, Request
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from app.services.catalog_data import CatalogDataService
+from app.services.catalog_data import CatalogDataService, get_index_stats
 from app.services.catalog_search import CatalogSearchService
 from app.services.category_search import CategorySearchService
 from app.services.geocode import GeoPoint, GeocodeError
@@ -23,6 +23,12 @@ from app.utils.text import compact_text
 
 
 APP_NAME = "Sparfuchs"
+
+# ---------------------------------------------------------------------------
+# Geocode cache: avoids repeated DB/network lookups for same location string
+# ---------------------------------------------------------------------------
+_geocode_cache: dict[str, GeoPoint] = {}
+_GEOCODE_CACHE_MAX = 200
 
 # Intent detection for deal-seeking queries
 _DEAL_INTENTS = {
@@ -83,6 +89,15 @@ app = FastAPI(title=APP_NAME)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
+
+@app.get("/sw.js")
+async def service_worker():
+    return FileResponse(
+        "app/static/sw.js",
+        media_type="application/javascript",
+        headers={"Service-Worker-Allowed": "/"},
+    )
+
 catalog_db_path = Path(os.getenv("SPARFUCHS_CATALOG_DB_PATH", "data/kaufda_dataset/offers.sqlite3"))
 catalog_search = CatalogSearchService(db_path=catalog_db_path)
 catalog_data = CatalogDataService(db_path=catalog_db_path)
@@ -118,8 +133,56 @@ try:
 except Exception:
     pass
 
+# Ensure price_history table exists for trend tracking
+try:
+    _conn = _sqlite3.connect(str(catalog_db_path))
+    _conn.execute("""
+        CREATE TABLE IF NOT EXISTS price_history (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            category_id INTEGER,
+            category_name TEXT,
+            chain TEXT,
+            price_eur REAL,
+            was_price_eur REAL,
+            store_name TEXT,
+            location TEXT,
+            timestamp TEXT DEFAULT (datetime('now'))
+        )
+    """)
+    _conn.execute("CREATE INDEX IF NOT EXISTS idx_price_history_category ON price_history(category_id, timestamp)")
+    _conn.execute("CREATE INDEX IF NOT EXISTS idx_price_history_timestamp ON price_history(timestamp)")
+    _conn.commit()
+    _conn.close()
+except Exception:
+    pass
+
+# Ensure product_labels index for category lookups
+try:
+    _conn = _sqlite3.connect(str(catalog_db_path))
+    _conn.execute("CREATE INDEX IF NOT EXISTS idx_product_labels_cat ON product_labels(category_v2_id)")
+    _conn.commit()
+    _conn.close()
+except Exception:
+    pass
+
 
 async def _resolve_location(location: str) -> GeoPoint:
+    # Fast path: check in-memory cache first
+    cache_key = (location or "").strip().lower()
+    if cache_key in _geocode_cache:
+        return _geocode_cache[cache_key]
+
+    result = await _resolve_location_uncached(location)
+
+    # Store in cache (simple FIFO eviction)
+    if len(_geocode_cache) >= _GEOCODE_CACHE_MAX:
+        oldest = next(iter(_geocode_cache))
+        del _geocode_cache[oldest]
+    _geocode_cache[cache_key] = result
+    return result
+
+
+async def _resolve_location_uncached(location: str) -> GeoPoint:
     coords = _try_parse_coords(location)
     if coords is not None:
         return GeoPoint(lat=coords[0], lon=coords[1], display_name=f"{coords[0]}, {coords[1]}")
@@ -148,6 +211,7 @@ async def _resolve_location(location: str) -> GeoPoint:
 
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request) -> HTMLResponse:
+    stats = get_index_stats(catalog_db_path)
     return templates.TemplateResponse(
         request=request,
         name="index.html",
@@ -157,6 +221,9 @@ def index(request: Request) -> HTMLResponse:
             "default_location": "Bonn",
             "error": None,
             "warnings": [],
+            "offer_count": stats["offer_count"],
+            "chain_count": stats["chain_count"],
+            "last_updated": stats["last_updated"],
         },
     )
 
@@ -306,6 +373,133 @@ async def api_suggest_categories(
     return JSONResponse(resp)
 
 
+@app.get("/api/sibling-categories")
+async def api_sibling_categories(
+    category_id: int,
+    location: str = "",
+    radius_km: float = 10.0,
+) -> JSONResponse:
+    """Return sibling categories (same parent) for product swap feature."""
+    if not catalog_data.available():
+        return JSONResponse({"siblings": []})
+
+    import sqlite3
+    conn = sqlite3.connect(str(catalog_db_path))
+    conn.row_factory = sqlite3.Row
+
+    try:
+        # Look up the given category in categories_v2
+        row = conn.execute(
+            "SELECT id, name, parent_id, level, product_count FROM categories_v2 WHERE id = ?",
+            (category_id,),
+        ).fetchone()
+
+        if not row:
+            # Fallback: try product_categories table
+            row = conn.execute(
+                "SELECT id, name, parent_id, kind, offer_count AS product_count FROM product_categories WHERE id = ?",
+                (category_id,),
+            ).fetchone()
+            if not row:
+                return JSONResponse({"siblings": []})
+            # product_categories: kind='family' means group head
+            parent_id = row["parent_id"]
+            if parent_id is None:
+                parent_id = category_id
+            siblings = conn.execute(
+                """SELECT id, name, offer_count AS product_count
+                   FROM product_categories
+                   WHERE parent_id = ? AND id != ?
+                   ORDER BY offer_count DESC""",
+                (parent_id, category_id),
+            ).fetchall()
+            # Include parent if it's not the queried category
+            if parent_id != category_id:
+                parent_row = conn.execute(
+                    "SELECT id, name, offer_count AS product_count FROM product_categories WHERE id = ?",
+                    (parent_id,),
+                ).fetchone()
+                if parent_row:
+                    siblings = [parent_row] + list(siblings)
+        else:
+            # categories_v2: 3-level hierarchy
+            level = int(row["level"])
+            parent_id = row["parent_id"]
+
+            if level == 3:
+                # Specific item → siblings are other level-3 under same parent (level-2 group)
+                if parent_id is None:
+                    return JSONResponse({"siblings": []})
+                siblings = conn.execute(
+                    """SELECT id, name, product_count
+                       FROM categories_v2
+                       WHERE parent_id = ? AND id != ? AND level = 3
+                       ORDER BY product_count DESC""",
+                    (parent_id, category_id),
+                ).fetchall()
+                # Also include the parent group node if it has offers
+                parent_row = conn.execute(
+                    "SELECT id, name, product_count FROM categories_v2 WHERE id = ?",
+                    (parent_id,),
+                ).fetchone()
+                if parent_row and parent_row["product_count"] and parent_row["product_count"] > 0:
+                    siblings = [parent_row] + list(siblings)
+            elif level == 2:
+                # Group node → siblings are other level-2 under same parent (level-1)
+                if parent_id is None:
+                    return JSONResponse({"siblings": []})
+                siblings = conn.execute(
+                    """SELECT id, name, product_count
+                       FROM categories_v2
+                       WHERE parent_id = ? AND id != ? AND level = 2
+                       ORDER BY product_count DESC""",
+                    (parent_id, category_id),
+                ).fetchall()
+            else:
+                # Level 1 (top-level) → no meaningful siblings
+                return JSONResponse({"siblings": []})
+
+        # Resolve local counts if location provided
+        local_counts: dict[int, int] | None = None
+        loc = (location or "").strip()
+        if loc:
+            try:
+                geo = await _resolve_location(loc)
+                scope = catalog_data.resolve_location_scope(
+                    lat=geo.lat, lon=geo.lon, radius_km=radius_km,
+                )
+                if scope is not None:
+                    local_counts = scope.category_counts
+            except Exception:
+                pass
+
+        result = []
+        for s in siblings:
+            cat_id = s["id"]
+            count = s["product_count"] or 0
+            display_count = count
+
+            if local_counts is not None:
+                display_count = local_counts.get(cat_id, 0)
+                if display_count == 0:
+                    continue  # Skip siblings with no local offers
+
+            result.append({
+                "id": cat_id,
+                "name": s["name"],
+                "offer_count": count,
+                "display_count": display_count,
+            })
+
+        # Sort by display count descending, limit to 6
+        result.sort(key=lambda x: x["display_count"], reverse=True)
+        result = result[:6]
+
+        return JSONResponse({"siblings": result})
+    finally:
+        conn.close()
+
+
 @app.post("/api/log-search")
 async def api_log_search(request: Request) -> JSONResponse:
     """Log a search event for analytics."""
@@ -437,6 +631,201 @@ async def search_page(
     )
 
 
+@app.post("/api/compare")
+async def api_compare(request: Request) -> JSONResponse:
+    """Live comparison API — returns store ranking as JSON."""
+    import time as _time
+    import sqlite3 as _sqlite3
+
+    try:
+        body = await request.json()
+    except Exception:
+        return JSONResponse({"error": "Ungültige Anfrage."}, status_code=400)
+
+    location = str(body.get("location", "")).strip()
+    radius_km = float(body.get("radius_km", 5))
+    basket_payload = body.get("basket", [])
+    max_stores_val = int(body.get("max_stores", 0))
+
+    if not location:
+        return JSONResponse({"error": "Bitte Standort angeben."}, status_code=400)
+
+    # Build wanted items
+    wanted_items: list[WantedItem] = []
+    for raw in basket_payload:
+        if not isinstance(raw, dict):
+            continue
+        cat_id = raw.get("category_id")
+        cat_name = raw.get("category_name", "")
+        if cat_id is not None:
+            expanded = category_search.expand_category(
+                category_id=int(cat_id), category_name=str(cat_name),
+            ) if category_search.available() else {"ids": [int(cat_id)]}
+            wanted_items.append(WantedItem(
+                q=str(cat_name), brand=None, any_brand=True,
+                category_id=int(cat_id), category_name=str(cat_name),
+                category_ids=tuple(int(i) for i in expanded.get("ids", [int(cat_id)])),
+            ))
+            continue
+        query = str(raw.get("q", "")).strip()
+        if not query:
+            continue
+        wanted_items.append(WantedItem(
+            q=query,
+            brand=(str(raw.get("brand")).strip() or None) if raw.get("brand") is not None else None,
+            any_brand=bool(raw.get("any_brand", True)),
+        ))
+
+    if not wanted_items:
+        return JSONResponse({"error": "Bitte mindestens einen Artikel hinzufügen."}, status_code=400)
+
+    if not catalog_data.available():
+        return JSONResponse({"error": "Datenbank nicht verfügbar."}, status_code=503)
+
+    selected_chains = KNOWN_CHAINS
+
+    try:
+        async with asyncio.timeout(COMPARE_TIMEOUT_SECONDS):
+            _t0 = _time.perf_counter()
+            geo = await _resolve_location(location)
+
+            stores = catalog_data.find_stores_in_radius(
+                lat=geo.lat, lon=geo.lon, radius_km=radius_km, chains=selected_chains,
+            )
+
+            if not stores:
+                return JSONResponse({"rows": [], "spar_mix": None, "warning": "Keine Märkte im Umkreis gefunden."})
+
+            total_store_count = len(stores)
+            if MAX_EVALUATED_STORES > 0 and total_store_count > MAX_EVALUATED_STORES:
+                stores = _smart_store_limit(stores, MAX_EVALUATED_STORES)
+
+            stores = catalog_data.match_stores_to_regions(stores)
+
+            chains_in_area = sorted({s.chain for s in stores})
+            matched_brochure_ids = sorted({
+                bid for s in stores for bid in (s.brochure_content_ids or ()) if bid
+            })
+            chains_with_brochures = {s.chain for s in stores if s.brochure_content_ids}
+            chains_without_brochures = [c for c in chains_in_area if c not in chains_with_brochures]
+
+            offers = catalog_data.load_current_offers(
+                chains=chains_in_area,
+                brochure_content_ids=matched_brochure_ids,
+                full_chains=chains_without_brochures,
+            )
+
+            basket_pricer = BasketPricer(offers) if offers else None
+            rows = basket_pricer.price_basket_for_stores(
+                stores=stores, wanted=wanted_items, origin=(geo.lat, geo.lon),
+            ) if basket_pricer else []
+
+            effective_max = max_stores_val if max_stores_val > 0 else None
+            spar_mix = SparMixPricer(basket_pricer).compute(
+                stores=stores, wanted=wanted_items, origin=(geo.lat, geo.lon),
+                max_stores=effective_max, basket_rows=rows,
+            ) if basket_pricer else SparMixResult(total_eur=None, lines=[], store_count=0, stores_used=[])
+
+            _t1 = _time.perf_counter()
+            print(f"[PERF] /api/compare: {(_t1-_t0)*1000:.0f}ms ({len(stores)} stores × {len(wanted_items)} items)")
+
+            # Serialize rows
+            def _serialize_row(r, idx):
+                total_items = len(r.lines)
+                found = total_items - r.missing_count
+                lines_json = []
+                for line in r.lines:
+                    lj = {"wanted": line.wanted.q, "score": line.score}
+                    if line.offer:
+                        lj["offer"] = {
+                            "title": line.offer.title,
+                            "brand": line.offer.brand,
+                            "price_eur": line.offer.price_eur,
+                            "was_price_eur": line.offer.was_price_eur,
+                            "image_url": line.offer.image_url,
+                            "base_price_eur": line.offer.base_price_eur,
+                            "base_unit": line.offer.base_unit,
+                            "valid_from": str(line.offer.valid_from) if line.offer.valid_from else None,
+                            "valid_to": str(line.offer.valid_to) if line.offer.valid_to else None,
+                        }
+                    else:
+                        lj["offer"] = None
+                    lines_json.append(lj)
+
+                diff = None
+                if idx > 0 and r.total_eur is not None and rows[0].total_eur is not None:
+                    diff = round(r.total_eur - rows[0].total_eur, 2)
+
+                return {
+                    "rank": idx + 1,
+                    "store_name": r.store.name,
+                    "chain": r.store.chain,
+                    "address": r.store.address,
+                    "lat": r.store.lat,
+                    "lon": r.store.lon,
+                    "distance_km": round(r.distance_km, 1),
+                    "total_eur": round(r.total_eur, 2) if r.total_eur is not None else None,
+                    "found": found,
+                    "total_items": total_items,
+                    "missing_count": r.missing_count,
+                    "diff_eur": diff,
+                    "lines": lines_json,
+                }
+
+            rows_json = [_serialize_row(r, i) for i, r in enumerate(rows)]
+
+            # Serialize spar_mix
+            spar_mix_json = None
+            if spar_mix and spar_mix.lines:
+                sm_lines = []
+                for line in spar_mix.lines:
+                    sl = {"wanted": line.wanted.q, "price_eur": line.price_eur}
+                    if line.store:
+                        sl["chain"] = line.store.chain
+                        sl["store_name"] = line.store.name
+                        sl["address"] = line.store.address
+                        sl["lat"] = line.store.lat
+                        sl["lon"] = line.store.lon
+                    if line.offer:
+                        sl["offer_title"] = line.offer.title
+                        sl["image_url"] = line.offer.image_url
+                    sm_lines.append(sl)
+                sm_saving = None
+                if spar_mix.total_eur is not None and rows and rows[0].total_eur is not None and spar_mix.total_eur < rows[0].total_eur:
+                    sm_saving = round(rows[0].total_eur - spar_mix.total_eur, 2)
+                spar_mix_json = {
+                    "total_eur": round(spar_mix.total_eur, 2) if spar_mix.total_eur is not None else None,
+                    "store_count": spar_mix.store_count,
+                    "stores_used": spar_mix.stores_used,
+                    "saving_vs_best": sm_saving,
+                    "lines": sm_lines,
+                }
+
+            # Log prices (fire-and-forget)
+            try:
+                _log_conn = _sqlite3.connect(str(catalog_db_path))
+                for row in rows[:3]:
+                    for line in row.lines:
+                        if line.offer and line.offer.price_eur is not None:
+                            _log_conn.execute(
+                                "INSERT INTO price_history (category_id, category_name, chain, price_eur, was_price_eur, store_name, location) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                                (getattr(line.wanted, 'category_id', None), line.wanted.q, row.store.chain, line.offer.price_eur, getattr(line.offer, 'was_price_eur', None), row.store.name, location),
+                            )
+                _log_conn.commit()
+                _log_conn.close()
+            except Exception:
+                pass
+
+            return JSONResponse({"rows": rows_json, "spar_mix": spar_mix_json})
+
+    except GeocodeError as exc:
+        return JSONResponse({"error": str(exc)}, status_code=400)
+    except asyncio.TimeoutError:
+        return JSONResponse({"error": f"Timeout nach {COMPARE_TIMEOUT_SECONDS:.0f}s. Versuche einen kleineren Radius."}, status_code=504)
+    except Exception as exc:
+        return JSONResponse({"error": f"Fehler: {exc}"}, status_code=500)
+
+
 @app.post("/results", response_class=HTMLResponse)
 async def results(
     request: Request,
@@ -487,6 +876,7 @@ async def results(
         )
 
     if not wanted_items:
+        stats = get_index_stats(catalog_db_path)
         return templates.TemplateResponse(
             request=request,
             name="index.html",
@@ -496,6 +886,9 @@ async def results(
                 "default_location": location,
                 "error": "Bitte mindestens einen Artikel zum Einkaufszettel hinzufuegen.",
                 "warnings": [],
+                "offer_count": stats["offer_count"],
+                "chain_count": stats["chain_count"],
+                "last_updated": stats["last_updated"],
             },
             status_code=400,
         )
@@ -622,6 +1015,23 @@ async def results(
 
             missing_store_chains = [chain for chain in selected_chains if chain not in chains_in_area]
 
+            # Fire-and-forget: log prices for trend tracking
+            try:
+                _log_conn = _sqlite3.connect(str(catalog_db_path))
+                for row in rows[:3]:  # Only top 3 stores
+                    for line in row.lines:
+                        if line.offer and line.offer.price_eur is not None:
+                            cat_id = getattr(line.wanted, 'category_id', None)
+                            cat_name = getattr(line.wanted, 'q', '')
+                            _log_conn.execute(
+                                "INSERT INTO price_history (category_id, category_name, chain, price_eur, was_price_eur, store_name, location) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                                (cat_id, cat_name, row.store.chain, line.offer.price_eur, getattr(line.offer, 'was_price_eur', None), row.store.name, location),
+                            )
+                _log_conn.commit()
+                _log_conn.close()
+            except Exception:
+                pass
+
     except GeocodeError as exc:
         return templates.TemplateResponse(
             request=request,
@@ -680,6 +1090,7 @@ async def results(
             status_code=500,
         )
 
+    stats = get_index_stats(catalog_db_path)
     return templates.TemplateResponse(
         request=request,
         name="results.html",
@@ -696,8 +1107,316 @@ async def results(
             "spar_mix": spar_mix,
             "max_stores": max_stores,
             "prospects_by_chain": {},
+            "last_updated": stats.get("last_updated", ""),
         },
     )
+
+
+@app.get("/api/popular-items")
+async def api_popular_items(limit: int = 8) -> JSONResponse:
+    """Return most frequently searched categories."""
+    import sqlite3
+    conn = sqlite3.connect(str(catalog_db_path))
+    conn.row_factory = sqlite3.Row
+    try:
+        rows = conn.execute("""
+            SELECT selected_category_id, selected_category_name, COUNT(*) as cnt
+            FROM search_log
+            WHERE selected_category_id IS NOT NULL
+              AND selected_category_name IS NOT NULL
+              AND timestamp > datetime('now', '-30 days')
+            GROUP BY selected_category_id
+            ORDER BY cnt DESC
+            LIMIT ?
+        """, (limit,)).fetchall()
+
+        items = [{"id": r["selected_category_id"], "name": r["selected_category_name"], "searches": r["cnt"]} for r in rows]
+        return JSONResponse({"items": items})
+    finally:
+        conn.close()
+
+
+@app.get("/api/category-tiles")
+async def api_category_tiles() -> JSONResponse:
+    """Return top-level categories for quick-start tiles."""
+    if not catalog_data.available():
+        return JSONResponse({"tiles": []})
+
+    import sqlite3
+    conn = sqlite3.connect(str(catalog_db_path))
+    conn.row_factory = sqlite3.Row
+    try:
+        # Try categories_v2 level-1 first
+        rows = conn.execute("""
+            SELECT id, name, product_count
+            FROM categories_v2
+            WHERE level = 1
+            ORDER BY product_count DESC
+            LIMIT 12
+        """).fetchall()
+
+        if not rows:
+            # Fallback: product_categories families
+            rows = conn.execute("""
+                SELECT id, name, expanded_offer_count as product_count
+                FROM product_categories
+                WHERE kind = 'family'
+                ORDER BY expanded_offer_count DESC
+                LIMIT 12
+            """).fetchall()
+
+        tiles = [{"id": r["id"], "name": compact_text(r["name"]), "count": r["product_count"] or 0} for r in rows]
+
+        # Dedup: if a tile name is a substring of another, remove the longer (more specific) one
+        names = [t["name"].lower() for t in tiles]
+        drop_indices: set[int] = set()
+        for i, name_i in enumerate(names):
+            for j, name_j in enumerate(names):
+                if i == j:
+                    continue
+                # If name_i is contained in name_j and name_j is longer, drop j
+                if name_i in name_j and len(name_j) > len(name_i):
+                    drop_indices.add(j)
+        tiles = [t for idx, t in enumerate(tiles) if idx not in drop_indices]
+
+        return JSONResponse({"tiles": tiles})
+    except Exception:
+        return JSONResponse({"tiles": []})
+    finally:
+        conn.close()
+
+
+@app.get("/api/offers-by-category")
+async def api_offers_by_category(
+    category_id: int = 0,
+    location: str = "",
+    radius_km: float = 10.0,
+    limit: int = 40,
+    offset: int = 0,
+) -> JSONResponse:
+    """Return offers for a category (with subcategories) for browse UI."""
+    if category_id <= 0:
+        return JSONResponse({"error": "category_id is required"}, status_code=400)
+
+    if not catalog_data.available():
+        return JSONResponse({"error": "database unavailable"}, status_code=503)
+
+    import sqlite3
+    conn = sqlite3.connect(str(catalog_db_path))
+    conn.row_factory = sqlite3.Row
+    try:
+        # 1) Fetch the category itself
+        cat_row = conn.execute(
+            "SELECT id, name, level FROM categories_v2 WHERE id = ?", [category_id]
+        ).fetchone()
+        if not cat_row:
+            return JSONResponse({"error": "category not found"}, status_code=404)
+        category = {"id": cat_row["id"], "name": compact_text(cat_row["name"]), "level": cat_row["level"]}
+
+        # 2) Direct subcategories
+        sub_rows = conn.execute(
+            "SELECT id, name, product_count FROM categories_v2 WHERE parent_id = ? ORDER BY product_count DESC",
+            [category_id],
+        ).fetchall()
+        subcategories = [{"id": r["id"], "name": compact_text(r["name"]), "count": r["product_count"] or 0} for r in sub_rows]
+
+        # 3) Collect all descendant category IDs recursively
+        all_ids: list[int] = [category_id]
+        queue: list[int] = [category_id]
+        while queue:
+            current = queue.pop()
+            children = conn.execute(
+                "SELECT id FROM categories_v2 WHERE parent_id = ?", [current]
+            ).fetchall()
+            for child in children:
+                cid = child["id"]
+                all_ids.append(cid)
+                queue.append(cid)
+
+        ph = ", ".join("?" for _ in all_ids)
+
+        # 4) Resolve location scope for filtering (optional)
+        local_offer_ids: frozenset[int] | None = None
+        if location.strip():
+            try:
+                geo = await _resolve_location(location)
+                scope = catalog_data.resolve_location_scope(
+                    lat=geo.lat, lon=geo.lon, radius_km=radius_km,
+                )
+                if scope is not None:
+                    local_offer_ids = scope.local_offer_ids
+            except GeocodeError:
+                pass  # fall through to unfiltered results
+
+        # 5) Query offers
+        if local_offer_ids is not None:
+            if not local_offer_ids:
+                # No offers in scope at all
+                return JSONResponse({
+                    "category": category,
+                    "subcategories": subcategories,
+                    "offers": [],
+                    "total": 0,
+                    "has_more": False,
+                })
+
+            # Build a temp table or IN clause for local offer IDs
+            # For performance, use a subquery with the location-scoped IDs
+            # Since local_offer_ids can be large, we filter in Python after SQL
+            count_row = conn.execute(f"""
+                SELECT COUNT(DISTINCT o.id) AS cnt
+                FROM offers o
+                JOIN product_labels pl ON o.product_name = pl.product_name
+                WHERE pl.category_v2_id IN ({ph})
+                  AND o.sales_price_eur IS NOT NULL
+            """, all_ids).fetchone()
+            total_unfiltered = count_row["cnt"]
+
+            # Fetch more than needed so we can filter by location in Python
+            batch_size = max(limit + offset + 200, 500)
+            rows = conn.execute(f"""
+                SELECT DISTINCT o.id, o.product_name AS title, o.brand_name AS brand,
+                       o.chain, o.sales_price_eur AS price_eur,
+                       o.regular_price_eur AS was_price_eur,
+                       o.base_price_text, o.offer_image_url AS image_url,
+                       pl.category_v2_id
+                FROM offers o
+                JOIN product_labels pl ON o.product_name = pl.product_name
+                WHERE pl.category_v2_id IN ({ph})
+                  AND o.sales_price_eur IS NOT NULL
+                ORDER BY o.sales_price_eur ASC
+                LIMIT ?
+            """, all_ids + [batch_size]).fetchall()
+
+            # Filter to local offers
+            filtered = [r for r in rows if r["id"] in local_offer_ids]
+            total = len(filtered)
+            page = filtered[offset:offset + limit]
+        else:
+            # No location filter — straightforward query
+            count_row = conn.execute(f"""
+                SELECT COUNT(DISTINCT o.id) AS cnt
+                FROM offers o
+                JOIN product_labels pl ON o.product_name = pl.product_name
+                WHERE pl.category_v2_id IN ({ph})
+                  AND o.sales_price_eur IS NOT NULL
+            """, all_ids).fetchone()
+            total = count_row["cnt"]
+
+            rows = conn.execute(f"""
+                SELECT DISTINCT o.id, o.product_name AS title, o.brand_name AS brand,
+                       o.chain, o.sales_price_eur AS price_eur,
+                       o.regular_price_eur AS was_price_eur,
+                       o.base_price_text, o.offer_image_url AS image_url,
+                       pl.category_v2_id
+                FROM offers o
+                JOIN product_labels pl ON o.product_name = pl.product_name
+                WHERE pl.category_v2_id IN ({ph})
+                  AND o.sales_price_eur IS NOT NULL
+                ORDER BY o.sales_price_eur ASC
+                LIMIT ? OFFSET ?
+            """, all_ids + [limit, offset]).fetchall()
+            page = rows
+
+        # 6) Build category name lookup for the IDs we have
+        cat_ids_in_result = list({r["category_v2_id"] for r in page if r["category_v2_id"]})
+        cat_name_map: dict[int, str] = {}
+        if cat_ids_in_result:
+            cn_ph = ", ".join("?" for _ in cat_ids_in_result)
+            for cn_row in conn.execute(
+                f"SELECT id, name FROM categories_v2 WHERE id IN ({cn_ph})", cat_ids_in_result
+            ):
+                cat_name_map[cn_row["id"]] = compact_text(cn_row["name"])
+
+        # 7) Build response offers
+        from app.services.catalog_data import _parse_base_price, _parse_float
+        offers = []
+        for r in page:
+            base_price_eur, base_unit = _parse_base_price(r["base_price_text"])
+            offers.append({
+                "id": str(r["id"]),
+                "title": compact_text(r["title"]),
+                "brand": compact_text(r["brand"]) or None,
+                "chain": r["chain"],
+                "price_eur": _parse_float(r["price_eur"]),
+                "was_price_eur": _parse_float(r["was_price_eur"]),
+                "base_price_eur": base_price_eur,
+                "base_unit": base_unit,
+                "image_url": r["image_url"],
+                "category_id": r["category_v2_id"],
+                "category_name": cat_name_map.get(r["category_v2_id"], ""),
+            })
+
+        return JSONResponse({
+            "category": category,
+            "subcategories": subcategories,
+            "offers": offers,
+            "total": total,
+            "has_more": (offset + limit) < total,
+        })
+    except Exception as exc:
+        return JSONResponse({"error": str(exc)}, status_code=500)
+    finally:
+        conn.close()
+
+
+@app.get("/api/price-trend")
+async def api_price_trend(
+    category_id: int = 0,
+    category_name: str = "",
+    days: int = 30,
+) -> JSONResponse:
+    """Return price trend for a category over the last N days."""
+    import sqlite3
+    conn = sqlite3.connect(str(catalog_db_path))
+    conn.row_factory = sqlite3.Row
+    try:
+        if category_id > 0:
+            where = "category_id = ?"
+            params: list = [category_id]
+        elif category_name:
+            where = "category_name = ?"
+            params = [category_name]
+        else:
+            return JSONResponse({"trend": [], "direction": "stable"})
+
+        rows = conn.execute(f"""
+            SELECT
+                date(timestamp) as day,
+                ROUND(AVG(price_eur), 2) as avg_price,
+                ROUND(MIN(price_eur), 2) as min_price,
+                ROUND(MAX(price_eur), 2) as max_price,
+                COUNT(*) as samples
+            FROM price_history
+            WHERE {where}
+              AND timestamp > datetime('now', '-{days} days')
+            GROUP BY date(timestamp)
+            ORDER BY day
+        """, params).fetchall()
+
+        trend_data = [
+            {"day": r["day"], "avg": r["avg_price"], "min": r["min_price"], "max": r["max_price"], "n": r["samples"]}
+            for r in rows
+        ]
+
+        # Calculate direction
+        direction = "stable"
+        if len(trend_data) >= 2:
+            first_avg = trend_data[0]["avg"]
+            last_avg = trend_data[-1]["avg"]
+            if last_avg < first_avg * 0.95:
+                direction = "down"
+            elif last_avg > first_avg * 1.05:
+                direction = "up"
+
+        return JSONResponse({
+            "trend": trend_data,
+            "direction": direction,
+            "category_id": category_id,
+            "category_name": category_name,
+        })
+    finally:
+        conn.close()
 
 
 @app.get("/healthz")

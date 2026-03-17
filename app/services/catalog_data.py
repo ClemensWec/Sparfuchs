@@ -109,25 +109,114 @@ class _LocationScopeCache:
 
 _scope_cache = _LocationScopeCache(ttl_seconds=300)
 
+# Module-level caches for CatalogDataService (frozen dataclass can't hold mutable attrs)
+_stores_table_cache: dict[str, bool] = {}
+_local_places_cache: dict[str, tuple[float, list[LocalPlace]]] = {}  # db_path → (timestamp, places)
+_LOCAL_PLACES_TTL = 600  # 10 minutes
+_all_chains_cache: dict[str, tuple[float, list[str]]] = {}  # db_path → (timestamp, chains)
+_ALL_CHAINS_TTL = 600
+_offers_cache: dict[str, tuple[float, list]] = {}  # cache_key → (timestamp, offers)
+_OFFERS_CACHE_MAX = 20
+_OFFERS_TTL = 300  # 5 minutes
+_brochure_map_cache: dict[str, tuple[float, dict]] = {}  # chain_key → (timestamp, brochure_map)
+_BROCHURE_MAP_TTL = 300
+
+
+# ---------------------------------------------------------------------------
+# Index page stats (cached)
+# ---------------------------------------------------------------------------
+
+_index_stats_cache: dict[str, object] = {}
+_index_stats_ts: float = 0.0
+_INDEX_STATS_TTL = 3600  # 1 hour
+
+
+def _relative_time_de(dt: date) -> str:
+    delta_days = (date.today() - dt).days
+    if delta_days < 0:
+        return "gerade eben"
+    if delta_days == 0:
+        return "heute"
+    if delta_days == 1:
+        return "vor 1 Tag"
+    if delta_days < 7:
+        return f"vor {delta_days} Tagen"
+    weeks = delta_days // 7
+    if weeks == 1:
+        return "vor 1 Woche"
+    return f"vor {weeks} Wochen"
+
+
+def get_index_stats(db_path: Path) -> dict[str, str | int]:
+    global _index_stats_ts
+
+    now = time.monotonic()
+    if _index_stats_cache and (now - _index_stats_ts) < _INDEX_STATS_TTL:
+        return _index_stats_cache
+
+    if not db_path.exists():
+        return {"offer_count": "0", "chain_count": 0, "last_updated": ""}
+
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    try:
+        row = conn.execute("""
+            SELECT
+                COUNT(*) AS offer_count,
+                COUNT(DISTINCT chain) AS chain_count,
+                MAX(valid_from) AS last_valid_from
+            FROM offers
+        """).fetchone()
+    finally:
+        conn.close()
+
+    offer_count = int(row["offer_count"])
+    chain_count = int(row["chain_count"])
+    last_valid_from = _parse_kaufda_date(row["last_valid_from"])
+
+    result = {
+        "offer_count": f"{offer_count:,}".replace(",", "."),
+        "chain_count": chain_count,
+        "last_updated": _relative_time_de(last_valid_from) if last_valid_from else "",
+    }
+
+    _index_stats_cache.clear()
+    _index_stats_cache.update(result)
+    _index_stats_ts = now
+
+    return result
+
 
 @dataclass(frozen=True)
 class CatalogDataService:
     db_path: Path
 
+    # Mutable caches on a frozen dataclass — stored as class-level defaults
+    # and keyed by db_path internally, or we use object.__setattr__ on first call.
+    # Simpler: use module-level caches keyed by db_path.
+
     def available(self) -> bool:
         return self.db_path.exists()
 
     def stores_table_available(self) -> bool:
+        # Cache the result — stores table doesn't change at runtime
+        cached = _stores_table_cache.get(str(self.db_path))
+        if cached is not None:
+            return cached
         if not self.available():
+            _stores_table_cache[str(self.db_path)] = False
             return False
         with _connect(self.db_path) as conn:
             row = conn.execute(
                 "SELECT name FROM sqlite_master WHERE type='table' AND name='stores'"
             ).fetchone()
             if row is None:
+                _stores_table_cache[str(self.db_path)] = False
                 return False
             count_row = conn.execute("SELECT COUNT(*) AS count FROM stores").fetchone()
-        return bool(count_row and int(count_row["count"]) > 0)
+        result = bool(count_row and int(count_row["count"]) > 0)
+        _stores_table_cache[str(self.db_path)] = result
+        return result
 
     def resolve_by_postcode(self, postcode: str) -> LocalPlace | None:
         if not self.available() or not postcode:
@@ -338,6 +427,14 @@ class CatalogDataService:
         return stores
 
     def _load_local_places(self) -> list[LocalPlace]:
+        # Check cache first — local places rarely change
+        db_key = str(self.db_path)
+        cached = _local_places_cache.get(db_key)
+        if cached is not None:
+            ts, places = cached
+            if time.monotonic() - ts < _LOCAL_PLACES_TTL:
+                return places
+
         sql = """
             SELECT
                 city_name AS display_name,
@@ -356,7 +453,7 @@ class CatalogDataService:
         with _connect(self.db_path) as conn:
             rows = list(conn.execute(sql))
 
-        return [
+        places = [
             LocalPlace(
                 display_name=compact_text(row["display_name"]) or "",
                 normalized_name=normalize_search_text(compact_text(row["display_name"]) or ""),
@@ -368,41 +465,20 @@ class CatalogDataService:
             for row in rows
             if row["avg_lat"] is not None and row["avg_lng"] is not None
         ]
+        _local_places_cache[db_key] = (time.monotonic(), places)
+        return places
 
     def match_stores_to_regions(self, stores: list[Store]) -> list[Store]:
         if not stores or not self.available():
             return stores
 
-        with _connect(self.db_path) as conn:
-            # Check if brochure_stores table exists
-            table_check = conn.execute(
-                "SELECT name FROM sqlite_master WHERE type='table' AND name='brochure_stores'"
-            ).fetchone()
-            if not table_check:
-                return stores
+        chains = sorted({store.chain for store in stores if store.chain})
+        if not chains:
+            return stores
 
-            # Batch lookup: get brochure_content_ids for all nearby stores' chains
-            chains = sorted({store.chain for store in stores if store.chain})
-            if not chains:
-                return stores
-            chain_ph = ", ".join("?" for _ in chains)
-            sql = f"""
-                SELECT s.osm_type, s.osm_id,
-                       GROUP_CONCAT(DISTINCT bs.brochure_content_id) AS brochure_ids
-                FROM stores s
-                JOIN brochure_stores bs ON bs.store_id = s.id
-                WHERE s.chain IN ({chain_ph})
-                GROUP BY s.osm_type, s.osm_id
-            """
-            rows = list(conn.execute(sql, list(chains)))
-
-        # Build lookup: (osm_type, osm_id) → brochure_content_ids
-        brochure_map: dict[tuple[str, int], tuple[str, ...]] = {}
-        for row in rows:
-            ids = tuple(
-                sorted({part.strip() for part in str(row["brochure_ids"] or "").split(",") if part.strip()})
-            )
-            brochure_map[(str(row["osm_type"]), int(row["osm_id"]))] = ids
+        brochure_map = self._get_brochure_map(tuple(chains))
+        if brochure_map is None:
+            return stores
 
         matched: list[Store] = []
         for store in stores:
@@ -426,6 +502,48 @@ class CatalogDataService:
                 matched.append(store)
 
         return matched
+
+    def _get_brochure_map(
+        self, chains: tuple[str, ...]
+    ) -> dict[tuple[str, int], tuple[str, ...]] | None:
+        """Get brochure map for chains, cached in module-level dict."""
+        cache_key = ",".join(chains)
+        cached = _brochure_map_cache.get(cache_key)
+        if cached is not None:
+            ts, bmap = cached
+            if time.monotonic() - ts < _BROCHURE_MAP_TTL:
+                return bmap
+
+        with _connect(self.db_path) as conn:
+            table_check = conn.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='brochure_stores'"
+            ).fetchone()
+            if not table_check:
+                return None
+
+            chain_ph = ", ".join("?" for _ in chains)
+            sql = f"""
+                SELECT s.osm_type, s.osm_id,
+                       GROUP_CONCAT(DISTINCT bs.brochure_content_id) AS brochure_ids
+                FROM stores s
+                JOIN brochure_stores bs ON bs.store_id = s.id
+                WHERE s.chain IN ({chain_ph})
+                GROUP BY s.osm_type, s.osm_id
+            """
+            rows = list(conn.execute(sql, list(chains)))
+
+        brochure_map: dict[tuple[str, int], tuple[str, ...]] = {}
+        for row in rows:
+            ids = tuple(
+                sorted({part.strip() for part in str(row["brochure_ids"] or "").split(",") if part.strip()})
+            )
+            brochure_map[(str(row["osm_type"]), int(row["osm_id"]))] = ids
+
+        if len(_brochure_map_cache) >= 20:
+            oldest_key = next(iter(_brochure_map_cache))
+            del _brochure_map_cache[oldest_key]
+        _brochure_map_cache[cache_key] = (time.monotonic(), brochure_map)
+        return brochure_map
 
     def resolve_location_scope(
         self,
@@ -488,9 +606,17 @@ class CatalogDataService:
         return scope
 
     def _all_chains(self) -> list[str]:
+        db_key = str(self.db_path)
+        cached = _all_chains_cache.get(db_key)
+        if cached is not None:
+            ts, chains = cached
+            if time.monotonic() - ts < _ALL_CHAINS_TTL:
+                return chains
         with _connect(self.db_path) as conn:
             rows = conn.execute("SELECT DISTINCT chain FROM stores ORDER BY chain").fetchall()
-        return [row["chain"] for row in rows]
+        chains = [row["chain"] for row in rows]
+        _all_chains_cache[db_key] = (time.monotonic(), chains)
+        return chains
 
     def _resolve_offer_ids_and_counts(
         self,
@@ -571,6 +697,18 @@ class CatalogDataService:
         brochure_content_ids = [item for item in (brochure_content_ids or []) if item]
         full_chain_set = {item for item in (full_chains or []) if item}
 
+        # Build cache key from inputs
+        cache_key = (
+            ",".join(sorted(chains))
+            + "|" + ",".join(sorted(brochure_content_ids))
+            + "|" + ",".join(sorted(full_chain_set))
+        )
+        cached = _offers_cache.get(cache_key)
+        if cached is not None:
+            ts, offers = cached
+            if time.monotonic() - ts < _OFFERS_TTL:
+                return offers
+
         params: list[object] = []
         sql = """
             SELECT *
@@ -600,7 +738,15 @@ class CatalogDataService:
 
         with _connect(self.db_path) as conn:
             rows = list(conn.execute(sql, params))
-        return [self._row_to_offer(row) for row in rows]
+        result = [self._row_to_offer(row) for row in rows]
+
+        # Cache with size limit
+        if len(_offers_cache) >= _OFFERS_CACHE_MAX:
+            # Evict oldest entry
+            oldest_key = next(iter(_offers_cache))
+            del _offers_cache[oldest_key]
+        _offers_cache[cache_key] = (time.monotonic(), result)
+        return result
 
     def _row_to_offer(self, row: sqlite3.Row) -> Offer:
         base_price_eur, base_unit = _parse_base_price(row["base_price_text"])

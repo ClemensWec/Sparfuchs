@@ -2,6 +2,7 @@
 {% block title %}Sparfuchs | Suche{% if q %}: {{ q }}{% endif %}{% endblock %}
 {% block content %}
   <section class="search-page">
+    <!-- Back + Location Context -->
     <div class="search-top-bar">
       <a class="back-link" href="/">&larr; Startseite</a>
       <div class="search-context">
@@ -10,6 +11,7 @@
       </div>
     </div>
 
+    <!-- Search Input -->
     <div class="search-bar-section">
       <form id="search-form" class="search-bar-wrap search-bar-page" action="/search" method="get">
         <input type="hidden" name="location" value="{{ location }}" />
@@ -26,31 +28,29 @@
       </form>
     </div>
 
-    <div class="search-layout">
-      <aside class="filter-panel" id="filter_panel">
-        <div class="filter-section">
-          <div class="section-kicker">Ketten</div>
-          <div id="chain_filters" class="filter-checks"></div>
-        </div>
-        <div class="filter-section">
-          <div class="section-kicker">Sortierung</div>
-          <select id="sort_select" class="filter-select">
-            <option value="relevance">Relevanz</option>
-            <option value="price_asc">Preis aufsteigend</option>
-            <option value="price_desc">Preis absteigend</option>
-            <option value="discount">Gr&ouml;&szlig;ter Rabatt</option>
-          </select>
-        </div>
-      </aside>
+    <!-- Filter Chips + Sort (Horizontal) -->
+    <div class="filter-chips-bar" id="filter_panel">
+      <div id="chain_filters" class="filter-chips-scroll"></div>
+      <select id="sort_select" class="sort-dropdown-inline">
+        <option value="relevance">Relevanz</option>
+        <option value="price_asc">Preis &uarr;</option>
+        <option value="price_desc">Preis &darr;</option>
+        <option value="discount">Rabatt</option>
+      </select>
+    </div>
 
+    <!-- Info Line -->
+    <div class="search-info-line">
+      <span id="result_count">{% if q %}Lade...{% else %}Gib einen Suchbegriff ein{% endif %}</span>
+    </div>
+
+    <!-- Main Layout: Results + Sidebar -->
+    <div class="search-layout">
       <main class="search-results">
-        <div class="search-results-header">
-          <span id="result_count" class="muted"></span>
-        </div>
-        <div id="product_grid" class="product-grid">
-          <div class="muted" style="grid-column:1/-1;text-align:center;padding:40px;">
-            {% if q %}Lade Ergebnisse...{% else %}Gib einen Suchbegriff ein, um Angebote zu finden.{% endif %}
-          </div>
+        <div id="product_grid" class="product-list">
+          {% if not q %}
+            <div class="empty-state-text">Gib einen Suchbegriff ein, um Angebote zu finden.</div>
+          {% endif %}
         </div>
         <div id="load_more_wrap" style="display:none;text-align:center;padding:20px;">
           <button id="load_more" class="primary" type="button">Mehr laden</button>
@@ -59,7 +59,7 @@
 
       <aside class="shopping-list-sidebar" id="shopping_sidebar">
         <div class="sidebar-head">
-          <div class="section-kicker">Einkaufsliste</div>
+          <h2 class="section-kicker">Einkaufsliste</h2>
           <span id="sidebar_count" class="count-badge">0</span>
         </div>
         <div id="sidebar_basket" class="sidebar-basket"></div>
@@ -78,4 +78,14 @@
       </aside>
     </div>
   </section>
+
+  <!-- Basket Bottom Bar (Mobile, replaces FAB on search) -->
+  <div id="basket_bottom_bar" class="basket-bottom-bar" aria-hidden="true">
+    <div class="bottom-bar-inner">
+      <div class="bottom-bar-info">
+        <span id="bottom_bar_count">0 Artikel</span>
+      </div>
+      <button type="button" id="bottom_bar_compare" class="bottom-bar-cta">Vergleichen &rarr;</button>
+    </div>
+  </div>
 {% endblock %}
