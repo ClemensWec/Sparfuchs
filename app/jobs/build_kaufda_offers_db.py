@@ -32,6 +32,7 @@ if str(ROOT_DIR) not in sys.path:
 from app.jobs.kaufda_offer_dataset import extract_offer_records_from_brochure, iter_brochure_dirs
 from app.utils.chains import normalize_chain
 from app.utils.text import compact_text, normalize_search_text
+from app.utils.unit_parser import parse_base_price, extract_qty_unit_from_description, _UNIT_MAP
 
 
 def parse_args() -> argparse.Namespace:
@@ -86,6 +87,14 @@ def init_db(conn: sqlite3.Connection) -> None:
             discount_percent REAL,
             currency_code TEXT,
             base_price_text TEXT,
+            -- Parsed & normalized unit data (from unit_parser.py)
+            qty_value REAL,            -- reference quantity  e.g. 100 for "100 g"
+            qty_unit TEXT,             -- canonical unit key  e.g. "g", "kg", "wl"
+            qty_unit_group TEXT,       -- unit group          e.g. "weight", "laundry_load"
+            base_price_eur REAL,       -- price for qty_value units  e.g. 0.79
+            base_price_eur_max REAL,   -- upper bound for range prices
+            normalized_unit TEXT,      -- normalized symbol   e.g. "g", "ml", "wl"
+            price_per_normalized REAL, -- price per 1 normalized unit  e.g. 0.0079 €/g
             discount_label_type TEXT,
             discount_label_value REAL,
             offer_image_url TEXT,
@@ -291,14 +300,38 @@ def _insert_deduped_offer(conn: sqlite3.Connection, chain_key: str, chain: str, 
     description_text_normalized = normalize_search_text(description_text)
     search_text_normalized = normalize_search_text(search_text)
 
+    base_price_text = compact_text(row.get("base_price_text"))
+    parsed_bp = parse_base_price(base_price_text)
+
+    # Fallback: extract qty/unit from description when base_price_text is empty
+    if not parsed_bp.is_comparable and not base_price_text:
+        desc_result = extract_qty_unit_from_description(description_text)
+        if desc_result is not None:
+            qty, unit_key, group, norm_sym = desc_result
+            sale_price = row.get("sales_price_eur")
+            if sale_price is not None:
+                _, multiplier, _ = _UNIT_MAP[unit_key]
+                from app.utils.unit_parser import ParsedBasePrice
+                parsed_bp = ParsedBasePrice(
+                    raw="",
+                    quantity=qty,
+                    unit=unit_key,
+                    unit_group=group,
+                    price_eur=float(sale_price),
+                    normalized_unit=norm_sym,
+                    price_per_normalized=float(sale_price) / (qty * multiplier),
+                )
+
     cursor = conn.execute(
         "INSERT INTO offers ("
         "chain_key, chain, product_name, product_name_normalized, brand_name, brand_name_normalized, "
         "description_text, description_text_normalized, search_text, search_text_normalized, "
         "sales_price_eur, regular_price_eur, discount_amount_eur, discount_percent, "
-        "currency_code, base_price_text, discount_label_type, discount_label_value, "
+        "currency_code, base_price_text, "
+        "qty_value, qty_unit, qty_unit_group, base_price_eur, base_price_eur_max, normalized_unit, price_per_normalized, "
+        "discount_label_type, discount_label_value, "
         "offer_image_url, offer_type, valid_from, valid_until, raw_deals_json"
-        ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         (
             chain_key, chain,
             product_name, product_name_normalized,
@@ -307,7 +340,10 @@ def _insert_deduped_offer(conn: sqlite3.Connection, chain_key: str, chain: str, 
             search_text, search_text_normalized,
             row.get("sales_price_eur"), row.get("regular_price_eur"),
             row.get("discount_amount_eur"), row.get("discount_percent"),
-            row.get("currency_code"), compact_text(row.get("base_price_text")),
+            row.get("currency_code"), base_price_text,
+            parsed_bp.quantity, parsed_bp.unit, parsed_bp.unit_group,
+            parsed_bp.price_eur, parsed_bp.price_eur_max,
+            parsed_bp.normalized_unit, parsed_bp.price_per_normalized,
             row.get("discount_label_type"), row.get("discount_label_value"),
             row.get("offer_image_url"), row.get("offer_type"),
             row.get("valid_from"), row.get("valid_until"),

@@ -13,6 +13,7 @@ from app.services.overpass import Store
 from app.utils.geo import haversine_km
 from app.utils.matching import calculate_match_score
 from app.utils.text import compact_text, normalize_search_text
+from app.utils.unit_parser import parse_base_price
 
 
 def _connect(db_path: Path) -> sqlite3.Connection:
@@ -34,20 +35,9 @@ def _parse_kaufda_date(value: str | None) -> date | None:
 
 
 def _parse_base_price(value: str | None) -> tuple[float | None, str | None]:
-    text = compact_text(value)
-    if not text:
-        return (None, None)
-
-    match = re.search(r"([A-Za-z]+)\s*=\s*([0-9]+(?:[.,][0-9]+)?)", text)
-    if not match:
-        match = re.search(r"([0-9]+(?:[.,][0-9]+)?)\s*(?:€|EUR)?\s*/\s*([A-Za-z]+)", text, re.IGNORECASE)
-        if not match:
-            return (None, None)
-        price_str, unit = match.group(1), match.group(2)
-        return (_parse_float(price_str), unit.lower())
-
-    unit, price_str = match.group(1), match.group(2)
-    return (_parse_float(price_str), unit.lower())
+    # Legacy helper kept for compatibility — new code uses parse_base_price() directly.
+    parsed = parse_base_price(value)
+    return (parsed.price_eur, parsed.unit)
 
 
 def _parse_float(value: str | float | int | None) -> float | None:
@@ -749,7 +739,14 @@ class CatalogDataService:
         return result
 
     def _row_to_offer(self, row: sqlite3.Row) -> Offer:
-        base_price_eur, base_unit = _parse_base_price(row["base_price_text"])
+        keys = row.keys()
+        # Prefer pre-parsed columns from DB; fall back to live parsing for old DBs.
+        if "price_per_normalized" in keys and row["price_per_normalized"] is not None:
+            base_price_eur = _parse_float(row["base_price_eur"])
+            base_unit = row["qty_unit"]
+        else:
+            base_price_eur, base_unit = _parse_base_price(row["base_price_text"])
+
         return Offer(
             id=str(row["id"]),
             title=compact_text(row["product_name"]),
@@ -760,12 +757,17 @@ class CatalogDataService:
             is_offer=True,
             valid_from=_parse_kaufda_date(row["valid_from"]),
             valid_to=_parse_kaufda_date(row["valid_until"]),
+            quantity=_parse_float(row["qty_value"]) if "qty_value" in keys else None,
+            unit=row["qty_unit"] if "qty_unit" in keys else None,
             base_price_eur=base_price_eur,
             base_unit=base_unit,
             image_url=row["offer_image_url"],
             source="kaufda_catalog",
             extra={
-                "category_id": row["category_id"] if "category_id" in row.keys() else None,
+                "category_id": row["category_id"] if "category_id" in keys else None,
+                "unit_group": row["qty_unit_group"] if "qty_unit_group" in keys else None,
+                "normalized_unit": row["normalized_unit"] if "normalized_unit" in keys else None,
+                "price_per_normalized": _parse_float(row["price_per_normalized"]) if "price_per_normalized" in keys else None,
             },
         )
 

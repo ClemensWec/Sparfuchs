@@ -18,6 +18,60 @@ const STORAGE = {
   theme: "sparfuchs.theme",
 };
 
+// Weight/volume units get normalized to a standard display unit for comparison.
+// All other units (wl, tab, stk, …) are shown with their original qty label.
+const _WEIGHT_UNITS  = new Set(["g", "kg"]);
+const _VOLUME_UNITS  = new Set(["ml", "l", "liter"]);
+
+/**
+ * Format a human-readable base price normalized to a standard comparison unit:
+ *   Weight  → always €/kg   (e.g. 100g@1,29€  → "12,90 €/kg")
+ *   Volume  → always €/l    (e.g. 330ml@0,79€ → "2,39 €/l")
+ *   Others  → original qty  (e.g. 1 WL@0,03€  → "0,03 €/WL")
+ *                           (e.g. 1 St.@3,30€ → "3,30 €/Stück")
+ */
+function formatBasePrice(offer) {
+  const unit  = offer.base_unit || offer.unit;
+  const qty   = offer.quantity != null ? Number(offer.quantity) : null;
+  const price = offer.base_price_eur != null ? Number(offer.base_price_eur) : null;
+  if (price == null || unit == null) return null;
+
+  const fmt = v => v.toFixed(2).replace(".", ",");
+
+  if (_WEIGHT_UNITS.has(unit)) {
+    // Normalize to €/kg
+    const multiplier = unit === "kg" ? 1 : 0.001;   // g→kg: /1000
+    const perKg = (qty != null && qty > 0)
+      ? (price / qty) / multiplier
+      : (unit === "kg" ? price : null);
+    if (perKg == null) return null;
+    return `${fmt(perKg)}\u00a0€/kg`;
+  }
+
+  if (_VOLUME_UNITS.has(unit)) {
+    // Normalize to €/l
+    const mlPerUnit = unit === "ml" ? 1 : 1000;     // ml→l: /1000
+    const perL = (qty != null && qty > 0)
+      ? (price / qty) * (1000 / mlPerUnit)
+      : (unit === "l" || unit === "liter" ? price : null);
+    if (perL == null) return null;
+    return `${fmt(perL)}\u00a0€/l`;
+  }
+
+  // Other units: show original price with qty label
+  const unitLabel = {
+    wl: "WL", tab: "Tab", blatt: "Blatt",
+    tuecher: "Tuch", tuch: "Tuch",
+    stueck: "Stück", st: "Stück", stk: "Stück",
+    dose: "Dose", m: "m",
+  }[unit] || unit;
+
+  const qtyLabel = (qty != null && qty !== 1)
+    ? `${Number.isInteger(qty) ? qty : qty}\u00a0${unitLabel}`
+    : unitLabel;
+  return `${fmt(price)}\u00a0€/${qtyLabel}`;
+}
+
 /* ── Theme Management ── */
 
 function _isDarkActive() {
@@ -342,9 +396,8 @@ function buildDetailLines(lines) {
       if (line.offer.was_price_eur && line.offer.was_price_eur > line.offer.price_eur) {
         linePrice.appendChild(el("span", { class: "was-price" }, `${line.offer.was_price_eur.toFixed(2).replace('.', ',')} \u20AC`));
       }
-      if (line.offer.base_price_eur && line.offer.base_unit) {
-        linePrice.appendChild(el("span", { class: "base-price" }, `${line.offer.base_price_eur.toFixed(2).replace('.', ',')} \u20AC/${line.offer.base_unit}`));
-      }
+      const bpLabel = formatBasePrice(line.offer);
+      if (bpLabel) linePrice.appendChild(el("span", { class: "base-price" }, bpLabel));
     } else if (line.offer) {
       linePrice.appendChild(el("span", { class: "muted" }, "\u2014"));
     } else {
@@ -1269,9 +1322,8 @@ function renderProductGrid(hits) {
     const titleText = h.brand ? `${h.brand} \u2013 ${h.title}` : h.title;
     info.appendChild(el("div", { class: "row-title" }, titleText));
     const meta = el("div", { class: "row-meta" });
-    if (h.base_price_eur && h.base_unit) {
-      meta.appendChild(el("span", {}, `${Number(h.base_price_eur).toFixed(2)} \u20AC/${h.base_unit}`));
-    }
+    const bpLabel = formatBasePrice(h);
+    if (bpLabel) meta.appendChild(el("span", {}, bpLabel));
     if (h.valid_from || h.valid_until) {
       meta.appendChild(el("span", {}, [h.valid_from, h.valid_until].filter(Boolean).join(" \u2013 ")));
     }
@@ -1742,8 +1794,9 @@ function buildOfferCard(offer) {
   body.appendChild(priceRow);
 
   // Base price
-  if (offer.base_price_eur != null && offer.base_unit) {
-    body.appendChild(el('div', { class: 'offer-card-base' }, `${_formatPrice(offer.base_price_eur)}/${offer.base_unit}`));
+  const cardBpLabel = formatBasePrice(offer);
+  if (cardBpLabel) {
+    body.appendChild(el('div', { class: 'offer-card-base' }, cardBpLabel));
   }
 
   card.appendChild(body);

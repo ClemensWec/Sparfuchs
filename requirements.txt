@@ -6,3 +6,4 @@ httpx>=0.26
 requests>=2.32
 rapidfuzz>=3.6
 cachetools>=5.3
+symspellpy>=6.9

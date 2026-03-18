@@ -13,6 +13,7 @@ import httpx
 from app.connectors.base import Offer
 from app.utils.chains import normalize_chain_with_extra
 from app.utils.keywords import generate_keyword_variants
+from app.utils.unit_parser import parse_base_price, extract_qty_unit_from_description, ParsedBasePrice, _UNIT_MAP
 
 
 def _resp_html_utf8(resp: httpx.Response) -> str:
@@ -73,9 +74,6 @@ def _parse_kaufda_dt_to_date(raw: str | None) -> date | None:
 
 
 _RE_BONUS = re.compile(r"(?P<eur>\d+[.,]\d{1,2})\s*€\s*Bonus", re.IGNORECASE)
-_RE_BASE_UNIT = re.compile(
-    r"(?P<qty>\d+[.,]?\d*)\s*(?P<unit>[a-zA-Z]+)\s*=\s*(?P<price>\d+[.,]\d{1,2})"
-)
 _SEARCH_BUCKETS = ("main", "topRanked", "otherPublishers")
 _ASSORTMENT_PUBLISHER_SLUGS = (
     "Aldi-Sued",
@@ -104,18 +102,8 @@ def _parse_bonus_cents(text: str | None) -> int | None:
 
 
 def _parse_base_price(price_by_base_unit: str | None) -> tuple[float | None, str | None]:
-    if not price_by_base_unit:
-        return (None, None)
-    s = str(price_by_base_unit).strip()
-    m = _RE_BASE_UNIT.search(s)
-    if not m:
-        return (None, None)
-    unit = m.group("unit").strip().lower()
-    price = m.group("price").replace(".", "").replace(",", ".")
-    try:
-        return (float(price), unit)
-    except Exception:
-        return (None, unit)
+    parsed = parse_base_price(price_by_base_unit)
+    return (parsed.price_eur, parsed.unit)
 
 
 
@@ -381,7 +369,27 @@ class KaufdaOffersSeoConnector:
         if was_price_eur is not None and was_price_eur <= 0:
             was_price_eur = None
 
-        base_price_eur, base_unit = _parse_base_price(prices.get("priceByBaseUnit"))
+        parsed_bp = parse_base_price(prices.get("priceByBaseUnit"))
+
+        # Fallback: extract qty/unit from description when priceByBaseUnit is absent
+        if not parsed_bp.is_comparable and price_eur is not None:
+            description = str(it.get("description") or "").strip()
+            desc_result = extract_qty_unit_from_description(description)
+            if desc_result is not None:
+                qty, unit_key, group, norm_sym = desc_result
+                _, multiplier, _ = _UNIT_MAP[unit_key]
+                parsed_bp = ParsedBasePrice(
+                    raw="",
+                    quantity=qty,
+                    unit=unit_key,
+                    unit_group=group,
+                    price_eur=price_eur,
+                    normalized_unit=norm_sym,
+                    price_per_normalized=price_eur / (qty * multiplier),
+                )
+
+        base_price_eur = parsed_bp.price_eur
+        base_unit = parsed_bp.unit
         bonus_cents = _parse_bonus_cents(prices.get("description")) or _parse_bonus_cents(it.get("description"))
 
         img = None
@@ -408,7 +416,10 @@ class KaufdaOffersSeoConnector:
                 "prices": prices,
                 "url": url,
                 "location": {"zip": zip_code, "city": city, "lat": loc.get("lat"), "lng": loc.get("lng")},
-            }
+            },
+            "unit_group": parsed_bp.unit_group,
+            "normalized_unit": parsed_bp.normalized_unit,
+            "price_per_normalized": parsed_bp.price_per_normalized,
         }
         extra.update(chain_extra)
 
@@ -425,8 +436,8 @@ class KaufdaOffersSeoConnector:
             was_price_eur=was_price_eur,
             valid_from=valid_from,
             valid_to=valid_to,
-            unit=None,
-            quantity=None,
+            unit=parsed_bp.unit,
+            quantity=parsed_bp.quantity,
             base_unit=base_unit,
             base_price_eur=base_price_eur,
             source="kaufda",

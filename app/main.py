@@ -745,6 +745,8 @@ async def api_compare(request: Request) -> JSONResponse:
                             "image_url": line.offer.image_url,
                             "base_price_eur": line.offer.base_price_eur,
                             "base_unit": line.offer.base_unit,
+                            "quantity": line.offer.quantity,
+                            "unit": line.offer.unit,
                             "valid_from": str(line.offer.valid_from) if line.offer.valid_from else None,
                             "valid_to": str(line.offer.valid_to) if line.offer.valid_to else None,
                         }
@@ -1278,7 +1280,8 @@ async def api_offers_by_category(
                 SELECT DISTINCT o.id, o.product_name AS title, o.brand_name AS brand,
                        o.chain, o.sales_price_eur AS price_eur,
                        o.regular_price_eur AS was_price_eur,
-                       o.base_price_text, o.offer_image_url AS image_url,
+                       o.base_price_text, o.qty_value, o.qty_unit,
+                       o.base_price_eur, o.offer_image_url AS image_url,
                        pl.category_v2_id
                 FROM offers o
                 JOIN product_labels pl ON o.product_name = pl.product_name
@@ -1307,7 +1310,8 @@ async def api_offers_by_category(
                 SELECT DISTINCT o.id, o.product_name AS title, o.brand_name AS brand,
                        o.chain, o.sales_price_eur AS price_eur,
                        o.regular_price_eur AS was_price_eur,
-                       o.base_price_text, o.offer_image_url AS image_url,
+                       o.base_price_text, o.qty_value, o.qty_unit,
+                       o.base_price_eur, o.offer_image_url AS image_url,
                        pl.category_v2_id
                 FROM offers o
                 JOIN product_labels pl ON o.product_name = pl.product_name
@@ -1329,10 +1333,9 @@ async def api_offers_by_category(
                 cat_name_map[cn_row["id"]] = compact_text(cn_row["name"])
 
         # 7) Build response offers
-        from app.services.catalog_data import _parse_base_price, _parse_float
+        from app.services.catalog_data import _parse_float
         offers = []
         for r in page:
-            base_price_eur, base_unit = _parse_base_price(r["base_price_text"])
             offers.append({
                 "id": str(r["id"]),
                 "title": compact_text(r["title"]),
@@ -1340,8 +1343,10 @@ async def api_offers_by_category(
                 "chain": r["chain"],
                 "price_eur": _parse_float(r["price_eur"]),
                 "was_price_eur": _parse_float(r["was_price_eur"]),
-                "base_price_eur": base_price_eur,
-                "base_unit": base_unit,
+                "base_price_eur": _parse_float(r["base_price_eur"]),
+                "base_unit": r["qty_unit"],
+                "quantity": _parse_float(r["qty_value"]),
+                "unit": r["qty_unit"],
                 "image_url": r["image_url"],
                 "category_id": r["category_v2_id"],
                 "category_name": cat_name_map.get(r["category_v2_id"], ""),
