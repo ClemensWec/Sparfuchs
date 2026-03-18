@@ -11,6 +11,41 @@ from app.utils.matching import calculate_match_score, normalize_text, MIN_SCORE_
 from app.utils.german_stems import get_token_variants
 
 
+def _get_normalized_price(offer: Offer) -> float | None:
+    """Return the price-per-normalized-unit for an offer, or None if unavailable.
+
+    Prefers the pre-computed value stored in offer.extra, falls back to
+    computing it from base_price_eur / quantity on the fly.
+    """
+    if offer.extra:
+        ppn = offer.extra.get("price_per_normalized")
+        if ppn is not None:
+            return float(ppn)
+    # Fallback: compute from base_price_eur if it represents a per-unit price already
+    return None
+
+
+def _cheaper(candidate: Offer, current_best: Offer) -> bool:
+    """Return True if candidate is cheaper than current_best.
+
+    Uses normalized price (e.g. €/g, €/ml, €/wl) when both offers share
+    the same unit group, so that different package sizes are compared fairly.
+    Falls back to absolute price_eur comparison otherwise.
+    """
+    cand_group = candidate.extra.get("unit_group") if candidate.extra else None
+    best_group = current_best.extra.get("unit_group") if current_best.extra else None
+
+    if cand_group and best_group and cand_group == best_group:
+        cand_norm = _get_normalized_price(candidate)
+        best_norm = _get_normalized_price(current_best)
+        if cand_norm is not None and best_norm is not None:
+            return cand_norm < best_norm
+
+    # Fallback: absolute price comparison
+    assert candidate.price_eur is not None and current_best.price_eur is not None
+    return float(candidate.price_eur) < float(current_best.price_eur)
+
+
 # Mirror of _CONSUMER_SYNONYMS from matching.py for pre-filter expansion
 _CONSUMER_SYNONYM_PAIRS: list[tuple[str, str]] = [
     ("marmelade", "konfituere"),
@@ -127,11 +162,37 @@ class BasketPricer:
 
         # Ranking: Meiste Treffer zuerst, dann günstigster Preis, dann kürzeste Distanz
         # found_count = Artikel mit Angebot (auch ohne Preis zählt als "gefunden")
+        def _norm_sort_price(r: StoreBasketRow) -> float:
+            """Use unit price (€/kg, €/l …) for ranking when all priced items share
+            the same unit group; otherwise fall back to the absolute basket total.
+
+            This ensures ALDI 500 g @ 8,65 €/kg beats EDEKA 100 g @ 17,90 €/kg
+            even though 5,19 € > 1,79 € in absolute terms.
+            """
+            if r.total_eur is None:
+                return float("inf")
+            ppns: list[float] = []
+            unit_groups: set[str] = set()
+            for line in r.lines:
+                if line.offer is None or line.offer.price_eur is None:
+                    continue  # missing / no-price items don't influence the comparison
+                ppn = (line.offer.extra or {}).get("price_per_normalized")
+                if ppn is None:
+                    return r.total_eur  # any item without unit data → fall back
+                group = (line.offer.extra or {}).get("unit_group")
+                ppns.append(float(ppn))
+                if group:
+                    unit_groups.add(group)
+            # Only meaningful when all items share one unit group (e.g. all weight).
+            # Mixed baskets (weight + volume) fall back to absolute total.
+            if ppns and len(unit_groups) <= 1:
+                return sum(ppns)
+            return r.total_eur
+
         def _sort_key(r: StoreBasketRow) -> tuple[int, int, float, float]:
             found_count = len(wanted) - r.missing_count  # Je mehr gefunden, desto besser
             has_price = 0 if r.total_eur is not None else 1  # Preis vorhanden = besser
-            price = r.total_eur if r.total_eur is not None else float("inf")
-            return (-found_count, has_price, price, r.distance_km)
+            return (-found_count, has_price, _norm_sort_price(r), r.distance_km)
 
         rows.sort(key=_sort_key)
         # Stores ohne irgendeinen bepreisten Treffer ausblenden.
@@ -210,7 +271,7 @@ class BasketPricer:
                 if best_offer.price_eur is None and offer.price_eur is not None:
                     best_offer = offer
                 elif offer.price_eur is not None and best_offer.price_eur is not None:
-                    if float(offer.price_eur) < float(best_offer.price_eur):
+                    if _cheaper(offer, best_offer):
                         best_offer = offer
 
         return LineMatch(wanted=wanted, offer=best_offer, score=(best_score if best_offer else None))
@@ -219,20 +280,17 @@ class BasketPricer:
         """Find best offer matching a product category (by category_id in offer.extra)."""
         cat_ids = set(wanted.category_ids or (() if wanted.category_id is None else (wanted.category_id,)))
         best_offer: Offer | None = None
-        best_price: float | None = None
 
         for offer in offers:
             offer_cat_id = (offer.extra or {}).get("category_id")
             if offer_cat_id not in cat_ids:
                 continue
-            # Found a match — pick cheapest with price
-            if offer.price_eur is not None:
-                price = float(offer.price_eur)
-                if best_price is None or price < best_price:
-                    best_offer = offer
-                    best_price = price
-            elif best_offer is None:
+            if best_offer is None:
                 best_offer = offer
+            elif offer.price_eur is not None:
+                # Prefer an offer with a price over one without
+                if best_offer.price_eur is None or _cheaper(offer, best_offer):
+                    best_offer = offer
 
         score = 100.0 if best_offer else None
         return LineMatch(wanted=wanted, offer=best_offer, score=score)
@@ -331,7 +389,7 @@ class SparMixPricer:
                     continue
                 match, price = entry
                 if price is not None:
-                    if best_price is None or price < best_price:
+                    if best_match is None or best_price is None or _cheaper(match.offer, best_match.offer):
                         best_match = match
                         best_price = price
                         best_store = stores[si]
@@ -374,23 +432,28 @@ class SparMixPricer:
         search_pool = candidates_sorted[:search_limit]
 
         best_combo: tuple[int, ...] | None = None
-        best_score = (0, float("inf"))  # (-coverage, total_price)
+        best_score = (0, float("inf"))  # (-coverage, sort_total)
 
         for combo in combinations(search_pool, max_stores):
             coverage = 0
-            total = 0.0
+            sort_total = 0.0
             for wi in range(num_items):
-                item_best: float | None = None
+                item_best_sort: float | None = None
                 for si in combo:
                     entry = store_matches.get(si, {}).get(wi)
                     if entry is not None:
-                        _, price = entry
-                        if price is not None and (item_best is None or price < item_best):
-                            item_best = price
-                if item_best is not None:
+                        match, price = entry
+                        if price is not None:
+                            # Prefer normalized unit price (€/kg, €/l …) for fair
+                            # comparison; fall back to absolute price when unavailable.
+                            ppn = _get_normalized_price(match.offer)
+                            sort_val = ppn if ppn is not None else price
+                            if item_best_sort is None or sort_val < item_best_sort:
+                                item_best_sort = sort_val
+                if item_best_sort is not None:
                     coverage += 1
-                    total += item_best
-            score = (-coverage, total)
+                    sort_total += item_best_sort
+            score = (-coverage, sort_total)
             if best_combo is None or score < best_score:
                 best_score = score
                 best_combo = combo
