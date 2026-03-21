@@ -275,6 +275,189 @@ async def run_web_validation_tests() -> list[TestResult]:
     return results
 
 
+async def run_category_api_tests() -> list[TestResult]:
+    """Teste Category Browse API Endpoints."""
+    from fastapi.testclient import TestClient
+
+    from app.main import app
+
+    results = []
+
+    client = TestClient(app)
+
+    # CAT-01: /api/category-tiles liefert Tiles
+    resp = client.get("/api/category-tiles")
+    data = resp.json()
+    tiles = data.get("tiles", [])
+    results.append(TestResult(
+        name="CAT-01: /api/category-tiles liefert Tiles",
+        passed=(resp.status_code == 200) and (len(tiles) > 0),
+        message=f"Status {resp.status_code}, {len(tiles)} Tiles",
+    ))
+
+    # CAT-02: /api/category-tiles keine Duplikate
+    tile_names = [t["name"].lower() for t in tiles]
+    has_dupes = len(tile_names) != len(set(tile_names))
+    results.append(TestResult(
+        name="CAT-02: /api/category-tiles keine Duplikate",
+        passed=not has_dupes,
+        message=f"OK, {len(tiles)} unique" if not has_dupes else f"FAIL: Duplikate in {tile_names}",
+    ))
+
+    # CAT-03: /api/offers-by-category mit gültiger ID liefert Offers
+    # Verwende erste Tile-ID als gültige Kategorie
+    valid_cat_id = tiles[0]["id"] if tiles else 1
+    resp = client.get("/api/offers-by-category", params={"category_id": valid_cat_id})
+    data = resp.json()
+    offers = data.get("offers", [])
+    results.append(TestResult(
+        name="CAT-03: /api/offers-by-category mit gültiger ID",
+        passed=(resp.status_code == 200) and (len(offers) > 0),
+        message=f"Status {resp.status_code}, {len(offers)} Offers für ID {valid_cat_id}",
+    ))
+
+    # CAT-04: /api/offers-by-category mit Location filtert
+    resp = client.get("/api/offers-by-category", params={
+        "category_id": valid_cat_id,
+        "location": "Bonn",
+        "radius_km": 5,
+    })
+    data = resp.json()
+    offers_loc = data.get("offers", [])
+    results.append(TestResult(
+        name="CAT-04: /api/offers-by-category mit Location filtert",
+        passed=(resp.status_code == 200),
+        message=f"Status {resp.status_code}, {len(offers_loc)} Offers (mit Location)",
+    ))
+
+    # CAT-05: /api/offers-by-category ungültige ID -> 404
+    resp = client.get("/api/offers-by-category", params={"category_id": 999999})
+    results.append(TestResult(
+        name="CAT-05: /api/offers-by-category ungültige ID -> 404",
+        passed=(resp.status_code == 404),
+        message=f"Status {resp.status_code}",
+    ))
+
+    return results
+
+
+async def run_compare_tests() -> list[TestResult]:
+    """Teste /api/compare Endpoint mit verschiedenen Basket-Konfigurationen."""
+    from fastapi.testclient import TestClient
+
+    from app.main import app
+
+    results = []
+
+    client = TestClient(app)
+
+    # CMP-01: /api/compare mit category_id Basket Item
+    resp = client.post("/api/compare", json={
+        "location": "Bonn",
+        "radius_km": 5,
+        "basket": [{"category_id": 1, "category_name": "Milch"}],
+    })
+    data = resp.json()
+    results.append(TestResult(
+        name="CMP-01: /api/compare mit category_id Basket Item",
+        passed=(resp.status_code == 200) and ("rows" in data or "error" not in data or "Datenbank" not in data.get("error", "")),
+        message=f"Status {resp.status_code}, Keys: {list(data.keys())[:5]}",
+    ))
+
+    # CMP-02: /api/compare mit gemischtem Basket
+    resp = client.post("/api/compare", json={
+        "location": "Bonn",
+        "radius_km": 5,
+        "basket": [
+            {"category_id": 1, "category_name": "Milch"},
+            {"q": "Butter"},
+        ],
+    })
+    data = resp.json()
+    results.append(TestResult(
+        name="CMP-02: /api/compare mit gemischtem Basket",
+        passed=(resp.status_code == 200) and ("rows" in data),
+        message=f"Status {resp.status_code}, Keys: {list(data.keys())[:5]}",
+    ))
+
+    # CMP-03: /api/compare ohne Location -> Fehler
+    resp = client.post("/api/compare", json={
+        "location": "",
+        "radius_km": 5,
+        "basket": [{"q": "Milch"}],
+    })
+    data = resp.json()
+    results.append(TestResult(
+        name="CMP-03: /api/compare ohne Location -> Fehler",
+        passed=(resp.status_code == 400) and ("error" in data),
+        message=f"Status {resp.status_code}, Error: {data.get('error', 'N/A')}",
+    ))
+
+    # CMP-04: /api/compare leerer Basket -> Fehler
+    resp = client.post("/api/compare", json={
+        "location": "Bonn",
+        "radius_km": 5,
+        "basket": [],
+    })
+    data = resp.json()
+    results.append(TestResult(
+        name="CMP-04: /api/compare leerer Basket -> Fehler",
+        passed=(resp.status_code == 400) and ("error" in data),
+        message=f"Status {resp.status_code}, Error: {data.get('error', 'N/A')}",
+    ))
+
+    return results
+
+
+async def run_unit_parser_tests() -> list[TestResult]:
+    """Teste Grundpreis-Normierung (unit_parser.py)."""
+    from app.utils.unit_parser import parse_base_price
+
+    results = []
+
+    # UP-01: "1,99 €/kg" -> korrekt geparst
+    bp = parse_base_price("1,99 €/kg")
+    results.append(TestResult(
+        name="UP-01: '1,99 €/kg' -> korrekt geparst",
+        passed=(
+            bp.unit == "kg"
+            and bp.unit_group == "weight"
+            and bp.price_eur is not None
+            and abs(bp.price_eur - 1.99) < 0.01
+            and bp.normalized_unit == "g"
+        ),
+        message=f"unit={bp.unit}, group={bp.unit_group}, price={bp.price_eur}, norm={bp.normalized_unit}",
+    ))
+
+    # UP-02: "2,49€/100g" -> auf kg normalisiert (price_per_normalized = Preis pro 1g)
+    bp = parse_base_price("2,49€/100g")
+    expected_ppn = 2.49 / 100.0  # 0.0249 €/g
+    results.append(TestResult(
+        name="UP-02: '2,49€/100g' -> auf g normalisiert",
+        passed=(
+            bp.unit == "g"
+            and bp.unit_group == "weight"
+            and bp.price_per_normalized is not None
+            and abs(bp.price_per_normalized - expected_ppn) < 0.001
+        ),
+        message=f"unit={bp.unit}, ppn={bp.price_per_normalized}, expected={expected_ppn:.4f}",
+    ))
+
+    # UP-03: Leerer String -> None
+    bp = parse_base_price("")
+    results.append(TestResult(
+        name="UP-03: Leerer String -> None",
+        passed=(
+            bp.unit is None
+            and bp.price_eur is None
+            and bp.price_per_normalized is None
+        ),
+        message=f"unit={bp.unit}, price={bp.price_eur}",
+    ))
+
+    return results
+
+
 def print_results(category: str, results: list[TestResult]) -> int:
     """Druckt Ergebnisse und gibt Anzahl Fehler zurück."""
     print(f"\n{'='*60}")
@@ -314,13 +497,23 @@ async def main():
     web_results = await run_web_validation_tests()
     total_failed += print_results("WEB-VALIDIERUNG", web_results)
 
+    up_results = await run_unit_parser_tests()
+    total_failed += print_results("GRUNDPREIS-NORMIERUNG", up_results)
+
+    cat_results = await run_category_api_tests()
+    total_failed += print_results("CATEGORY BROWSE API", cat_results)
+
+    cmp_results = await run_compare_tests()
+    total_failed += print_results("PREISVERGLEICH API", cmp_results)
+
     # Integration Tests
     print("\n[Führe KaufDA API Tests aus...]")
     kd_results = await run_kaufda_tests()
     total_failed += print_results("KAUFDA API", kd_results)
 
     # Summary
-    total_tests = len(kw_results) + len(ch_results) + len(fm_results) + len(web_results) + len(kd_results)
+    all_results = [kw_results, ch_results, fm_results, web_results, up_results, cat_results, cmp_results, kd_results]
+    total_tests = sum(len(r) for r in all_results)
     total_passed = total_tests - total_failed
 
     print(f"\n{'='*60}")

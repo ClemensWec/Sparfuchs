@@ -460,9 +460,8 @@ class CategorySearchService:
 
         # Deduplicate by normalized category name.
         # When a level-2 group and level-3 child share the same name
-        # (e.g. both "Hundefutter"), prefer the group (higher count, ranked first).
-        # Sort groups before children so they get seen first.
-        ranked.sort(key=lambda item: (item[0], item[1].get("_level", 3) == 2), reverse=True)
+        # (e.g. both "Milch"), always prefer the group (broader, more offers).
+        ranked.sort(key=lambda item: item[0], reverse=True)
         seen_names: dict[str, int] = {}
         deduped: list[dict] = []
         for _, payload in ranked:
@@ -471,10 +470,20 @@ class CategorySearchService:
             name_key = " ".join(tokens)
             if name_key in seen_names:
                 existing = deduped[seen_names[name_key]]
-                # If existing is a group and new is a child with same name, skip
-                if existing.get("_level") == 2 and payload.get("_level") == 3:
+                existing_level = existing.get("_level", 3)
+                new_level = payload.get("_level", 3)
+                if existing_level == 2 and new_level == 3:
+                    # Group already present, absorb child's count
                     continue
-                # Otherwise merge counts (same level duplicates)
+                if new_level == 2 and existing_level == 3:
+                    # New entry is the group — replace child with group,
+                    # keep the higher count (group aggregates children)
+                    idx = seen_names[name_key]
+                    payload["offer_count"] = max(payload["offer_count"], existing["offer_count"])
+                    payload["display_offer_count"] = max(payload["display_offer_count"], existing["display_offer_count"])
+                    deduped[idx] = payload
+                    continue
+                # Same level duplicates: merge counts
                 existing["offer_count"] += payload["offer_count"]
                 existing["display_offer_count"] += payload["display_offer_count"]
                 continue
@@ -520,6 +529,11 @@ class CategorySearchService:
         for group_id, child_ids in group_children.items():
             best_child_score = max(cat_scores[cid][0] for cid in child_ids)
             total_hits = sum(cat_scores[cid][1] for cid in child_ids)
+            # Sum children's product_count for L2 groups (DB product_count is 0
+            # because product_labels only attach at L3 level)
+            children_product_count = sum(
+                cat_info[cid].get("product_count", 0) for cid in child_ids
+            )
 
             # Group score: slightly below best child so exact matches rank first.
             # "Orangensaft" (200) should appear before "Saft & Schorlen" (185).
@@ -550,6 +564,9 @@ class CategorySearchService:
                 if group_id in cat_info:
                     existing_tier = cat_info[group_id].get("_tier", MatchTier.INDIRECT)
                     cat_info[group_id]["_tier"] = min(group_tier, existing_tier)
+                    # Fix product_count if DB has 0 (L2 nodes don't have direct labels)
+                    if cat_info[group_id].get("product_count", 0) == 0:
+                        cat_info[group_id]["product_count"] = children_product_count
                 continue
 
             cat_scores[group_id] = (group_score, total_hits)
@@ -558,7 +575,7 @@ class CategorySearchService:
             first_child = cat_info[child_ids[0]]
             cat_info[group_id] = {
                 "name": f"_group_{group_id}",  # placeholder, resolved below
-                "product_count": 0,  # will be filled from DB or sum
+                "product_count": children_product_count,  # sum of children (DB has 0 for L2)
                 "parent_name": first_child.get("parent_name", ""),
                 "parent_count": 0,
                 "level": 2,
@@ -588,7 +605,11 @@ class CategorySearchService:
                 info = cat_info.get(row["id"])
                 if info:
                     info["name"] = row["name"]
-                    info["product_count"] = row["product_count"] or 0
+                    # Keep children sum if DB product_count is 0 (L2 nodes)
+                    db_count = row["product_count"] or 0
+                    if db_count > 0:
+                        info["product_count"] = db_count
+                    # else: keep the children_product_count set in _aggregate_to_groups
                     info["parent_name"] = row["parent_name"] or ""
 
     def _multi_token_search(

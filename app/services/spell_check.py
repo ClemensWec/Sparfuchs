@@ -64,12 +64,26 @@ class SpellCheckService:
         words = q.split()
 
         if len(words) == 1:
-            # Single word: lookup
+            # Single word: lookup with ALL suggestions at closest distance,
+            # then re-rank by shared prefix length to prefer "butter" over
+            # "bier" for query "butr" (both distance 2, but "butter" shares
+            # more prefix characters).
             suggestions = self._sym.lookup(
-                q, Verbosity.CLOSEST, max_edit_distance=max_edit_distance
+                q, Verbosity.ALL, max_edit_distance=max_edit_distance
             )
-            if suggestions and suggestions[0].term != q:
-                return suggestions[0].term
+            if suggestions:
+                best_dist = suggestions[0].distance
+                # Keep only suggestions at the best distance
+                tied = [s for s in suggestions if s.distance == best_dist]
+                # Re-rank: longest shared prefix wins, then higher frequency
+                def _prefix_len(term: str) -> int:
+                    i = 0
+                    while i < len(q) and i < len(term) and q[i] == term[i]:
+                        i += 1
+                    return i
+                tied.sort(key=lambda s: (-_prefix_len(s.term), -s.count))
+                if tied[0].term != q:
+                    return tied[0].term
         else:
             # Multi-word: lookup_compound handles word segmentation + correction
             suggestions = self._sym.lookup_compound(

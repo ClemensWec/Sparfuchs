@@ -59,6 +59,12 @@
         <p class="section-note">Mehrere Artikel mit Komma trennen.</p>
       </div>
 
+      <!-- KETTEN-FILTER (global, immer sichtbar) -->
+      <section class="chain-section" id="chain_section" style="display:none;">
+        <h2 class="section-kicker">Ketten</h2>
+        <div class="chain-filter-bar" id="chain_filters_global"></div>
+      </section>
+
       <!-- KATEGORIE-TILES -->
       <section class="tiles-section">
         <h2 class="section-kicker">Oder schnell starten</h2>
@@ -87,8 +93,7 @@
         </div>
       </section>
 
-      <!-- Ketten-Filter -->
-      <div class="chain-filter-bar" id="chain_filters" style="display:none;"></div>
+      <!-- Ketten-Filter (nur noch global links, hier nicht mehr nötig) -->
 
       <!-- LIVE STORE RANKING (appears automatically) -->
       <section id="live_results" class="live-results" style="display:none;" aria-live="polite">
@@ -117,12 +122,13 @@
     </div>
   </div>
 
-  <!-- Mobile FAB + Bottom Sheet -->
+  <!-- Mobile FAB (hidden when tab-bar active) -->
   <button type="button" id="basket_fab" class="basket-fab" aria-label="Einkaufsliste anzeigen" style="display:none;">
     <span class="basket-fab-icon">&#128722;</span>
     <span id="basket_fab_count" class="basket-fab-badge">0</span>
   </button>
 
+  <!-- Mobile Bottom Sheet (legacy, hidden when tab-bar active) -->
   <div id="basket_sheet" class="bottom-sheet" aria-hidden="true">
     <div class="bottom-sheet-backdrop" id="sheet_backdrop"></div>
     <div class="bottom-sheet-panel">
@@ -134,4 +140,17 @@
       <div id="sheet_basket_items" class="bottom-sheet-body"></div>
     </div>
   </div>
+
+  <!-- Mobile Tab Bar -->
+  <nav id="mobile_tab_bar" class="mobile-tab-bar">
+    <button type="button" class="mobile-tab active" data-tab="search" aria-label="Suche">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <span>Suche</span>
+    </button>
+    <button type="button" class="mobile-tab" data-tab="basket" aria-label="Einkaufsliste">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+      <span>Einkaufsliste</span>
+      <span id="tab_basket_badge" class="tab-badge" style="display:none;">0</span>
+    </button>
+  </nav>
 {% endblock %}
