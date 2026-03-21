@@ -40,6 +40,15 @@ def _parse_base_price(value: str | None) -> tuple[float | None, str | None]:
     return (parsed.price_eur, parsed.unit)
 
 
+def _sanitize_was_price(was_raw, sale_raw) -> float | None:
+    """Return was_price only if it's valid (higher than sale price)."""
+    was = _parse_float(was_raw)
+    sale = _parse_float(sale_raw)
+    if was is not None and sale is not None and was <= sale:
+        return None  # inverted/equal price = bad data
+    return was
+
+
 def _parse_float(value: str | float | int | None) -> float | None:
     if value is None or value == "":
         return None
@@ -754,7 +763,7 @@ class CatalogDataService:
             brand=(compact_text(row["brand_name"]) or None),
             chain=str(row["chain"]),
             price_eur=_parse_float(row["sales_price_eur"]),
-            was_price_eur=_parse_float(row["regular_price_eur"]),
+            was_price_eur=_sanitize_was_price(row["regular_price_eur"], row["sales_price_eur"]),
             is_offer=True,
             valid_from=_parse_kaufda_date(row["valid_from"]),
             valid_to=_parse_kaufda_date(row["valid_until"]),

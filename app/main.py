@@ -647,7 +647,7 @@ async def api_log_search(request: Request) -> JSONResponse:
     """Log a search event for analytics."""
     try:
         body = await request.json()
-        query = str(body.get("query", ""))[:500]
+        query = str(body.get("query") or "")[:500]
         result_count = body.get("result_count")
         if result_count is not None:
             result_count = int(result_count)
@@ -784,10 +784,18 @@ async def api_compare(request: Request) -> JSONResponse:
     except Exception:
         return JSONResponse({"error": "Ungültige Anfrage."}, status_code=400)
 
-    location = str(body.get("location", "")).strip()
-    radius_km = float(body.get("radius_km", 5))
-    basket_payload = body.get("basket", [])
-    max_stores_val = int(body.get("max_stores", 0))
+    location = str(body.get("location") or "").strip()
+    try:
+        radius_km = float(body.get("radius_km", 5))
+    except (TypeError, ValueError):
+        radius_km = 5.0
+    basket_payload = body.get("basket") or []
+    if not isinstance(basket_payload, list):
+        basket_payload = []
+    try:
+        max_stores_val = int(body.get("max_stores", 0))
+    except (TypeError, ValueError):
+        max_stores_val = 0
 
     if not location:
         return JSONResponse({"error": "Bitte Standort angeben."}, status_code=400)
@@ -798,15 +806,23 @@ async def api_compare(request: Request) -> JSONResponse:
         if not isinstance(raw, dict):
             continue
         cat_id = raw.get("category_id")
-        cat_name = raw.get("category_name", "")
+        cat_name = str(raw.get("category_name") or "")
         if cat_id is not None:
+            try:
+                cat_id_int = int(cat_id)
+            except (TypeError, ValueError):
+                continue
             expanded = category_search.expand_category(
-                category_id=int(cat_id), category_name=str(cat_name),
-            ) if category_search.available() else {"ids": [int(cat_id)]}
+                category_id=cat_id_int, category_name=cat_name,
+            ) if category_search.available() else {"ids": [cat_id_int]}
+            raw_brand = raw.get("brand")
+            item_brand = (str(raw_brand).strip() or None) if raw_brand is not None else None
+            item_any_brand = bool(raw.get("any_brand", True)) if item_brand else True
+            item_q = str(raw.get("q") or cat_name).strip() or cat_name
             wanted_items.append(WantedItem(
-                q=str(cat_name), brand=None, any_brand=True,
-                category_id=int(cat_id), category_name=str(cat_name),
-                category_ids=tuple(int(i) for i in expanded.get("ids", [int(cat_id)])),
+                q=item_q, brand=item_brand, any_brand=item_any_brand,
+                category_id=cat_id_int, category_name=cat_name,
+                category_ids=tuple(int(i) for i in expanded.get("ids", [cat_id_int])),
             ))
             continue
         query = str(raw.get("q", "")).strip()
@@ -895,11 +911,16 @@ async def api_compare(request: Request) -> JSONResponse:
                         }
                     else:
                         lj["offer"] = None
+                    lj["match_type"] = line.match_type
                     lines_json.append(lj)
 
                 diff = None
                 if idx > 0 and r.total_eur is not None and rows[0].total_eur is not None:
                     diff = round(r.total_eur - rows[0].total_eur, 2)
+
+                # A store is "exact" if ALL brand-specific lines are exact matches
+                brand_lines = [l for l in lines_json if l.get("match_type") is not None]
+                is_exact = all(l["match_type"] == "exact" for l in brand_lines) if brand_lines else None
 
                 return {
                     "rank": idx + 1,
@@ -915,6 +936,7 @@ async def api_compare(request: Request) -> JSONResponse:
                     "missing_count": r.missing_count,
                     "diff_eur": diff,
                     "lines": lines_json,
+                    "is_exact_store": is_exact,
                 }
 
             rows_json = [_serialize_row(r, i) for i, r in enumerate(rows)]

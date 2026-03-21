@@ -98,10 +98,17 @@ function loadBasket() {
   for (const it of saved) {
     if (!it || typeof it !== "object") continue;
     if (it.category_id != null) {
-      basket.push({
+      const catItem = {
         category_id: Number(it.category_id),
         category_name: String(it.category_name || ""),
-      });
+      };
+      // Preserve brand info for brand-specific products
+      if (it.brand != null) {
+        catItem.brand = String(it.brand).trim() || null;
+        catItem.any_brand = Boolean(it.any_brand);
+        catItem.q = String(it.q || it.category_name || "").trim();
+      }
+      basket.push(catItem);
       continue;
     }
     const q = String(it.q || "").trim();
@@ -346,7 +353,21 @@ function _buildAltOfferCard(offer, basketIndex) {
   card.appendChild(body);
 
   card.addEventListener("click", () => {
-    basket[basketIndex] = { category_id: offer.category_id, category_name: offer.category_name || offer.title };
+    // Visual feedback
+    card.style.opacity = "0.5";
+    card.style.pointerEvents = "none";
+
+    // Close all alt panels before updating basket (prevents DOM destruction race)
+    for (const p of $all('.alt-panel')) p.remove();
+
+    // Replace basket item with selected alternative
+    const newItem = { category_id: offer.category_id, category_name: offer.category_name || offer.title };
+    if (offer.brand) {
+      newItem.brand = offer.brand;
+      newItem.any_brand = false;
+      newItem.q = ((offer.brand || '') + ' ' + (offer.title || '')).trim();
+    }
+    basket[basketIndex] = newItem;
     persistBasket();
   });
 
@@ -444,7 +465,10 @@ async function doLiveCompare() {
     });
 
     // Check if this is still the latest request
-    if (version !== _compareVersion) return;
+    if (version !== _compareVersion) {
+      if (loading) loading.style.display = "none";
+      return;
+    }
 
     const data = await resp.json();
     if (loading) loading.style.display = "none";
@@ -473,15 +497,24 @@ async function doLiveCompare() {
     }
 
     // Re-render basket to show alt buttons for text-based items with discovered categories
-    updateAllBasketViews();
+    // BUT only if no alt-panel is currently open (to avoid destroying it mid-interaction)
+    if (!document.querySelector('.alt-panel')) {
+      updateAllBasketViews();
+    }
 
     // Apply the global chain filter to compare results
     applyChainFilter();
     if (freshness) freshness.innerHTML = '';
 
   } catch (err) {
-    if (err.name === 'AbortError') return;
-    if (version !== _compareVersion) return;
+    if (err.name === 'AbortError') {
+      if (loading) loading.style.display = "none";
+      return;
+    }
+    if (version !== _compareVersion) {
+      if (loading) loading.style.display = "none";
+      return;
+    }
     if (loading) loading.style.display = "none";
     if (errorEl) { errorEl.style.display = ""; errorEl.textContent = "Fehler beim Laden der Preise."; }
   }
@@ -563,7 +596,7 @@ function buildDetailLines(lines) {
   return frag;
 }
 
-function renderLiveRanking(rows, container) {
+function renderLiveRanking(rows, container, sparMixHtml) {
   container.innerHTML = "";
 
   if (rows.length === 0) {
@@ -571,15 +604,54 @@ function renderLiveRanking(rows, container) {
     return;
   }
 
-  // Top 3 as full cards
-  const maxCards = Math.min(rows.length, 3);
-  for (let i = 0; i < maxCards; i++) {
-    container.appendChild(buildStoreCard(rows[i], i === 0));
+  // Check if there are brand-specific items → split exact vs similar
+  const hasBrandItems = rows.some(r => r.is_exact_store !== null && r.is_exact_store !== undefined);
+  let exactRows = rows;
+  let similarRows = [];
+
+  if (hasBrandItems) {
+    exactRows = rows.filter(r => r.is_exact_store === true);
+    similarRows = rows.filter(r => r.is_exact_store !== true);
   }
 
-  // Rest as expandable compact rows (all visible)
-  for (let i = 3; i < rows.length; i++) {
-    container.appendChild(buildCompactRow(rows[i]));
+  // Render exact rows (or all rows if no brand items)
+  function _renderGroup(group, startRank, showBest) {
+    for (let i = 0; i < group.length; i++) {
+      const row = Object.assign({}, group[i], { rank: startRank + i });
+      if (i < 3) {
+        container.appendChild(buildStoreCard(row, showBest && i === 0));
+      } else {
+        container.appendChild(buildCompactRow(row));
+      }
+      // Spar-Mix after #1
+      if (i === 0 && sparMixHtml && showBest) {
+        container.appendChild(sparMixHtml);
+      }
+    }
+    return group.length;
+  }
+
+  const exactCount = _renderGroup(exactRows, 1, true);
+
+  // Insert SparMix after #1 if no exact rows but we have similar
+  if (exactCount === 0 && sparMixHtml) {
+    // Will be added after first similar row instead
+  }
+
+  // Divider + similar rows
+  if (hasBrandItems && similarRows.length > 0) {
+    const divider = el("div", { class: "similar-products-divider" });
+    divider.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><path d="M8 1v14M1 8h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Folgende M\u00e4rkte bieten \u00e4hnliche Produkte';
+    container.appendChild(divider);
+    _renderGroup(similarRows, exactCount + 1, exactCount === 0);
+  }
+
+  // If no exact rows existed but we have sparMix, insert after first similar
+  if (exactCount === 0 && sparMixHtml && similarRows.length > 0 && !sparMixHtml.parentNode) {
+    const firstCard = container.querySelector('.store-card');
+    if (firstCard && firstCard.nextSibling) {
+      container.insertBefore(sparMixHtml, firstCard.nextSibling);
+    }
   }
 }
 
@@ -700,11 +772,10 @@ function buildCompactRow(row) {
 }
 
 function renderLiveSparMix(sparMix, container, rows) {
-  if (!container) return;
-  container.innerHTML = "";
+  if (container) container.innerHTML = "";
 
-  if (!sparMix || !sparMix.lines || sparMix.lines.length === 0) return;
-  if (sparMix.total_eur == null) return;
+  if (!sparMix || !sparMix.lines || sparMix.lines.length === 0) return null;
+  if (sparMix.total_eur == null) return null;
 
   const card = el("div", { class: "spar-mix-card-inline" });
 
@@ -718,7 +789,7 @@ function renderLiveSparMix(sparMix, container, rows) {
   priceRow.appendChild(el("span", { class: "spar-mix-store-count" }, `bei ${sparMix.store_count} L\u00e4den`));
   head.appendChild(priceRow);
 
-  if (sparMix.saving_vs_best != null) {
+  if (sparMix.saving_vs_best != null && sparMix.saving_vs_best > 0 && rows.length > 0) {
     head.appendChild(el("div", { class: "spar-mix-saving" },
       `${sparMix.saving_vs_best.toFixed(2).replace('.', ',')} \u20AC weniger als nur bei ${rows[0].chain}`));
   }
@@ -774,7 +845,7 @@ function renderLiveSparMix(sparMix, container, rows) {
     storeBreakdown.style.display = expanded ? "none" : "";
   });
 
-  container.appendChild(card);
+  return card;
 }
 
 /* ── Chain Filter (Live Compare) ── */
@@ -856,9 +927,8 @@ function applyChainFilter() {
     filteredRows[i] = Object.assign({}, filteredRows[i], { rank: i + 1 });
   }
 
-  renderLiveRanking(filteredRows, ranking);
-
-  // Filter spar mix lines
+  // Build spar mix card
+  let sparMixCard = null;
   if (sparMix && sparMix.lines) {
     const filteredLines = sparMix.lines.filter(l => !l.chain || _activeChains.has(l.chain));
     const filteredTotal = filteredLines.reduce((sum, l) => {
@@ -877,10 +947,12 @@ function applyChainFilter() {
         : null,
     };
 
-    renderLiveSparMix(filteredSparMix, sparMixEl, filteredRows);
+    sparMixCard = renderLiveSparMix(filteredSparMix, sparMixEl, filteredRows);
   } else {
-    renderLiveSparMix(sparMix, sparMixEl, filteredRows);
+    sparMixCard = renderLiveSparMix(sparMix, sparMixEl, filteredRows);
   }
+
+  renderLiveRanking(filteredRows, ranking, sparMixCard);
 
   // Also filter browse cards if browse is open
   _applyChainFilterToBrowse();
@@ -2121,9 +2193,6 @@ function openCategoryBrowse(categoryId, categoryName) {
   });
   header.appendChild(backBtn);
   header.appendChild(el('h2', { class: 'browse-title' }, categoryName));
-  if (basket.length > 0) {
-    header.appendChild(el('span', { class: 'browse-basket-badge' }, String(basket.length)));
-  }
   panel.appendChild(header);
 
   // Tabs container (sticky, populated after fetch)
@@ -2341,7 +2410,13 @@ function buildOfferCard(offer) {
   const addBtn = el('button', { class: 'offer-card-add', type: 'button', 'aria-label': 'Zum Warenkorb' }, '+');
   addBtn.addEventListener('click', (e) => {
     e.stopPropagation();
-    addToBasket({ category_id: offer.category_id, category_name: offer.category_name || offer.title });
+    const basketItem = { category_id: offer.category_id, category_name: offer.category_name || offer.title };
+    if (offer.brand) {
+      basketItem.brand = offer.brand;
+      basketItem.any_brand = false;
+      basketItem.q = (offer.brand + ' ' + (offer.title || '')).trim();
+    }
+    addToBasket(basketItem);
 
     addBtn.textContent = '\u2713';
     addBtn.classList.add('added');
@@ -2351,7 +2426,6 @@ function buildOfferCard(offer) {
     }, 1500);
 
     // Update browse header badge
-    _updateBrowseBadge();
   });
   card.appendChild(addBtn);
 
@@ -2362,17 +2436,6 @@ function _formatPrice(val) {
   return val.toFixed(2).replace('.', ',') + ' \u20AC';
 }
 
-function _updateBrowseBadge() {
-  const badge = document.querySelector('.browse-basket-badge');
-  if (badge) {
-    badge.textContent = String(basket.length);
-  } else {
-    const header = document.querySelector('.browse-header');
-    if (header && basket.length > 0) {
-      header.appendChild(el('span', { class: 'browse-basket-badge' }, String(basket.length)));
-    }
-  }
-}
 
 function closeCategoryBrowse() {
   const panel = $('#category_browse');

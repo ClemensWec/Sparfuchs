@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sparfuchs-v8';
+const CACHE_NAME = 'sparfuchs-v16';
 const STATIC_ASSETS = [
   '/',
   '/static/app.css',

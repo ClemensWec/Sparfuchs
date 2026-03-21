@@ -80,6 +80,7 @@ class LineMatch:
     wanted: WantedItem
     offer: Offer | None
     score: float | None
+    match_type: str | None = None  # "exact", "similar", or None
 
 
 @dataclass(frozen=True)
@@ -217,23 +218,54 @@ class BasketPricer:
         query = wanted.q.strip()
         brand = (wanted.brand or "").strip().lower() if (wanted.brand and not wanted.any_brand) else None
 
-        # Pre-filter: build expanded token set for cheap substring check.
-        # Uses normalized text (ä→ae) + stem variants + synonyms to avoid
-        # losing matches like huhn→hähnchen, brot→brötchen, nudeln→nudel.
+        best_offer, best_score = self._text_match_scan(query, brand, offers)
+
+        # Brand-specific fallback: if no match with brand filter, retry WITHOUT
+        # brand filter to find "similar" products at other chains.
+        if best_offer is None and brand:
+            # Strip brand from query, use category_name as base
+            base = wanted.category_name or query
+            fallback_q = re.sub(r'\b' + re.escape(wanted.brand) + r'\b', '', base, flags=re.IGNORECASE).strip()
+            if not fallback_q:
+                fallback_q = base
+
+            # Try full fallback query first
+            best_offer, best_score = self._text_match_scan(fallback_q, None, offers)
+
+            # If still nothing, try individual tokens (e.g. "Tilsiter" from "Alt-Mecklenburger Tilsiter")
+            if best_offer is None and len(fallback_q.split()) > 1:
+                for token in fallback_q.split():
+                    if len(token) >= 4:  # skip short tokens
+                        best_offer, best_score = self._text_match_scan(token, None, offers)
+                        if best_offer is not None:
+                            break
+
+        # Determine match_type for brand-specific items
+        match_type = None
+        if not wanted.any_brand and wanted.brand and best_offer is not None:
+            offer_brand = (best_offer.brand or "").lower()
+            wanted_brand = wanted.brand.strip().lower()
+            if _brand_matches(wanted_brand, offer_brand) and best_score >= 85:
+                match_type = "exact"
+            else:
+                match_type = "similar"
+
+        return LineMatch(wanted=wanted, offer=best_offer, score=(best_score if best_offer else None), match_type=match_type)
+
+    def _text_match_scan(self, query: str, brand: str | None, offers: list[Offer]) -> tuple[Offer | None, float]:
+        """Scan offers for best text match, optionally filtering by brand."""
         q_norm = normalize_text(query)
         q_tokens_raw = [t for t in q_norm.split() if len(t) >= 3]
         pf_tokens: list[str] = []
         for t in q_tokens_raw:
             variants = get_token_variants(t)
             pf_tokens.extend(variants)
-        # Also add synonym variants
         for term_a, term_b in _CONSUMER_SYNONYM_PAIRS:
             for t in q_tokens_raw:
                 if t == term_a:
                     pf_tokens.append(term_b)
                 elif t == term_b:
                     pf_tokens.append(term_a)
-        # Deduplicate
         pf_tokens = list(set(pf_tokens))
 
         best_offer: Offer | None = None
@@ -245,7 +277,6 @@ class BasketPricer:
                 if not offer.brand:
                     continue
                 offer_brand_lower = offer.brand.lower()
-                # Prüfe ob Brand als ganzes Wort vorkommt (nicht nur Substring)
                 if not _brand_matches(brand, offer_brand_lower):
                     continue
 
@@ -267,33 +298,89 @@ class BasketPricer:
             if score > best_score:
                 best_offer, best_score = offer, score
             elif score == best_score and best_offer is not None:
-                # Bei gleichem Score: Angebot mit Preis bevorzugen, dann günstigeren Preis
                 if best_offer.price_eur is None and offer.price_eur is not None:
                     best_offer = offer
                 elif offer.price_eur is not None and best_offer.price_eur is not None:
                     if _cheaper(offer, best_offer):
                         best_offer = offer
 
-        return LineMatch(wanted=wanted, offer=best_offer, score=(best_score if best_offer else None))
+        return best_offer, best_score
 
     def _best_match_by_category(self, wanted: WantedItem, offers: list[Offer]) -> LineMatch:
-        """Find best offer matching a product category (by category_id in offer.extra)."""
+        """Find best offer matching a product category (by category_id in offer.extra).
+
+        Priority order (for specific product selections):
+        1. Name-match within exact category_id (same product at another chain)
+        2. Any exact category_id match (cheapest)
+        3. Name-match within expanded sibling categories
+        4. Any expanded category match (cheapest)
+        """
         cat_ids = set(wanted.category_ids or (() if wanted.category_id is None else (wanted.category_id,)))
-        best_offer: Offer | None = None
+        exact_id = wanted.category_id
+        wanted_norm = normalize_text(wanted.q) if wanted.q else ""
+        wanted_tokens = set(wanted_norm.split()) if wanted_norm else set()
+
+        exact_name: Offer | None = None
+        exact_any: Offer | None = None
+        expanded_name: Offer | None = None
+        expanded_any: Offer | None = None
 
         for offer in offers:
             offer_cat_id = (offer.extra or {}).get("category_id")
             if offer_cat_id not in cat_ids:
                 continue
-            if best_offer is None:
-                best_offer = offer
-            elif offer.price_eur is not None:
-                # Prefer an offer with a price over one without
-                if best_offer.price_eur is None or _cheaper(offer, best_offer):
-                    best_offer = offer
 
+            is_exact = (offer_cat_id == exact_id)
+            name_sim = self._name_similarity(offer, wanted_tokens) if wanted_tokens else 0.0
+
+            if is_exact:
+                if name_sim >= 0.5:
+                    if exact_name is None:
+                        exact_name = offer
+                    elif offer.price_eur is not None:
+                        if exact_name.price_eur is None or _cheaper(offer, exact_name):
+                            exact_name = offer
+                if exact_any is None:
+                    exact_any = offer
+                elif offer.price_eur is not None:
+                    if exact_any.price_eur is None or _cheaper(offer, exact_any):
+                        exact_any = offer
+            else:
+                if name_sim >= 0.5:
+                    if expanded_name is None:
+                        expanded_name = offer
+                    elif offer.price_eur is not None:
+                        if expanded_name.price_eur is None or _cheaper(offer, expanded_name):
+                            expanded_name = offer
+                if expanded_any is None:
+                    expanded_any = offer
+                elif offer.price_eur is not None:
+                    if expanded_any.price_eur is None or _cheaper(offer, expanded_any):
+                        expanded_any = offer
+
+        best_offer = exact_name or exact_any or expanded_name or expanded_any
         score = 100.0 if best_offer else None
-        return LineMatch(wanted=wanted, offer=best_offer, score=score)
+
+        # Determine match_type for brand-specific category items
+        match_type = None
+        if not wanted.any_brand and wanted.brand and best_offer is not None:
+            offer_brand = (best_offer.brand or "").lower()
+            wanted_brand = wanted.brand.strip().lower()
+            if _brand_matches(wanted_brand, offer_brand):
+                match_type = "exact"
+            else:
+                match_type = "similar"
+
+        return LineMatch(wanted=wanted, offer=best_offer, score=score, match_type=match_type)
+
+    def _name_similarity(self, offer: Offer, wanted_tokens: set[str]) -> float:
+        """Token overlap ratio between offer title and wanted tokens."""
+        offer_norm = self._offer_text_norm.get(id(offer)) or normalize_text(offer.title or "")
+        offer_tokens = set(offer_norm.split())
+        if not offer_tokens or not wanted_tokens:
+            return 0.0
+        overlap = wanted_tokens & offer_tokens
+        return len(overlap) / len(wanted_tokens)
 
 
 @dataclass(frozen=True)

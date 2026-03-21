@@ -1002,7 +1002,7 @@ button:disabled {
   top: calc(100% + 6px);
   left: 0;
   right: 0;
-  z-index: 30;
+  z-index: 120;
   display: none;
   max-height: 360px;
   overflow: auto;
@@ -2432,6 +2432,19 @@ h2.section-kicker {
 .store-card.is-best {
   border-color: var(--saving, #198754);
   box-shadow: 0 0 0 1px var(--saving, #198754);
+}
+
+.similar-products-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  margin: 16px 0 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #6c757d;
+  border-top: 2px dashed #dee2e6;
+  letter-spacing: 0.01em;
 }
 
 .store-card-head {
@@ -4365,14 +4378,6 @@ h2.section-kicker {
 }
 .browse-back:hover { background: var(--brand-surface); }
 .browse-title { margin: 0; font-size: 1.25rem; font-weight: 600; flex: 1; }
-.browse-basket-badge {
-  background: var(--cta);
-  color: white;
-  border-radius: 12px;
-  padding: 2px 10px;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
 
 .browse-tabs {
   display: flex;

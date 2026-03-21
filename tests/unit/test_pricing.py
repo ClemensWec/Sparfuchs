@@ -229,13 +229,13 @@ class TestBestMatchByCategory:
         assert result.offer.price_eur == pytest.approx(1.09)
 
     def test_expanded_category_ids(self):
-        """Family-Expansion: category_ids enthält mehrere IDs."""
+        """Family-Expansion: exact category_id match preferred over cheaper sibling."""
         offers = [
             _make_offer("Hähnchenbrust", price_eur=4.99, category_id=30),
             _make_offer("Suppenhuhn", price_eur=3.49, category_id=31),
         ]
         pricer = BasketPricer(offers)
-        # Family-Node "Hähnchen" expandiert zu IDs 30 und 31
+        # User selected category_id=30 specifically, expanded to (30, 31)
         wanted = WantedItem(
             q="Hähnchen", brand=None,
             category_id=30, category_name="Hähnchen",
@@ -244,7 +244,23 @@ class TestBestMatchByCategory:
 
         result = pricer._best_match_by_category(wanted, offers)
         assert result.offer is not None
-        # Günstigstes: Suppenhuhn @ 3,49€
+        # Exact category_id match preferred: Hähnchenbrust @ 4,99€
+        assert result.offer.price_eur == pytest.approx(4.99)
+
+    def test_expanded_fallback_to_sibling(self):
+        """When exact category_id has no offers, fall back to sibling."""
+        offers = [
+            _make_offer("Suppenhuhn", price_eur=3.49, category_id=31),
+        ]
+        pricer = BasketPricer(offers)
+        wanted = WantedItem(
+            q="Hähnchen", brand=None,
+            category_id=30, category_name="Hähnchen",
+            category_ids=(30, 31),
+        )
+
+        result = pricer._best_match_by_category(wanted, offers)
+        assert result.offer is not None
         assert result.offer.price_eur == pytest.approx(3.49)
 
 
