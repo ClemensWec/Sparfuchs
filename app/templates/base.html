@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="color-scheme" content="light dark" />
+    <meta name="color-scheme" content="light" />
     <meta name="theme-color" content="#1A3A32" />
     <link rel="manifest" href="/static/manifest.json" />
     <link rel="icon" href="/static/icon.svg" type="image/svg+xml" />
@@ -13,19 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', path='app.css') }}?v=20260318e" />
-    <script>
-      // Apply saved theme BEFORE first paint to prevent flash
-      (function() {
-        var s = null;
-        try { s = localStorage.getItem('sparfuchs.theme'); } catch(e) {}
-        if (s === 'dark') {
-          document.documentElement.classList.add('dark-mode');
-        } else if (s === 'light') {
-          document.documentElement.classList.add('light-mode');
-        }
-      })();
-    </script>
+    <link rel="stylesheet" href="{{ url_for('static', path='app.css') }}?v=20260321m" />
   </head>
   <body>
     <div class="site-shell">
@@ -42,11 +30,6 @@
       </main>
     </div>
 
-    <!-- Theme Toggle -->
-    <button type="button" id="theme_toggle" class="theme-toggle" aria-label="Dunkelmodus umschalten">
-      <span class="theme-icon" aria-hidden="true"></span>
-    </button>
-
-    <script src="{{ url_for('static', path='app.js') }}?v=20260318e"></script>
+    <script src="{{ url_for('static', path='app.js') }}?v=20260321m"></script>
   </body>
 </html>

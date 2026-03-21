@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sparfuchs-v1';
+const CACHE_NAME = 'sparfuchs-v8';
 const STATIC_ASSETS = [
   '/',
   '/static/app.css',
@@ -35,19 +35,20 @@ self.addEventListener('fetch', (event) => {
   // Skip non-GET requests
   if (event.request.method !== 'GET') return;
 
-  // Static assets: cache-first
+  // Static assets: network-first (ensures updates arrive immediately)
   if (url.pathname.startsWith('/static/')) {
     event.respondWith(
-      caches.match(event.request).then((cached) => {
-        if (cached) return cached;
-        return fetch(event.request).then((response) => {
+      fetch(event.request)
+        .then((response) => {
           if (response.ok) {
             const clone = response.clone();
             caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
           }
           return response;
-        });
-      })
+        })
+        .catch(() => {
+          return caches.match(event.request);
+        })
     );
     return;
   }

@@ -500,6 +500,148 @@ async def api_sibling_categories(
         conn.close()
 
 
+@app.get("/api/alternative-offers")
+async def api_alternative_offers(
+    category_id: int,
+    location: str = "",
+    radius_km: float = 10.0,
+    chains: str = "",
+) -> JSONResponse:
+    """Return actual offers from sibling categories for the alternatives panel."""
+    if not catalog_data.available():
+        return JSONResponse({"groups": []})
+
+    import sqlite3
+    from app.services.catalog_data import _parse_base_price
+
+    conn = sqlite3.connect(str(catalog_db_path))
+    conn.row_factory = sqlite3.Row
+
+    try:
+        # 1) Find the category and its siblings (same logic as sibling-categories)
+        row = conn.execute(
+            "SELECT id, name, parent_id, level FROM categories_v2 WHERE id = ?",
+            (category_id,),
+        ).fetchone()
+
+        if not row:
+            return JSONResponse({"groups": []})
+
+        level = int(row["level"])
+        parent_id = row["parent_id"]
+
+        if level == 3 and parent_id:
+            # L3 → siblings are other L3 under same L2 parent
+            sibling_rows = conn.execute(
+                "SELECT id, name FROM categories_v2 WHERE parent_id = ? AND id != ? AND level = 3",
+                (parent_id, category_id),
+            ).fetchall()
+        elif level == 2:
+            # L2 → children are L3 under this node (show offers from children)
+            sibling_rows = conn.execute(
+                "SELECT id, name FROM categories_v2 WHERE parent_id = ? AND level = 3",
+                (category_id,),
+            ).fetchall()
+        else:
+            return JSONResponse({"groups": []})
+
+        if not sibling_rows:
+            return JSONResponse({"groups": []})
+
+        # 2) Collect all sibling category IDs
+        sibling_ids = [s["id"] for s in sibling_rows]
+        sibling_names = {s["id"]: s["name"] for s in sibling_rows}
+
+        # 3) Build location scope filter
+        scope_where = ""
+        scope_params: list = []
+
+        loc = (location or "").strip()
+        if loc:
+            try:
+                geo = await _resolve_location(loc)
+                scope = catalog_data.resolve_location_scope(
+                    lat=geo.lat, lon=geo.lon, radius_km=radius_km,
+                )
+                if scope is not None:
+                    bids = scope.brochure_content_ids
+                    fchains = scope.full_chains
+                    clauses = []
+                    if bids:
+                        placeholders = ",".join("?" * len(bids))
+                        clauses.append(f"o.id IN (SELECT offer_id FROM offer_brochures WHERE brochure_content_id IN ({placeholders}))")
+                        scope_params.extend(bids)
+                    if fchains:
+                        placeholders = ",".join("?" * len(fchains))
+                        clauses.append(f"o.chain IN ({placeholders})")
+                        scope_params.extend(fchains)
+                    if clauses:
+                        scope_where = " AND (" + " OR ".join(clauses) + ")"
+            except Exception:
+                pass
+
+        # Chain filter
+        chain_where = ""
+        chain_params: list = []
+        if chains:
+            chain_list = [c.strip() for c in chains.split(",") if c.strip()]
+            if chain_list:
+                placeholders = ",".join("?" * len(chain_list))
+                chain_where = f" AND o.chain IN ({placeholders})"
+                chain_params = chain_list
+
+        # 4) Query actual offers grouped by sibling category
+        cat_placeholders = ",".join("?" * len(sibling_ids))
+        sql = f"""
+            SELECT o.product_name, o.brand_name, o.chain, o.sales_price_eur,
+                   o.regular_price_eur, o.offer_image_url, o.base_price_text,
+                   pl.category_v2_id
+            FROM offers o
+            JOIN product_labels pl ON o.product_name = pl.product_name
+            WHERE pl.category_v2_id IN ({cat_placeholders})
+                  {scope_where}{chain_where}
+            ORDER BY pl.category_v2_id, o.sales_price_eur IS NULL, o.sales_price_eur ASC
+        """
+        params = sibling_ids + scope_params + chain_params
+        offer_rows = conn.execute(sql, params).fetchall()
+
+        # 5) Group and limit: max 4 offers per category, max 6 categories
+        from collections import defaultdict
+        grouped: dict[int, list] = defaultdict(list)
+        for orow in offer_rows:
+            cat = orow["category_v2_id"]
+            if len(grouped[cat]) >= 4:
+                continue
+            bp_eur, bp_unit = _parse_base_price(orow["base_price_text"])
+            grouped[cat].append({
+                "title": orow["product_name"],
+                "brand": orow["brand_name"],
+                "chain": orow["chain"],
+                "price_eur": float(orow["sales_price_eur"]) if orow["sales_price_eur"] is not None else None,
+                "was_price_eur": float(orow["regular_price_eur"]) if orow["regular_price_eur"] is not None else None,
+                "image_url": orow["offer_image_url"],
+                "base_price_eur": bp_eur,
+                "base_unit": bp_unit,
+                "category_id": cat,
+                "category_name": sibling_names.get(cat, ""),
+            })
+
+        # 6) Build response — sort groups by offer count descending
+        groups = []
+        for cat_id in sorted(grouped.keys(), key=lambda c: len(grouped[c]), reverse=True):
+            if len(groups) >= 6:
+                break
+            groups.append({
+                "category_id": cat_id,
+                "category_name": sibling_names.get(cat_id, ""),
+                "offers": grouped[cat_id],
+            })
+
+        return JSONResponse({"groups": groups})
+    finally:
+        conn.close()
+
+
 @app.post("/api/log-search")
 async def api_log_search(request: Request) -> JSONResponse:
     """Log a search event for analytics."""
@@ -749,6 +891,7 @@ async def api_compare(request: Request) -> JSONResponse:
                             "unit": line.offer.unit,
                             "valid_from": str(line.offer.valid_from) if line.offer.valid_from else None,
                             "valid_to": str(line.offer.valid_to) if line.offer.valid_to else None,
+                            "category_id": (line.offer.extra or {}).get("category_id"),
                         }
                     else:
                         lj["offer"] = None
@@ -1139,51 +1282,122 @@ async def api_popular_items(limit: int = 8) -> JSONResponse:
 
 
 @app.get("/api/category-tiles")
-async def api_category_tiles() -> JSONResponse:
-    """Return top-level categories for quick-start tiles."""
+async def api_category_tiles(
+    chains: str = "",
+    location: str = "",
+    radius_km: float = 10.0,
+) -> JSONResponse:
+    """Return top-level categories for quick-start tiles, with optional chain/location filtering."""
     if not catalog_data.available():
-        return JSONResponse({"tiles": []})
+        return JSONResponse({"tiles": [], "available_chains": []})
 
     import sqlite3
     conn = sqlite3.connect(str(catalog_db_path))
     conn.row_factory = sqlite3.Row
     try:
-        # Try categories_v2 level-1 first
-        rows = conn.execute("""
-            SELECT id, name, product_count
-            FROM categories_v2
-            WHERE level = 1
-            ORDER BY product_count DESC
-            LIMIT 12
-        """).fetchall()
+        # 0) Get all available chains (always unfiltered)
+        all_chains = [r[0] for r in conn.execute(
+            "SELECT DISTINCT chain FROM offers WHERE chain IS NOT NULL AND sales_price_eur IS NOT NULL ORDER BY chain"
+        ).fetchall()]
 
-        if not rows:
-            # Fallback: product_categories families
-            rows = conn.execute("""
-                SELECT id, name, expanded_offer_count as product_count
-                FROM product_categories
-                WHERE kind = 'family'
-                ORDER BY expanded_offer_count DESC
+        # 1) Parse chain filter
+        chain_list = [c.strip() for c in chains.split(",") if c.strip()] if chains.strip() else []
+        chain_clause = ""
+        chain_params: list = []
+        if chain_list:
+            chain_ph = ", ".join("?" for _ in chain_list)
+            chain_clause = f"AND o.chain IN ({chain_ph})"
+            chain_params = chain_list
+
+        # 2) Resolve location scope (optional)
+        local_offer_ids: frozenset[int] | None = None
+        if location.strip():
+            try:
+                geo = await _resolve_location(location)
+                scope = catalog_data.resolve_location_scope(
+                    lat=geo.lat, lon=geo.lon, radius_km=radius_km,
+                )
+                if scope is not None:
+                    local_offer_ids = scope.local_offer_ids
+            except (GeocodeError, Exception):
+                pass
+
+        # 3) Build SQL with optional chain filter
+        if local_offer_ids is not None and len(local_offer_ids) > 0:
+            # With location filter: fetch all then filter in Python
+            rows = conn.execute(f"""
+                SELECT c.id, c.name, o.id as offer_id
+                FROM categories_v2 c
+                JOIN categories_v2 sub ON (sub.parent_id = c.id
+                    OR sub.parent_id IN (SELECT id FROM categories_v2 WHERE parent_id = c.id))
+                JOIN product_labels pl ON pl.category_v2_id = sub.id
+                JOIN offers o ON o.product_name = pl.product_name
+                    AND o.sales_price_eur IS NOT NULL
+                    {chain_clause}
+                WHERE c.level = 1
+            """, chain_params).fetchall()
+
+            # Group by category, count only local offers
+            from collections import Counter
+            cat_info: dict[int, str] = {}
+            cat_counts: Counter = Counter()
+            for r in rows:
+                cat_info[r["id"]] = r["name"]
+                if r["offer_id"] in local_offer_ids:
+                    cat_counts[r["id"]] += 1
+
+            tiles_raw = [
+                {"id": cid, "name": compact_text(cat_info[cid]), "count": cat_counts[cid]}
+                for cid in cat_counts
+            ]
+            tiles_raw.sort(key=lambda t: t["count"], reverse=True)
+            tiles_raw = tiles_raw[:12]
+        elif local_offer_ids is not None and len(local_offer_ids) == 0:
+            # Location set but no offers in radius
+            return JSONResponse({"tiles": [], "available_chains": all_chains})
+        else:
+            # No location filter
+            rows = conn.execute(f"""
+                SELECT c.id, c.name,
+                       COUNT(DISTINCT o.id) as product_count
+                FROM categories_v2 c
+                JOIN categories_v2 sub ON (sub.parent_id = c.id
+                    OR sub.parent_id IN (SELECT id FROM categories_v2 WHERE parent_id = c.id))
+                JOIN product_labels pl ON pl.category_v2_id = sub.id
+                JOIN offers o ON o.product_name = pl.product_name
+                    AND o.sales_price_eur IS NOT NULL
+                    {chain_clause}
+                WHERE c.level = 1
+                GROUP BY c.id
+                ORDER BY product_count DESC
                 LIMIT 12
-            """).fetchall()
+            """, chain_params).fetchall()
 
-        tiles = [{"id": r["id"], "name": compact_text(r["name"]), "count": r["product_count"] or 0} for r in rows]
+            if not rows:
+                rows = conn.execute("""
+                    SELECT id, name, expanded_offer_count as product_count
+                    FROM product_categories
+                    WHERE kind = 'family'
+                    ORDER BY expanded_offer_count DESC
+                    LIMIT 12
+                """).fetchall()
 
-        # Dedup: if a tile name is a substring of another, remove the longer (more specific) one
-        names = [t["name"].lower() for t in tiles]
+            tiles_raw = [{"id": r["id"], "name": compact_text(r["name"]), "count": r["product_count"] or 0} for r in rows]
+
+        # 4) Dedup: if a tile name is a substring of another, remove the longer one
+        names = [t["name"].lower() for t in tiles_raw]
         drop_indices: set[int] = set()
         for i, name_i in enumerate(names):
             for j, name_j in enumerate(names):
                 if i == j:
                     continue
-                # If name_i is contained in name_j and name_j is longer, drop j
                 if name_i in name_j and len(name_j) > len(name_i):
                     drop_indices.add(j)
-        tiles = [t for idx, t in enumerate(tiles) if idx not in drop_indices]
+        tiles = [t for idx, t in enumerate(tiles_raw) if idx not in drop_indices]
 
-        return JSONResponse({"tiles": tiles})
+        return JSONResponse({"tiles": tiles, "available_chains": all_chains})
     except Exception:
-        return JSONResponse({"tiles": []})
+        return JSONResponse({"tiles": [], "available_chains": []})
     finally:
         conn.close()
 
@@ -1195,6 +1409,7 @@ async def api_offers_by_category(
     radius_km: float = 10.0,
     limit: int = 40,
     offset: int = 0,
+    chains: str = "",
 ) -> JSONResponse:
     """Return offers for a category (with subcategories) for browse UI."""
     if category_id <= 0:
@@ -1237,6 +1452,15 @@ async def api_offers_by_category(
 
         ph = ", ".join("?" for _ in all_ids)
 
+        # 3b) Parse chain filter
+        chain_list = [c.strip() for c in chains.split(",") if c.strip()] if chains.strip() else []
+        chain_clause = ""
+        chain_params: list = []
+        if chain_list:
+            chain_ph = ", ".join("?" for _ in chain_list)
+            chain_clause = f"AND o.chain IN ({chain_ph})"
+            chain_params = chain_list
+
         # 4) Resolve location scope for filtering (optional)
         local_offer_ids: frozenset[int] | None = None
         if location.strip():
@@ -1271,7 +1495,8 @@ async def api_offers_by_category(
                 JOIN product_labels pl ON o.product_name = pl.product_name
                 WHERE pl.category_v2_id IN ({ph})
                   AND o.sales_price_eur IS NOT NULL
-            """, all_ids).fetchone()
+                  {chain_clause}
+            """, all_ids + chain_params).fetchone()
             total_unfiltered = count_row["cnt"]
 
             # Fetch more than needed so we can filter by location in Python
@@ -1280,16 +1505,16 @@ async def api_offers_by_category(
                 SELECT DISTINCT o.id, o.product_name AS title, o.brand_name AS brand,
                        o.chain, o.sales_price_eur AS price_eur,
                        o.regular_price_eur AS was_price_eur,
-                       o.base_price_text, o.qty_value, o.qty_unit,
-                       o.base_price_eur, o.offer_image_url AS image_url,
+                       o.base_price_text, o.offer_image_url AS image_url,
                        pl.category_v2_id
                 FROM offers o
                 JOIN product_labels pl ON o.product_name = pl.product_name
                 WHERE pl.category_v2_id IN ({ph})
                   AND o.sales_price_eur IS NOT NULL
+                  {chain_clause}
                 ORDER BY o.sales_price_eur ASC
                 LIMIT ?
-            """, all_ids + [batch_size]).fetchall()
+            """, all_ids + chain_params + [batch_size]).fetchall()
 
             # Filter to local offers
             filtered = [r for r in rows if r["id"] in local_offer_ids]
@@ -1303,23 +1528,24 @@ async def api_offers_by_category(
                 JOIN product_labels pl ON o.product_name = pl.product_name
                 WHERE pl.category_v2_id IN ({ph})
                   AND o.sales_price_eur IS NOT NULL
-            """, all_ids).fetchone()
+                  {chain_clause}
+            """, all_ids + chain_params).fetchone()
             total = count_row["cnt"]
 
             rows = conn.execute(f"""
                 SELECT DISTINCT o.id, o.product_name AS title, o.brand_name AS brand,
                        o.chain, o.sales_price_eur AS price_eur,
                        o.regular_price_eur AS was_price_eur,
-                       o.base_price_text, o.qty_value, o.qty_unit,
-                       o.base_price_eur, o.offer_image_url AS image_url,
+                       o.base_price_text, o.offer_image_url AS image_url,
                        pl.category_v2_id
                 FROM offers o
                 JOIN product_labels pl ON o.product_name = pl.product_name
                 WHERE pl.category_v2_id IN ({ph})
                   AND o.sales_price_eur IS NOT NULL
+                  {chain_clause}
                 ORDER BY o.sales_price_eur ASC
                 LIMIT ? OFFSET ?
-            """, all_ids + [limit, offset]).fetchall()
+            """, all_ids + chain_params + [limit, offset]).fetchall()
             page = rows
 
         # 6) Build category name lookup for the IDs we have
@@ -1343,10 +1569,7 @@ async def api_offers_by_category(
                 "chain": r["chain"],
                 "price_eur": _parse_float(r["price_eur"]),
                 "was_price_eur": _parse_float(r["was_price_eur"]),
-                "base_price_eur": _parse_float(r["base_price_eur"]),
-                "base_unit": r["qty_unit"],
-                "quantity": _parse_float(r["qty_value"]),
-                "unit": r["qty_unit"],
+                "base_price_text": r["base_price_text"],
                 "image_url": r["image_url"],
                 "category_id": r["category_v2_id"],
                 "category_name": cat_name_map.get(r["category_v2_id"], ""),

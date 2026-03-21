@@ -701,30 +701,31 @@ class CatalogDataService:
 
         params: list[object] = []
         sql = """
-            SELECT *
-            FROM offers
+            SELECT o.*, pl.category_v2_id
+            FROM offers o
+            LEFT JOIN product_labels pl ON o.product_name = pl.product_name
             WHERE 1=1
         """
 
         chain_placeholders = ", ".join("?" for _ in chains)
-        sql += f" AND chain IN ({chain_placeholders})"
+        sql += f" AND o.chain IN ({chain_placeholders})"
         params.extend(chains)
 
         scope_clauses: list[str] = []
         if brochure_content_ids:
             placeholders = ", ".join("?" for _ in brochure_content_ids)
             scope_clauses.append(
-                f"id IN (SELECT offer_id FROM offer_brochures WHERE brochure_content_id IN ({placeholders}))"
+                f"o.id IN (SELECT offer_id FROM offer_brochures WHERE brochure_content_id IN ({placeholders}))"
             )
             params.extend(brochure_content_ids)
         if full_chain_set:
             placeholders = ", ".join("?" for _ in full_chain_set)
-            scope_clauses.append(f"chain IN ({placeholders})")
+            scope_clauses.append(f"o.chain IN ({placeholders})")
             params.extend(sorted(full_chain_set))
         if scope_clauses:
             sql += " AND (" + " OR ".join(scope_clauses) + ")"
 
-        sql += " ORDER BY chain ASC, product_name ASC"
+        sql += " ORDER BY o.chain ASC, o.product_name ASC"
 
         with _connect(self.db_path) as conn:
             rows = list(conn.execute(sql, params))
@@ -764,7 +765,8 @@ class CatalogDataService:
             image_url=row["offer_image_url"],
             source="kaufda_catalog",
             extra={
-                "category_id": row["category_id"] if "category_id" in keys else None,
+                "category_id": (row["category_v2_id"] if "category_v2_id" in row.keys() and row["category_v2_id"] else None)
+                    or (row["category_id"] if "category_id" in keys else None),
                 "unit_group": row["qty_unit_group"] if "qty_unit_group" in keys else None,
                 "normalized_unit": row["normalized_unit"] if "normalized_unit" in keys else None,
                 "price_per_normalized": _parse_float(row["price_per_normalized"]) if "price_per_normalized" in keys else None,
