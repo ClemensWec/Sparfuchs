@@ -269,6 +269,7 @@ async def api_suggest_categories(
     q: str = "",
     location: str = "",
     radius_km: float = 10.0,
+    chains: str = "",
 ) -> JSONResponse:
     """Return matching product categories for autocomplete."""
     query = (q or "").strip()
@@ -377,8 +378,9 @@ async def api_suggest_categories(
                         local_offer_ids = scope.local_offer_ids
                 except Exception:
                     pass
+            active_chains = [c for c in chains.split(",") if c] if chains else KNOWN_CHAINS
             all_product_hits = catalog_search.search(
-                query, chains=KNOWN_CHAINS,
+                query, chains=active_chains,
                 local_offer_ids=local_offer_ids,
                 limit=0,  # get all to count total
             )

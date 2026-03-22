@@ -894,6 +894,7 @@ function buildChainFilterBar(chains) {
       }
       _syncAllChainPills();
       localStorage.setItem(CHAIN_FILTER_KEY, JSON.stringify([..._activeChains]));
+      _catCache.clear();
       applyChainFilter();
       // Also reload tiles to update counts
       loadCategoryTiles();
@@ -1255,6 +1256,9 @@ async function fetchCategories(q, dropdown, input) {
     const radius = (localStorage.getItem(STORAGE.radiusKm) || "10").trim();
     let catUrl = `/api/suggest-categories?q=${encodeURIComponent(q)}`;
     if (loc) catUrl += `&location=${encodeURIComponent(loc)}&radius_km=${encodeURIComponent(radius)}`;
+    if (_activeChains.size > 0 && _activeChains.size < _allAvailableChains.length) {
+      catUrl += `&chains=${[..._activeChains].join(",")}`;
+    }
 
     const resp = await fetch(catUrl);
     const data = await resp.json();
@@ -1891,6 +1895,7 @@ function buildGlobalChainFilter(chains) {
       // Update all pills (global + compare)
       _syncAllChainPills();
       localStorage.setItem(CHAIN_FILTER_KEY, JSON.stringify([..._activeChains]));
+      _catCache.clear();
       // Reload tiles with new filter
       loadCategoryTiles();
       // Re-filter browse if open
