@@ -1078,7 +1078,7 @@ const _CAT_CACHE_TTL = 300_000;
 function _getCachedOrFilter(query) {
   const cached = _catCache.get(query);
   if (cached && Date.now() - cached.ts < _CAT_CACHE_TTL) {
-    return { categories: cached.categories, brands: cached.brands || [] };
+    return { categories: cached.categories, brands: cached.brands || [], products: cached.products || [], products_total: cached.products_total || 0 };
   }
 
   for (let i = query.length - 1; i >= 2; i--) {
@@ -1091,7 +1091,10 @@ function _getCachedOrFilter(query) {
       const filteredBrands = (prefixCache.brands || []).filter(b =>
         b.brand.toLowerCase().includes(query.toLowerCase())
       );
-      if (filtered.length >= 3) return { categories: filtered, brands: filteredBrands };
+      const filteredProducts = (prefixCache.products || []).filter(p =>
+        ((p.brand || "") + " " + p.title).toLowerCase().includes(query.toLowerCase())
+      );
+      if (filtered.length >= 3 || filteredProducts.length >= 1) return { categories: filtered, brands: filteredBrands, products: filteredProducts, products_total: filteredProducts.length };
       break;
     }
   }
@@ -1184,7 +1187,7 @@ function wireCategoryAutocomplete() {
 
     const cached = _getCachedOrFilter(q);
     if (cached) {
-      renderCategoryDropdown(cached.categories || cached, dropdown, input, q, null, cached.brands || [], cached.offers || []);
+      renderCategoryDropdown(cached.categories || cached, dropdown, input, q, null, cached.brands || [], cached.products || [], cached.products_total || 0);
       return;
     }
 
@@ -1253,24 +1256,14 @@ async function fetchCategories(q, dropdown, input) {
     let catUrl = `/api/suggest-categories?q=${encodeURIComponent(q)}`;
     if (loc) catUrl += `&location=${encodeURIComponent(loc)}&radius_km=${encodeURIComponent(radius)}`;
 
-    // Fetch categories + product offers in parallel
-    let suggestUrl = `/api/suggest?q=${encodeURIComponent(q)}`;
-    if (loc) suggestUrl += `&location=${encodeURIComponent(loc)}&radius_km=${encodeURIComponent(radius)}`;
-
-    const [catResp, suggestResp] = await Promise.all([
-      fetch(catUrl),
-      fetch(suggestUrl).catch(() => null),
-    ]);
-    const data = await catResp.json();
+    const resp = await fetch(catUrl);
+    const data = await resp.json();
     const categories = data.categories || [];
     const brands = data.brands || [];
-    let offers = [];
-    if (suggestResp && suggestResp.ok) {
-      const suggestData = await suggestResp.json();
-      offers = (suggestData.hits || []).slice(0, 5);
-    }
-    _catCache.set(q, { categories, brands, offers, ts: Date.now() });
-    renderCategoryDropdown(categories, dropdown, input, q, data.corrected_to || null, brands, offers);
+    const products = data.products || [];
+    const products_total = data.products_total || 0;
+    _catCache.set(q, { categories, brands, products, products_total, ts: Date.now() });
+    renderCategoryDropdown(categories, dropdown, input, q, data.corrected_to || null, brands, products, products_total);
     fetch("/api/log-search", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -1332,9 +1325,11 @@ function _isInBasket(categoryId) {
   return basket.some(b => b.category_id === categoryId);
 }
 
-function renderCategoryDropdown(categories, dropdown, input, query, correctedTo, brands, offers) {
+function renderCategoryDropdown(categories, dropdown, input, query, correctedTo, brands, products, productsTotal) {
   dropdown.innerHTML = "";
   input.removeAttribute("aria-activedescendant");
+  products = products || [];
+  productsTotal = productsTotal || 0;
 
   if (correctedTo) {
     const corrRow = el("div", { class: "suggest-correction" });
@@ -1344,19 +1339,120 @@ function renderCategoryDropdown(categories, dropdown, input, query, correctedTo,
     dropdown.appendChild(corrRow);
   }
 
-  if (!categories.length && !(brands && brands.length) && !query) {
+  if (!categories.length && !products.length && !query) {
     dropdown.style.display = "none";
     return;
   }
 
   const liveRegion = document.getElementById("suggest-live");
   if (liveRegion) {
-    const total = categories.length + (brands ? brands.length : 0);
+    const total = categories.length + products.length;
     liveRegion.textContent = total ? `${total} Vorschl\u00e4ge verf\u00fcgbar` : "Keine Vorschl\u00e4ge gefunden";
   }
 
-  // Category suggestions FIRST (before brands)
-  if (categories.length > 0 && brands && brands.length > 0) {
+  // Product suggestions — grouped by product (shows cheapest price + chain list)
+  if (products.length > 0) {
+    dropdown.appendChild(el("div", { class: "suggest-section-header" }, "Produkte"));
+    for (const prod of products) {
+      const itemIdx = dropdown.querySelectorAll(".suggest-item").length;
+      const item = el("div", {
+        class: "suggest-item suggest-product",
+        role: "option",
+        id: `suggest-item-${itemIdx}`,
+        "aria-selected": "false"
+      });
+      const row = el("div", { class: "suggest-product-row" });
+
+      // Product image
+      if (prod.image_url) {
+        row.appendChild(el("img", { class: "suggest-product-img", src: prod.image_url, alt: "", loading: "lazy" }));
+      } else {
+        row.appendChild(el("div", { class: "suggest-product-img suggest-product-img-empty" }));
+      }
+
+      // Info column: title + chain list + base price
+      const infoCol = el("div", { class: "suggest-product-info" });
+      const titleLine = el("div", { class: "suggest-product-title" });
+      const displayTitle = prod.brand ? `${prod.brand} \u2013 ${prod.title}` : prod.title;
+      titleLine.appendChild(_highlightMatch(displayTitle, query));
+      infoCol.appendChild(titleLine);
+
+      // Compact chain list as mini pills
+      const chains = prod.chains || [prod.cheapest_chain || prod.chain];
+      if (chains.length > 0) {
+        const chainsRow = el("div", { class: "suggest-product-chains-list" });
+        for (const ch of chains.slice(0, 6)) {
+          chainsRow.appendChild(el("span", { class: "suggest-product-chain-mini" }, ch));
+        }
+        if (chains.length > 6) {
+          chainsRow.appendChild(el("span", { class: "suggest-product-chain-mini" }, `+${chains.length - 6}`));
+        }
+        infoCol.appendChild(chainsRow);
+      }
+
+      // Base price line
+      const basePriceLabel = formatBasePrice(prod);
+      if (basePriceLabel) {
+        infoCol.appendChild(el("div", { class: "suggest-product-meta" }, basePriceLabel));
+      }
+      row.appendChild(infoCol);
+
+      // Price column — "ab X €" when multiple chains
+      const priceCol = el("div", { class: "suggest-product-price" });
+      if (prod.price_eur != null) {
+        const chainCount = prod.chain_count || 1;
+        const prefix = chainCount > 1 ? "ab " : "";
+        priceCol.appendChild(el("span", { class: "suggest-product-price-value" }, `${prefix}${Number(prod.price_eur).toFixed(2).replace(".", ",")} \u20ac`));
+        // Show cheapest chain name below price
+        const cheapestChain = prod.cheapest_chain || (chains.length === 1 ? chains[0] : null);
+        if (cheapestChain) {
+          priceCol.appendChild(el("span", { class: "suggest-product-cheapest-chain" }, cheapestChain));
+        }
+        // was_price only meaningful for single-chain products
+        if (chainCount === 1 && prod.was_price_eur != null && prod.was_price_eur > prod.price_eur) {
+          priceCol.appendChild(el("span", { class: "suggest-product-was-price" }, `${Number(prod.was_price_eur).toFixed(2).replace(".", ",")} \u20ac`));
+        }
+      }
+      row.appendChild(priceCol);
+
+      // Add button
+      const addBtn = el("button", { class: "suggest-product-add", title: "Zur Einkaufsliste" }, "+");
+      addBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        addToBasket({ q: prod.title, brand: prod.brand || null, any_brand: !prod.brand });
+        addBtn.textContent = "\u2713";
+        addBtn.classList.add("added");
+        input.value = "";
+        dropdown.style.display = "none";
+        input.setAttribute("aria-expanded", "false");
+        input.placeholder = `\u2713 ${prod.brand ? prod.brand + " " : ""}${prod.title} hinzugef\u00fcgt!`;
+        setTimeout(() => { input.placeholder = "Was brauchst du? Butter, Milch, Eier..."; }, 1500);
+      });
+      row.appendChild(addBtn);
+
+      item.appendChild(row);
+      item.addEventListener("click", () => { addBtn.click(); });
+      dropdown.appendChild(item);
+    }
+
+    // "Show all results" link if more than 5 grouped products
+    if (productsTotal > 5) {
+      const showAllItem = el("div", { class: "suggest-item suggest-show-all" });
+      const _loc = (localStorage.getItem(STORAGE.location) || "").trim();
+      const _rad = (localStorage.getItem(STORAGE.radiusKm) || "10").trim();
+      showAllItem.textContent = `Alle ${productsTotal} Ergebnisse anzeigen \u203a`;
+      showAllItem.addEventListener("click", () => {
+        dropdown.style.display = "none";
+        input.setAttribute("aria-expanded", "false");
+        let _searchUrl = `/search?q=${encodeURIComponent(query)}`;
+        if (_loc) _searchUrl += `&location=${encodeURIComponent(_loc)}&radius_km=${encodeURIComponent(_rad)}`;
+        window.location.href = _searchUrl;
+      });
+      dropdown.appendChild(showAllItem);
+    }
+  }
+
+  if (products.length > 0 && categories.length > 0) {
     dropdown.appendChild(el("div", { class: "suggest-section-header" }, "Kategorien"));
   }
 
@@ -1437,98 +1533,6 @@ function renderCategoryDropdown(categories, dropdown, input, query, correctedTo,
     }
 
     dropdown.appendChild(item);
-  }
-
-  // Brand suggestions AFTER categories
-  if (brands && brands.length > 0) {
-    dropdown.appendChild(el("div", { class: "suggest-section-header" }, "Marken"));
-    for (const brand of brands) {
-      const itemIdx = dropdown.querySelectorAll(".suggest-item").length;
-      const item = el("div", {
-        class: "suggest-item suggest-brand",
-        role: "option",
-        id: `suggest-item-${itemIdx}`,
-        "aria-selected": "false"
-      });
-      const row = el("div", { class: "suggest-item-row" });
-      const nameCol = el("div", { class: "suggest-item-name" });
-      const nameEl = el("div", {});
-      nameEl.appendChild(_highlightMatch(brand.brand, query));
-      nameCol.appendChild(nameEl);
-      nameCol.appendChild(el("div", { class: "suggest-item-meta" }, `in ${brand.top_category}`));
-      row.appendChild(nameCol);
-      row.appendChild(el("span", { class: "suggest-item-count" }, `${brand.product_count} Produkte`));
-      item.appendChild(row);
-
-      item.addEventListener("click", () => {
-        dropdown.style.display = "none";
-        input.setAttribute("aria-expanded", "false");
-        const _loc = (localStorage.getItem(STORAGE.location) || "").trim();
-        const _rad = (localStorage.getItem(STORAGE.radiusKm) || "10").trim();
-        let _searchUrl = `/search?q=${encodeURIComponent(brand.brand)}`;
-        if (_loc) _searchUrl += `&location=${encodeURIComponent(_loc)}&radius_km=${encodeURIComponent(_rad)}`;
-        window.location.href = _searchUrl;
-      });
-      dropdown.appendChild(item);
-    }
-  }
-
-  // Product offer suggestions LAST
-  if (offers && offers.length > 0) {
-    dropdown.appendChild(el("div", { class: "suggest-section-header" }, "Aktuelle Angebote"));
-    for (const offer of offers) {
-      const itemIdx = dropdown.querySelectorAll(".suggest-item").length;
-      const item = el("div", {
-        class: "suggest-item suggest-offer",
-        role: "option",
-        id: `suggest-item-${itemIdx}`,
-        "aria-selected": "false"
-      });
-
-      const row = el("div", { class: "suggest-offer-row" });
-
-      // Product image thumbnail
-      if (offer.image_url) {
-        const img = el("img", {
-          class: "suggest-offer-img",
-          src: offer.image_url,
-          alt: offer.title,
-          loading: "lazy",
-        });
-        img.addEventListener("error", () => { img.style.display = "none"; });
-        row.appendChild(img);
-      }
-
-      // Info column: title, brand, chain
-      const info = el("div", { class: "suggest-offer-info" });
-      const titleEl = el("div", { class: "suggest-offer-title" });
-      titleEl.appendChild(_highlightMatch(offer.title, query));
-      info.appendChild(titleEl);
-
-      const meta = el("div", { class: "suggest-offer-meta" });
-      if (offer.brand) meta.appendChild(document.createTextNode(offer.brand + " · "));
-      meta.appendChild(el("span", { class: "suggest-offer-chain" }, offer.chain));
-      info.appendChild(meta);
-      row.appendChild(info);
-
-      // Price column
-      const priceCol = el("div", { class: "suggest-offer-price" });
-      priceCol.appendChild(el("div", { class: "suggest-offer-price-now" },
-        offer.price_eur != null ? offer.price_eur.toFixed(2) + " \u20AC" : ""));
-      if (offer.was_price_eur && offer.discount_percent) {
-        priceCol.appendChild(el("div", { class: "suggest-offer-price-was" },
-          offer.was_price_eur.toFixed(2) + " \u20AC"));
-      }
-      row.appendChild(priceCol);
-
-      item.appendChild(row);
-
-      // Click → add product title as free-text basket item
-      item.addEventListener("click", () => {
-        _addAndFeedback({ q: offer.title }, input, dropdown);
-      });
-      dropdown.appendChild(item);
-    }
   }
 
   dropdown.style.display = "block";

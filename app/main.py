@@ -19,7 +19,7 @@ from app.services.geocode import GeoPoint, GeocodeError
 from app.services.matching import Suggestion
 from app.services.pricing import BasketPricer, SparMixPricer, SparMixResult, WantedItem
 from app.utils.chains import KNOWN_CHAINS
-from app.utils.text import compact_text
+from app.utils.text import compact_text, normalize_search_text
 
 
 APP_NAME = "Sparfuchs"
@@ -359,15 +359,81 @@ async def api_suggest_categories(
         for h in hits:
             h.pop("corrected_from", None)
             h.pop("corrected_to", None)
-    # Search for matching brands
-    brand_hits = category_search.search_brands(query, limit=3)
+
+    # --- Product suggestions (top 5 offers matching the query) ---
+    product_hits: list[dict[str, Any]] = []
+    products_total = 0
+    if catalog_search.available():
+        try:
+            # Resolve local_offer_ids for geo-filtering
+            local_offer_ids: frozenset[int] | None = None
+            if loc:
+                try:
+                    geo = await _resolve_location(loc)
+                    scope = catalog_data.resolve_location_scope(
+                        lat=geo.lat, lon=geo.lon, radius_km=radius_km,
+                    )
+                    if scope is not None:
+                        local_offer_ids = scope.local_offer_ids
+                except Exception:
+                    pass
+            all_product_hits = catalog_search.search(
+                query, chains=KNOWN_CHAINS,
+                local_offer_ids=local_offer_ids,
+                limit=0,  # get all to count total
+            )
+
+            # Group by (brand, title) so the same product across chains
+            # appears as a single entry with cheapest price + chain list
+            product_groups: dict[tuple[str, str], list] = {}
+            for hit in all_product_hits:
+                key = (
+                    normalize_search_text(hit.brand or ""),
+                    normalize_search_text(hit.title),
+                )
+                product_groups.setdefault(key, []).append(hit)
+
+            grouped: list[dict[str, Any]] = []
+            for _key, group in product_groups.items():
+                # Best-scored entry → display title/brand/image
+                group.sort(key=lambda s: -s.score)
+                best = group[0]
+                # Cheapest-priced entry → price info
+                priced = [s for s in group if s.price_eur is not None]
+                cheapest = min(priced, key=lambda s: s.price_eur) if priced else best
+                # Collect chains in score order (deduped)
+                chains_list: list[str] = []
+                seen: set[str] = set()
+                for s in group:
+                    if s.chain not in seen:
+                        seen.add(s.chain)
+                        chains_list.append(s.chain)
+                grouped.append({
+                    "title": best.title,
+                    "brand": best.brand,
+                    "price_eur": cheapest.price_eur,
+                    "was_price_eur": cheapest.was_price_eur,
+                    "cheapest_chain": cheapest.chain,
+                    "chains": chains_list,
+                    "chain_count": len(chains_list),
+                    "image_url": best.image_url,
+                    "base_price_eur": cheapest.base_price_eur,
+                    "base_unit": cheapest.base_unit,
+                    "score": best.score,
+                })
+            grouped.sort(key=lambda g: g["score"], reverse=True)
+            products_total = len(grouped)
+            product_hits = grouped[:5]
+        except Exception:
+            pass
 
     # Remove internal fields before sending to client
     for h in hits:
         h.pop("_level", None)
     resp: dict[str, Any] = {"q": q, "categories": hits}
-    if brand_hits:
-        resp["brands"] = brand_hits
+    if product_hits:
+        resp["products"] = product_hits
+        resp["products_total"] = products_total
     if corrected_to:
         resp["corrected_to"] = corrected_to
     return JSONResponse(resp)

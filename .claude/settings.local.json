@@ -2,7 +2,15 @@
   "permissions": {
     "allow": [
       "WebFetch(domain:www.kaufda.de)",
-      "Bash(/c/Users/Clemens/AppData/Local/Programs/Python/Python311/python.exe -c \":*)"
+      "Bash(/c/Users/Clemens/AppData/Local/Programs/Python/Python311/python.exe -c \":*)",
+      "Bash(py -3.11 --version)",
+      "Bash(py -3.12 --version)",
+      "Bash(py -3.13 --version)",
+      "Bash(py -3 --version)",
+      "Bash(sqlite3 c:/Projects/Sparfuchs/data/kaufda_dataset/offers.sqlite3 \"SELECT DISTINCT base_price_text FROM offers WHERE base_price_text IS NOT NULL LIMIT 500;\")",
+      "Bash(python3 -c \"import sqlite3; conn = sqlite3.connect\\(''c:/Projects/Sparfuchs/data/kaufda_dataset/offers.sqlite3''\\); cursor = conn.cursor\\(\\); cursor.execute\\(''SELECT COUNT\\(*\\) FROM offers''\\); print\\(''Total offers:'', cursor.fetchone\\(\\)[0]\\); cursor.execute\\(''SELECT COUNT\\(*\\) FROM offers WHERE base_price_text IS NOT NULL''\\); print\\(''Offers with base_price_text:'', cursor.fetchone\\(\\)[0]\\); conn.close\\(\\)\")",
+      "Bash(find c:/Projects/Sparfuchs -type f \\\\\\(-name *.json -o -name *.py -o -name *.txt \\\\\\))",
+      "Bash(python3 -c \"import sys, json, re; data=json.load\\(sys.stdin\\); units={}; [units.setdefault\\(m.group\\(2\\), []\\).append\\(m.group\\(0\\)\\) for page in data.get\\(''''contents'''', []\\) for offer in page.get\\(''''offers'''', []\\) for deal in offer.get\\(''''content'''', {}\\).get\\(''''deals'''', []\\) if deal.get\\(''''priceByBaseUnit''''\\) for m in [re.search\\(r''''\\([\\\\d.,]+\\)\\\\s*\\([a-zA-Z]+\\)\\\\s*[=\\\\/]'''', str\\(deal.get\\(''''priceByBaseUnit''''\\)\\)\\)] if m]; print\\(''''\\\\n''''.join\\([f''''{u}: {v[:3]}'''' for u, v in sorted\\(units.items\\(\\)\\)]\\)\\)\")"
     ]
   }
 }
